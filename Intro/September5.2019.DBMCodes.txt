@@ -1,0 +1,102 @@
+#############################################
+# get5SampleKey.pl
+#############################################
+
+This program produces the DBM input file sample.snps
+ 
+Input:
+826.pos has the fields chr, pos, ref.count, alter.count, ref.allele, alt.allele, quality
+
+chr10   1166555 0       2       T       C       30.768
+chr10   1182970 0       5       A       G       117.264
+chr10   1183608 1       1       C       T       4.76933
+
+Output:
+test.snps has the fields ID, CHR, POS, Quality, Ref, Alt
+
+1       chr10   46025   21.7931 C       A
+2       chr10   46026   21.7931 C       A
+3       chr10   47663   21.7931 C       T
+4       chr10   47754   24.9307 T       C
+5       chr10   47771   35.0083 C       T
+
+
+Usage:
+testing folder: /home/s_m774/project/data/dbm
+perl /home/s_m774/software/DBM/perl/get5SampleKey.pl 826chr10.pos 827chr10.pos 832chr10.pos 847chr10.pos 850chr10.pos 1
+
+Note: 
+The last option is the minimum number of samples for each SNP to appear on
+
+#############################################
+# getCounts.pl
+#############################################
+
+This program produces the DBM input file sample.counts
+
+Input file 1: 
+sample.snps has the fields ID, CHR, POS, Quality, (Ref, Alt) Each of these the positions will show up in at least one sample.  
+
+1 chr10 1233561 100
+2 chr10 3010999 100
+
+
+Input file 2: 
+826.pos has the fields chr, pos, ref.count, alter.count, ref.allele, alt.allele, quality
+
+chr10 587617 0 1  C A 7.79993
+chr10 1101983 0 1  C T 7.79993
+chr10 1132778 0 1  C A 7.79993
+
+Output:
+test.counts has the fields M, ID, ref.count, altnative.count
+
+
+M 1  0 15
+M 2  0 10
+
+
+Usage:
+testing folder: /home/s_m774/project/data/dbm/7.14
+perl getCounts.pl sample.snps 826.pos test.counts
+
+Number of lines in each input and output files:
+246 sample.snps
+96 826.pos
+246 test.counts
+
+Note:
+This perl code does the same as the following unix command
+join -j1 -o1.2,2.4,2.5 <(<sample.snps awk '{print $3"\t"$0}' | sort -k1,1) <(<826.pos awk '{print $2"\t"$0}' | sort -k1,1) | sort -n | sed 's/^/M /' | sed "s/ /\t/g" > 826.counts
+
+
+
+#############################################
+# get5SampleQuality.pl
+#############################################
+
+This program the extracts quality scores of each SNP
+ 
+Input:
+826.pos has the fields chr, pos, ref.count, alter.count, ref.allele, alt.allele, quality
+
+chr10   1166555 0       2       T       C       30.768
+chr10   1182970 0       5       A       G       117.264
+chr10   1183608 1       1       C       T       4.76933
+
+Output: 
+quality.txt has the fields CHR, POS, Quality1, Quality2, ...
+
+chr10   1233561 185.999 31.0104 109.008 NA      221.999
+chr10   3010999 180.999 180.999 212.999 163.003 194.999
+chr10   3011174 221.999 221.999 225.009 221.999 221.999
+chr10   5073699 221.999 221.999 221.999 221.999 225.009
+chr10   5073715 221.999 221.999 221.999 225.009 221.999
+
+
+Usage:
+testing folder: /home/s_m774/project/data/dbm
+perl /home/s_m774/software/DBM/perl/get5SampleQuality.pl 826chr10.pos 827chr10.pos 832chr10.pos 847chr10.pos 850chr10.pos 1
+
+Note: 
+The last option is the minimum number of samples for each SNP to appear on

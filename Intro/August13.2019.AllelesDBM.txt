@@ -1,0 +1,216 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Preparing Real Data
+#################################################################################
+
+
+# Prepared DBM Input sample.snps and sample.counts
+
+# Step 1: Created sample.SNPs
+# cut
+# -f fields
+# sed to tab delimit
+# s is substitute
+# g is globally
+# awk to place fields in the correct order
+# sed to tab delimit
+/home/s_m774/data/dbm/pair.2depth.5sample/allele.8.11
+cp starfish.8.10/*.vcf allele.8.11/
+
+grep ^chr10 826.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF == 7' > 826.pos
+grep ^chr10 827.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF == 7' > 827.pos
+grep ^chr10 832.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF == 7' > 832.pos
+
+
+grep ^chr10 826.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF != 7' > 826.multiple
+grep ^chr10 827.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF != 7' > 827.multiple
+grep ^chr10 832.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$9"\t"$3"\t"$4"\t"$5}' | sed s/,/\\t/g | awk 'NF != 7' > 832.multiple
+
+# SNP counts at ≥2 coverage, pair end
+wc -l *.pos
+  354 826.pos
+  504 827.pos
+  791 832.pos
+ 1649 total
+ 
+wc -l *.multiple
+  1 826.multiple
+  1 827.multiple
+  2 832.multiple
+  4 total
+
+
+# cat to combine each individual
+# grep to filter chromosome 10
+# cut to get chromosome and positon fields
+# -f fields
+# sort by positon
+# -k sort starting on specified field
+# -n numerically
+# -u unique rows
+# awk to give each SNP postion an ID and quality
+# NR is number of records and the current row number
+# sort to remove duplicates
+# -k sort starting on this column
+# -n numerically
+# -u unique rows
+
+cat *.pos | sort -k 2 -nu | awk '{print NR"\t"$1"\t"$2"\t100\t"$5"\t"$6}' > sample.snps
+
+
+# sample.snps
+1       chr10   48086   100     G       A
+2       chr10   76388   100     T       C
+3       chr10   282815  100     C       T
+4       chr10   411314  100     T       C
+5       chr10   411367  100     G       A
+6       chr10   478040  100     G       A
+7       chr10   789566  100     G       A
+8       chr10   943843  100     G       A
+9       chr10   1166555 100     T       C
+10      chr10   1180133 100     G       C
+11      chr10   1182970 100     A       G
+12      chr10   1183069 100     G       A
+13      chr10   1183608 100     C       T
+14      chr10   1184763 100     C       T
+15      chr10   1185028 100     C       T
+16      chr10   1185195 100     C       T
+17      chr10   1185203 100     G       T
+18      chr10   1199953 100     A       T
+19      chr10   1217136 100     C       T
+20      chr10   1233504 100     C       T
+21      chr10   1233561 100     T       G
+22      chr10   1233656 100     G       A
+23      chr10   1233977 100     C       T
+24      chr10   1233978 100     C       T
+25      chr10   1234100 100     A       T
+26      chr10   1271134 100     C       T
+...
+1438    chr10   133269660       100     C       T
+1439    chr10   133270005       100     G       A
+1440    chr10   133326433       100     G       A
+1441    chr10   133344451       100     G       A
+1442    chr10   133431249       100     C       T
+1443    chr10   133442100       100     G       A
+1444    chr10   133564759       100     C       T
+1445    chr10   133564956       100     C       T
+1446    chr10   133566184       100     C       T
+1447    chr10   133566206       100     A       C
+
+
+
+# Step 2: Created sample.counts
+perl /home/s_m774/software/DBM/prepare.pl sample.snps 826.pos 826.counts
+perl /home/s_m774/software/DBM/prepare.pl sample.snps 827.pos 827.counts
+perl /home/s_m774/software/DBM/prepare.pl sample.snps 832.pos 832.counts
+  
+
+# Created sample.counts by combining individual.counts
+# cut to get allele counts
+# -f fields to be cut
+# paste appends the fields in file2 on file1
+cut -f 3,4 827.counts | paste 826.counts - > 826.827.counts
+cut -f 3,4 832.counts | paste 826.827.counts - > sample.counts
+
+# Inserted DBM header 
+# -i is insert
+# 1s to insert at the top of file
+sed -i '1s/^/I\tSID\tI1\tI1\tI2\tI2\tI3\tI3\n/' sample.counts
+
+# sample.counts
+I       SID     I1      I1      I2      I2      I3      I3
+M       1       0       0       0       0       0       4
+M       2       0       0       0       0       0       2
+M       3       0       0       0       0       0       2
+M       4       0       0       0       3       0       0
+M       5       0       0       0       3       0       0
+M       6       0       0       0       0       0       2
+M       7       0       0       0       0       3       2
+M       8       0       0       0       2       0       0
+M       9       0       2       0       0       0       0
+M       10      0       0       0       2       0       0
+M       11      0       5       0       0       0       0
+M       12      0       0       0       0       0       20
+M       13      1       1       0       0       0       2
+M       14      9       2       0       0       0       0
+M       15      36      18      0       0       0       127
+M       16      0       0       0       0       0       19
+M       17      0       0       6       2       0       0
+M       18      0       23      26      4       20      12
+M       19      0       0       0       0       44      28
+M       20      0       16      0       0       0       0
+M       21      0       40      31      6       47      21
+M       22      0       0       0       0       120     104
+M       23      0       0       0       0       1       5
+M       24      0       0       0       0       1       5
+M       25      0       0       0       3       0       0
+...
+M       1438    0       0       0       0       0       2
+M       1439    0       0       1       1       0       0
+M       1440    0       0       0       0       1       1
+M       1441    0       0       0       0       0       2
+M       1442    0       0       0       0       0       2
+M       1443    0       2       0       3       0       0
+M       1444    0       0       0       0       1       1
+M       1445    0       0       0       0       2       1
+M       1446    0       2       0       0       0       0
+M       1447    0       2       0       0       0       0
+
+#################################################################################
+# Running Real Data 
+#################################################################################
+
+# Ran DBM
+/home/s_m774/project/dbm/
+cp data/dbm/pair.2depth.5sample/allele.8.11/sample.* project/dbm/allele.8.11/
+
+/home/s_m774/software/DBM/dbm sample
+
+N=3 estimated proportion of FP sites = 0.000016
+N = 3(0), L = 1747, lambda=3.263881
+N=3, L=1747, ploidity=2, a=0.510640
+K=9
+
+...
+
+foward time = 0.000000 sec
+backward time = 0.160000 sec
+time1=1.990000 sec      time2=0.720000 sec
+summarize posteriors...done
+total time = 3sec
+
+# sample.g
+ID CHR POS I1 I1 I2 I2 I3 I3
+1 chr10 48086 A G A G A A
+2 chr10 76388 T C C T C C
+3 chr10 282815 C T T T T T
+4 chr10 411314 T C C C T C
+5 chr10 411367 A A A A A G
+6 chr10 478040 G A A A A A
+7 chr10 789566 G A G A G A
+8 chr10 943843 G A A A A G
+9 chr10 1166555 C C C C C T
+10 chr10 1180133 G C C C G C
+11 chr10 1182970 G G G G G G
+12 chr10 1183069 A G A A A A
+13 chr10 1183608 C T T C T T
+14 chr10 1184763 T C T T C T
+15 chr10 1185028 C T C T T T
+16 chr10 1185195 C T C T T T
+17 chr10 1185203 G T T G T G
+18 chr10 1199953 T T T A A T
+19 chr10 1217136 T C C T T C
+20 chr10 1233504 T T T C T T
+21 chr10 1233561 G G G T T G
+22 chr10 1233656 A G G A A G
+23 chr10 1233977 T T T C C T
+24 chr10 1233978 T C C T C T
+25 chr10 1234100 T A T T T A
+
+
+
+
+
+
+
+

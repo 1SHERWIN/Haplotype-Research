@@ -1,0 +1,94 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Paper https://www.ncbi.nlm.nih.gov/pubmed/29342247
+# Download  https://github.com/jcna99/PEATH
+# Installation
+#################################################################################
+
+# From README.md
+Compiling PEATH
+After downloading the CPP code, complie PATH by using
+
+g++ PEATH.cpp -o PEATH -O2 -std=c++11
+
+
+/home/s_m774/software
+unzip PEATH-master.zip
+Archive:  PEATH-master.zip
+489b0af3d019e8711bff1cca429d171a27171063
+   creating: PEATH-master/
+   creating: PEATH-master/DataSet/
+  inflating: PEATH-master/DataSet/Simulated_chromosomes.zip
+  inflating: PEATH-master/README.md
+   creating: PEATH-master/src/
+  inflating: PEATH-master/src/PEATH.cpp
+  inflating: PEATH-master/src/eval.cpp
+
+
+/home/s_m774/software/PEATH/src
+[s_m774@login1 src]$ module add gcc/7.2.0
+[s_m774@login1 src]$ module list
+Currently Loaded Modulefiles:
+  1) rocks-openmpi   2) gcc/7.2.0
+
+g++ PEATH.cpp -o PEATH -O2 -std=c++11
+
+g++ eval.cpp -o eval -O2
+ 
+#################################################################################
+# Running example data 
+#################################################################################
+
+# From README.md
+Running PEATH
+To run PEATH, use the following command:
+
+./PEATH <input_file> <output_file> (param)
+<input_file> is an input matrix for sequence reads and <output_file> contains phased haplotype.
+
+(param) is an optional parameter for time/accuracy tradeoff which is a positive integer (default: 50).
+
+ex) ./PEATH chr1.matrix.SORTED chr1.haplo
+
+Evaluation
+To evaluate a haplotype, use the evaluation code.
+
+./eval <matrix_file> <answer_file> <haplo_file> <output_file> (mask_file)
+<matrix_file> is a matrix for sequence reads, <answer_file> is an answer file, <haplo_file> is a haplotype file, <output_file> is an output file containing evaluation results.
+
+(mask_file) is a mask haplo file which is optional.
+
+ex) ./eval chr1.matrix.SORTED chr1.valid.master chr1.haplo chr1.eval
+
+
+
+
+
+/home/s_m774/software/run/PEATH
+
+[s_m774@login1 PEATH]$ unzip Simulated_chromosomes.zip
+Archive:  Simulated_chromosomes.zip
+  inflating: Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED
+  inflating: Simulated_chromosomes/new_matrix_05_002.MATRIX.SORTED
+  inflating: Simulated_chromosomes/new_matrix_05_003.MATRIX.SORTED
+
+
+/home/s_m774/software/PEATH/src/PEATH /home/s_m774/software/run/PEATH/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED chr1.haplo
+
+22412   22083   5567  4709.9   4288   39.9174
+
+# There is an additional "evaluate" program that requires an "answer" file
+
+# output to chr1.haplo
+Block Number: 1  Block Length: 6  Phased Length: 6  Number of Reads: 5  Start position: 2  Weighted MEC: 0.0160636  MEC: 0
+2        0       1
+3        1       0
+4        0       1
+5        0       1
+6        0       1
+7        1       0
+
+
+
+
+

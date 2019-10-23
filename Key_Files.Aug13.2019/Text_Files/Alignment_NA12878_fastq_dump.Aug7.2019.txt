@@ -1,0 +1,260 @@
+#############################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Datasets/NA12878/8.7.2019.fastq_dump_Alignment
+# Alignment of NA12878 fastq files
+# obtained via the fastq dump procedure
+#############################################
+
+cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa .
+ls
+Aug7.2019.sbatch_NA12878.fatq_dump_Alignment.txt  chr10.fa  screen_output
+
+more Aug7.2019.sbatch_NA12878.fatq_dump_Alignment.txt
+#!/bin/bash -l
+
+
+#SBATCH -p shared
+#SBATCH -n 2
+#SBATCH -t 38:00:00
+#SBATCH -J NA12878
+#SBATCH --mem=40G
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting 1.fastq into 1.sai via bwa, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.
+index/hg38.fa /home/abj15/Research.Project/Datasets/NA12878/8.5.2019.fastq_dump/SRR9091899_1.fastq > SRR9091899_1.sai  2>screen_output/screen.out.sai_1
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting 1.fastq into 1.sai via bwa, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting 2.fastq into 2.sai via bwa, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.
+index/hg38.fa /home/abj15/Research.Project/Datasets/NA12878/8.5.2019.fastq_dump/SRR9091899_2.fastq > SRR9091899_2.sai  2>screen_output/screen.out.sai_2
+
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting 2.fastq into 2.sai via bwa, the time is ----------------------------"
+
+date;
+
+echo "-----------------------------------------------------------------"
+
+
+
+echo "Begin converting .sai files into .sam file, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa sampe -a -P /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.in
+dex/hg38.fa SRR9091899_1.sai SRR9091899_2.sai /home/abj15/Research.Project/Datasets/NA12878/8.5.2019.fastq_dump/SRR9091899_1.fastq /home/abj15/Research.Project/Datasets
+/NA12878/8.5.2019.fastq_dump/SRR9091899_2.fastq > SRR9091899.bwa.sam  2>screen_output/screen.out_bwa.sam
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting .sai files into .sam file, the time is ----------------------------"
+
+date;
+
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting bwa.sam > bwa.bam, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b SRR9091899.bwa.sam > SRR9091899.bwa.bam  2>screen_output/screen.out_sam2bam
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting bwa.sam > bwa.bam, the time is ----------------------------"
+
+date;
+
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin sorting bwa.bam, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort SRR9091899.bwa.bam -T tmpt.sorted -o SRR9091899.bwa.bam.sorted  2>screen_output/screen.out_sorted
+_bam
+
+
+echo "-----------------------------------------------------------------"
+
+echo "After sorting bwa.bam, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin indexing bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index SRR9091899.bwa.bam.sorted 2>screen_output/screen.out_indexed_bam
+
+
+echo "-----------------------------------------------------------------"
+
+echo "After indexing bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin extracting chr10, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h SRR9091899.bwa.bam.sorted chr10 > SRR9091899_chr10.bwa.sam.sorted  2>screen_output/screen.out_
+chr10_sam
+
+echo "-----------------------------------------------------------------"
+
+echo "After extracting chr10, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting chr10.bwa.sam.sorted to chr10.bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b SRR9091899_chr10.bwa.sam.sorted > SRR9091899_chr10.bwa.bam.sorted  2>screen_output/screen.o
+ut_chr10_sam2bam
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting chr10.bwa.sam.sorted to chr10.bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin indexing chr10.bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index SRR9091899_chr10.bwa.bam.sorted  2>screen_output/screen.out_chr10_index_bam
+
+
+echo "-----------------------------------------------------------------"
+
+echo "After indexing chr10.bwa.bam.sorted, the time is ----------------------------"
+
+date;
+
+
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting chr10.bwa.bam.sorted to chr10.bcf, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 415000000 -f chr10.fa SRR9091899_chr10.bwa.bam.sorted > SRR9091899_chr10.bcf  2>screen_o
+utput/screen.out_chr10_bam2bcf
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting chr10.bwa.bam.sorted to chr10.bcf, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin converting chr10.bcf to chr10.vcf, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v SRR9091899_chr10.bcf -o SRR9091899_chr10.vcf  2>screen_output/screen.out_bcf2vcf
+
+echo "-----------------------------------------------------------------"
+
+echo "After converting chr10.bcf to chr10.vcf, the time is ----------------------------"
+
+date;
+
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin removing the headers from chr10.vcf, the time is ----------------------------"
+
+date;
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view -H SRR9091899_chr10.vcf > noheaders.SRR9091899_chr10.vcf  2>screen_output/screen.out_noheaders_vc
+f
+
+echo "-----------------------------------------------------------------"
+
+echo "After removing the headers from chr10.vcf, the time is ----------------------------"
+
+date;
+######################################
+# running sbatch script for alignment
+######################################
+
+nohup bash Aug7.2019.sbatch_NA12878.fatq_dump_Alignment.txt &
+[1] 84381
+[abj15@login2 8.7.2019.fastq_dump_Alignment]$ nohup: ignoring input and appending output to `nohup.out'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

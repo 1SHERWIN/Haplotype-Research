@@ -1,0 +1,193 @@
+
+# File name: June3.2019.CSP.txt
+
+############################################
+# LEAP server user guide 
+############################################
+
+# This is to run a job interactively 
+sinteractive -p shared -N 1 -t 48:00:00 --mem=20G
+
+https://itrcstats.itrc.txstate.edu/wiki/index.php/LEAP_Cluster_User_Guide
+
+############################################
+# Install PHASE 
+############################################
+http://stephenslab.uchicago.edu/phase/download.html
+
+gunzip phase.2.1.linux.tar.gz
+
+tar -xvf phase.2.1.1.linux.tar
+
+
+############################################
+# Installation
+############################################
+
+/home/s_s355/software/NGS.hap/CSP
+
+tar xzfv CSP.tar.gz
+
+# The following is from the "readme.txt" 
+
+# Step 1: 
+Usage:
+	ruby CSP1.rb <Genotype_file> <Fragment_file> <Output_file1> <PHASE_file1> <PHASE_file2> <N> <W>
+
+Example of running CSP1:
+	ruby CSP1.rb example/genotype.txt example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5
+
+# Step 2:
+In the second step, CSP for each SNP fragment are calculated using the results of CSP1.rb.
+
+Usage:
+	ruby CSP2.rb <Output_file1> <Fragment_file> <Output_file2> <W>
+Example of running CSP2:
+	ruby CSP2.rb out/csp1.txt example/fragment.txt out/csp2.txt 5
+
+
+############################################
+# Running example data 
+############################################
+
+# Copy all CSP files to the "run" folder. 
+cd /home/s_s355/software/NGS.hap/CSP
+cp -r * /home/s_s355/research3/NGS.hap.run/CSP/
+
+##### Step 1 
+# This is the one based on the original CSP1.rb code, so it gives error messages. 
+
+cd /home/s_s355/research3/NGS.hap.run/CSP/example
+
+/group/hon/hon3398o/ruby-2.6.2/bin/ruby  /home/s_s355/software/NGS.hap/CSP/CSP1.old.rb /home/s_s355/research3/NGS.hap.run/CSP/example/genotype.txt  /home/s_s355/research3/NGS.hap.run/CSP/example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5 >screenout.1  2>screenout.2
+
+# Next we manually fixed the CSP1.rb file by providing the phase path
+date; time /group/hon/hon3398o/ruby-2.6.2/bin/ruby  /home/s_s355/software/NGS.hap/CSP/CSP1.rb /home/s_s355/research3/NGS.hap.run/CSP/example/genotype.txt  /home/s_s355/research3/NGS.hap.run/CSP/example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5  > screenout.1  2>screenout.2 ; date
+
+# The screenout.2 has "rm: cannot remove `phase/output.out_pairs': No such file or directory", 
+# we checked it and found this does not affect the results. It is likely that the CSP authors 
+# are trying to clean their account/folder before a new file is generated. 
+
+##### Step 2
+
+date; time 
+
+/group/hon/hon3398o/ruby-2.6.2/bin/ruby  /home/s_s355/software/NGS.hap/CSP/CSP2.rb out/csp1.txt /home/s_s355/research3/NGS.hap.run/CSP/example/fragment.txt out/csp2.txt 5 
+
+# May not use the following if the screen out
+>s2.screen.1 2>s2.screen.2; date
+
+
+
+
+
+
+############################################
+# CSP "readme.txt" 
+############################################
+more readme.txt 
+CSP detects chimeric fragments in dilution-based sequencing.
+Version 1.0.0 (17/09/13)
+
+----------
+Reference
+----------
+
+
+----------------
+Calculating CSP
+----------------
+
+CSP is calculated with two steps.
+
+In the first step, haplotypes probabilities for each SNP fragment region are calculated with the statistical phasing.
+We use PHASE [1,2] for the statistical phasing and PHASE have to be installed to calculate CSP.
+
+Usage:
+	ruby CSP1.rb <Genotype_file> <Fragment_file> <Output_file1> <PHASE_file1> <PHASE_file2> <N> <W>
+
+Example of running CSP1:
+	ruby CSP1.rb example/genotype.txt example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5
+
+
+Genotype_file:
+This contains population genotypes information.
+Format of the file is
+<chromosome number> <chromosome position> <refSNP> <base1> <base2> <genotype1> <genotype2> <genotype3> ... 
+where <genotype(n)> is n-th individual genotype of a SNP.
+<genotype1> has to be an individual who is the target of the dilution-based sequencing.
+Example of the file is as follows.
+1 52066 rs28402963 T C 10 01 01 00 01 00 00 00 10 00 00
+1 695745 . G A 10 00 00 00 00 00 00 10 00 00 00
+1 766409 rs12124819 A G 01 01 00 00 00 10 01 11 11 00 11
+1 801628 . C T 01 00 01 00 00 00 00 00 00 00 00
+1 805678 . A T 01 -- -- -- -- -- -- -- -- -- --
+1 805716 . A G 01 -- -- -- -- -- -- -- -- -- --
+1 806222 . G A 01 00 00 10 10 00 11 01 00 00 10
+In our paper, we generated this file from CEU genotypes, which were downloaded from 1000 genomes project (ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/release/2010_07/trio/snps/CEU.trio.201
+0_03.genotypes.vcf.gz and ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/release/2010_07/low_coverage/snps/CEU.low_coverage.2010_07.genotypes.vcf.gz).
+
+Fragment_file:
+This contains SNP fragments.
+Please see MixSIH page for detailed explanation.
+
+Output_file1:
+This contains the haplotypes and these probabilities of the target individual for each SNP fragment.
+Because we use sliding-window calculation, a SNP fragment appears many times.
+Format of the file is
+<SNP fragment name>
+<haplotype1_1> , <haplotype1_2> , <probability of haplotype1>
+<haplotype2_1> , <haplotype2_2> , <probability of haplotype2>
+...
+Example of the file is as follows.
+
+frag1
+001 , 110 , 0.100
+000 , 111 , 0.899
+frag2
+0001 , 1110 , 1.000
+frag3
+00000 , 11111 , 1.000
+frag3
+00000 , 11111 , 1.000
+frag3
+00001 , 11110 , 0.670
+00011 , 11100 , 0.330
+
+PHASE_file1:
+This is a temporal file to create input file for PHASE.
+
+PHASE_file2:
+This is a prefix of the output files of PHASE.
+
+N:
+N is the number of individual genotypes.
+
+W:
+W is the sliding-window width.
+We use W=5 for default setting.
+
+
+In the second step, CSP for each SNP fragment are calculated using the results of CSP1.rb.
+
+Usage:
+	ruby CSP2.rb <Output_file1> <Fragment_file> <Output_file2> <W>
+Example of running CSP2:
+	ruby CSP2.rb out/csp1.txt example/fragment.txt out/csp2.txt 5
+
+
+Output_file1:
+This is the output file of CSP1.rb.
+
+Output_file2:
+This contains the CSP values for each SNP fragment.
+Format of the file is
+<SNP fragment name> <CSP>
+
+
+[1] Stephens, Matthew, Nicholas J. Smith, and Peter Donnelly. "A new statistical method for haplotype reconstruction from population data." The American Journal of Human Genetics 68.4 (2001): 978-
+989.
+[2] Stephens, Matthew, and Peter Donnelly. "A comparison of bayesian methods for haplotype reconstruction from population genotype data." The American Journal of Human Genetics 73.5 (2003): 1162-1
+169.
+
+

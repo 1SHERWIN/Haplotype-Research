@@ -1,0 +1,71 @@
+############################################################################################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Software/ParticleHap
+# Website for manual: https://sites.google.com/site/asynoeun/particlehap
+############################################################################################################
+# 5.20.2019
+# Download ParticleHap & testdata.txt 
+# A sample dataset ('testdata.txt') from NA12878 (chromosome22) can be downloaded.
+# Website to download ParticleHap & testdata.txt: https://sites.google.com/site/asynoeun/particlehap
+
+[abj15@login1 ParticleHap]$ gcc -std=c99 -g3 -c -o ParticleHap.o ParticleHap.c
+ParticleHap.c: In function 'DataRead':
+ParticleHap.c:694: warning: assignment makes integer from pointer without a cast
+ParticleHap.c:718: warning: assignment makes integer from pointer without a cast
+ParticleHap.c:743: warning: assignment makes integer from pointer without a cast
+[abj15@login1 ParticleHap]$ gcc -o ParticleHap ParticleHap.o
+[abj15@login1 ParticleHap]$ ls
+ParticleHap  ParticleHap.c  ParticleHap.o  testdata.txt
+
+#################################################################################################################
+# To Run: ./ParticleHap -i inputfile > outputfile
+
+[abj15@login1 ParticleHap]$ ./ParticleHap -i testdata.txt > testdata.out
+[abj15@login1 ParticleHap]$ ls
+ParticleHap  ParticleHap.c  ParticleHap.o  testdata.out  testdata.txt
+
+[abj15@login1 ParticleHap]$ wc -l testdata.*
+  14669 testdata.out
+  39462 testdata.txt
+  54131 total
+
+################################################################################################################# 
+# Input file format
+
+[abj15@login1 ParticleHap]$ head testdata.txt
+1 SRR000948.147589 9 CA
+1 SRR000965.449454.1 9 TG
+1 SRR000969.96862.1 9 CA
+1 SRR000979.511323.1 9 TG
+1 SRR001105.408177.1 9 CA
+1 SRR002639.141348 9 TG
+1 SRR002661.396781 9 TG
+1 SRR003162.221308 9 CA
+1 SRR003164.970623 9 CA
+1 SRR003175.1210043 9 CA
+
+# The input file format is as follows:
+# <Number of contiguous segments> <Read identifier> <Position of first SNP segment> <Continuous bases in read> 
+# <Position of next SNP segment> <Continuous bases in read> …
+
+# Note that ParticleHap accepts the bases with ‘A,C,G,T'.
+
+#######################################################################################################################
+# The output file contains phased haplotypes for each haplotype block and the format is as follows:
+#
+# <Block number> <the number of reads covering the block> <the number of SNPs phased> <the MEC score of the block>
+# <SNP position> <first haplotype> <second haplotype>
+
+[abj15@login1 ParticleHap]$ head testdata.out
+
+BLOCK:1 nReads:16 nPhased:2 MEC:0
+9 C T
+10 A G
+BLOCK:2 nReads:3 nPhased:2 MEC:0
+14 A T
+15 C A
+BLOCK:4 nReads:11 nPhased:2 MEC:0
+87 C G
+88 A G
+
+########################################################################################################################

@@ -1,0 +1,105 @@
+###############################
+# Created by: Allison Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Run/HapCUT2/mkdir 8.13.2019.10mil_NA12891_chr10_fastqdump
+# HapCUT2 run on NA12891(father) 10 million
+# reads chr10 fastq-dump data
+# directory of data: /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.fastq_dump_Alignment
+################################ 
+
+cp /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.fastq_dump_Alignment/10mil_SRR7706465_chr10.bwa.bam.sorted .
+cp /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.fastq_dump_Alignment/10mil_SRR7706465_chr10.vcf . 
+
+###########################
+# Running 1st step of HapCUT2
+###########################
+
+/home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 10mil_SRR7706465_chr10.bwa.bam.sorted --VCF 10mil_SRR7706465_chr10.vcf --out 10mil_SRR7706465_chr10_frag.file
+
+wc -l *
+  286604 10mil_SRR7706465_chr10.bwa.bam.sorted
+    1132 10mil_SRR7706465_chr10_frag.file
+   41543 10mil_SRR7706465_chr10.vcf
+  329279 total
+
+head 10mil_SRR7706465_chr10_frag.file
+1 SRR7706465.359731975 13570 11 ::
+2 SRR7706465.361556674 13724 000 13728 10 :::::
+1 SRR7706465.356819214_MP 40910 01 KK
+1 SRR7706465.359882133 40908 01 KK
+1 SRR7706465.354709148 40908 10 KK
+1 SRR7706465.361873817_MP 40741 00 KK
+1 SRR7706465.360458696_MP 40679 00 KF
+1 SRR7706465.354728143_MP 40679 11 KK
+1 SRR7706465.355883829_MP 40597 111 KKK
+1 SRR7706465.355193632_MP 40597 000 KKK
+
+#############################
+# second step to run HapCUT2
+#############################
+
+
+/home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 10mil_SRR7706465_chr10_frag.file --vcf 10mil_SRR7706465_chr10.vcf --output 10mil_SRR7706465_chr10.haplotype.file
+
+wc -l *
+  286604 10mil_SRR7706465_chr10.bwa.bam.sorted
+    1132 10mil_SRR7706465_chr10_frag.file
+    2420 10mil_SRR7706465_chr10.haplotype.file
+   41543 10mil_SRR7706465_chr10.vcf
+  331699 total
+
+more 10mil_SRR7706465_chr10.haplotype.file
+BLOCK: offset: 25 len: 2 phased: 2 SPAN: 1 fragments 2
+25      0       1       chr10   145996  A       G       0/1:36,0,21     0       .       64.65
+26      0       1       chr10   145997  A       G       0/1:36,0,26     0       .       64.65
+********
+BLOCK: offset: 62 len: 2 phased: 2 SPAN: 8 fragments 2
+62      0       1       chr10   279186  C       T       0/1:31,0,36     0       .       60.84
+63      0       1       chr10   279194  C       T       0/1:31,0,21     0       .       60.84
+********
+BLOCK: offset: 100 len: 2 phased: 2 SPAN: 85 fragments 2
+100     0       1       chr10   394162  C       T       0/1:31,0,31     0       .       71.64
+101     0       1       chr10   394247  G       A       0/1:51,0,64     0       .       71.64
+********
+BLOCK: offset: 102 len: 3 phased: 2 SPAN: 195 fragments 1
+102     0       1       chr10   405760  G       A       0/1:33,0,56     0       .       38.99
+104     0       1       chr10   405955  C       A       0/1:36,0,36     0       .       38.99
+********
+BLOCK: offset: 206 len: 2 phased: 2 SPAN: 60 fragments 2
+206     0       1       chr10   773745  G       C       0/1:75,0,20     0       .       64.65
+207     0       1       chr10   773805  C       T       0/1:44,0,23     0       .       64.65
+********
+BLOCK: offset: 210 len: 2 phased: 2 SPAN: 33 fragments 1
+210     1       0       chr10   783812  C       T       0/1:32,3,0      0       .       31.59
+211     1       0       chr10   783845  G       C       0/1:36,0,31     0       .       31.59
+********
+BLOCK: offset: 212 len: 2 phased: 2 SPAN: 23 fragments 3
+212     0       1       chr10   786579  A       G       0/1:44,0,13     0       .       71.64
+213     1       0       chr10   786602  A       G       0/1:44,0,41     0       .       71.64
+********
+BLOCK: offset: 218 len: 2 phased: 2 SPAN: 1 fragments 3
+218     0       1       chr10   802118  A       G       0/1:83,0,20     0       .       100.00
+219     0       1       chr10   802119  A       T       0/1:80,0,32     0       .       100.00
+********
+BLOCK: offset: 275 len: 2 phased: 2 SPAN: 57 fragments 3
+275     0       1       chr10   966375  G       A       0/1:68,0,25     0       .       100.00
+276     0       1       chr10   966432  G       A       0/1:64,0,33     0       .       100.00
+********
+BLOCK: offset: 302 len: 2 phased: 2 SPAN: 169 fragments 1
+302     1       0       chr10   1005311 A       T       0/1:36,0,23     0       .       38.99
+303     0       1       chr10   1005480 C       T       0/1:33,0,56     0       .       38.99
+********
+BLOCK: offset: 349 len: 2 phased: 2 SPAN: 12 fragments 3
+349     1       0       chr10   1126899 C       A       0/1:60,0,51     0       .       100.00
+350     1       0       chr10   1126911 T       C       0/1:68,0,33     0       .       100.00
+********
+BLOCK: offset: 439 len: 2 phased: 2 SPAN: 16 fragments 2
+439     1       0       chr10   1333894 C       T       0/1:31,0,36     0       .       100.00
+440     1       0       chr10   1333910 C       A       0/1:36,0,36     0       .       100.00
+********
+BLOCK: offset: 442 len: 2 phased: 2 SPAN: 8 fragments 2
+442     1       0       chr10   1342234 A       C       0/1:36,0,36     0       .       100.00
+443     0       1       chr10   1342242 C       T       0/1:36,0,36     0       .       100.00
+********
+
+#########################
+#########################

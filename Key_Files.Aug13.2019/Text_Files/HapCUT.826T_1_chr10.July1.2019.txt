@@ -1,0 +1,110 @@
+#############################################
+# Created by: Allison Bertie Johnson
+# Working Directory: 
+# MAnnual: https://github.com/vibansal/hapcut
+# HapCUT: Running on chr10 of dataset 826T_1
+#############################################
+# Copy needed .bam & .vcf files to working directory
+
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.bwa.bam.sorted .
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.vcf .
+
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+  14089 total
+
+#############################################
+# Run first step of HapCUT 
+
+/home/abj15/Research.Project/Software/HapCUT/hapcut-master/./extractHAIRS --VCF 826T_1_sequence_chr10.vcf --826T_1_sequence_chr10.bwa.bam.sorted --maxIS 600 > 826T_chr10_fragment_matrix.file
+
+[abj15@login1 7.1.2019]$ /home/abj15/Research.Project/Software/HapCUT/hapcut-master/./extractHAIRS --VCF 826T_1_sequence_chr10.vcf --bam 826T_1_sequence_chr10.bwa.bam.sorted --maxIS 600 > 826T_chr10_fragment_matrix.file
+
+ extracting haplotype informative reads from bamfiles 826T_1_sequence_chr10.bwa.bam.sorted minQV 13 minMQ 20 maxIS 600
+
+VCF file 826T_1_sequence_chr10.vcf has 380 variants
+vcffile 826T_1_sequence_chr10.vcf chromosomes 1 hetvariants 71 380
+reading sorted bamfile 826T_1_sequence_chr10.bwa.bam.sorted
+
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+     10 826T_chr10_fragment_matrix.file
+  14099 total
+
+[abj15@login1 7.1.2019]$ more 826T_chr10_fragment_matrix.file
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10 @F
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10 FF
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01 >F
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01 EF
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10 EF
+1 ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC 306 10 <F
+
+#########################
+# Second step of HapCUT
+#########################
+
+/home/abj15/Research.Project/Software/HapCUT/hapcut-master/./HAPCUT --fragments 826T_chr10_fragment_matrix.file --VCF 826T_1_sequence_chr10.vcf --output 826T_chr10_output_haplotype.file
+
+[abj15@login1 7.1.2019]$ /home/abj15/Research.Project/Software/HapCUT/hapcut-master/./HAPCUT --fragments 826T_chr10_fragment_matrix.file --VCF 826T_1_sequence_chr10.vcf --output 826T_chr10_output_haplotype.file
+
+fragment file: 826T_chr10_fragment_matrix.file
+variantfile (VCF format):826T_1_sequence_chr10.vcf
+haplotypes will be output to file: 826T_chr10_output_haplotype.file
+iterations of maxcut algorithm: 100
+QVoffset: 33
+
+calling MAXCUT based haplotype assembly algorithm
+read 380 variants from 826T_1_sequence_chr10.vcf file
+processed fragment file and variant file: fragments 10 variants 380
+0.001920 MB memory needs to be allocated for graph edges
+
+no of non-trivial connected components 1 max-Degree 10 connected variants 2 coverage-per-variant 10.000000
+
+no of non-trivial connected components 1 max-Degree 10 connected variants 2 coverage-per-variant 10.000000
+fragments 10 snps 380 component(blocks) 1
+comp 0 first 305 last 306 phased 2 fragments 10
+starting from a completely random solution SOLUTION
+iter 0 current haplotype MEC 9.994219 calls 20 LL -31.962727 Mon 2019-07-01 06:37:09 CDT
+iter 0 current haplotype MEC 9.994219 calls 20 LL -31.962727 Mon 2019-07-01 06:37:09 CDT
+
+ component 0 length 2 phased 2 305...306
+iter 1 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+iter 1 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+iter 2 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+.
+.
+.
+iter 98 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+iter 98 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+iter 99 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+iter 99 current haplotype MEC 0.000000 calls 20 LL -0.003378 Mon 2019-07-01 06:37:09 CDT
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+     10 826T_chr10_fragment_matrix.file
+      4 826T_chr10_hapcut.log
+      3 826T_chr10_output_haplotype.file
+  14106 total
+#################################
+# Haplotype block review 
+#################################
+
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+     10 826T_chr10_fragment_matrix.file
+      3 826T_chr10_output_haplotype.file
+wc: trash: Is a directory
+      0 trash
+  14102 total
+
+[abj15@login1 7.1.2019]$ more 826T_chr10_output_haplotype.file
+BLOCK: offset: 306 len: 2 phased: 2 SPAN: 46 MECscore 0.00 fragments 10
+306     1       0       chr10   113089594       C       T       0/1:144,0,106   4,6:-20.1,-0.0,-13.9:-13.9:0.0
+307     0       1       chr10   113089640       C       T       0/1:129,0,165   6,4:-14.8,-0.0,-22.2:-14.8:0.0

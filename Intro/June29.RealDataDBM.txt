@@ -1,0 +1,358 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Preparing Real Data
+#################################################################################
+
+
+# Alligned reads with BWA
+
+# fastq reads
+/group/hon/hon3398o/0.course.files/Data/seq.data/DNAseq
+826T_1_sequence.txt  827T_1_sequence.txt  832T_1_sequence.txt 
+cp 826T_1_sequence.txt 827T_1_sequence.txt 832T_1_sequence.txt /home/s_m774/project/data/
+
+# Reference genome
+/group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa
+
+
+
+
+
+
+
+# Step 1: aln is allign 
+# -I is Illumina 1.3+
+# -t is threads
+
+# hg38.fa only worked from inside Dr. Sun's directory
+time /home/s_m774/software/bwa aln -I /home/s_m774/project/data/hg38.fa /home/s_m774/project/data/826T_1_sequence.txt > 826.sai
+
+# 826
+time /home/s_m774/software/bwa aln -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa /home/s_m774/project/data/826T_1_sequence.txt > 826.sai
+
+real    3m14.573s
+user    3m12.166s
+sys     0m2.168s
+
+# 827
+/home/s_m774/software/bwa aln -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa /home/s_m774/project/data/827T_1_sequence.txt > 827.sai
+
+# 832
+/home/s_m774/software/bwa aln -t 4 -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa /home/s_m774/project/data/832T_1_sequence.txt > 832.sai
+
+
+
+# Step 2: samse is to convert to sam
+# 826
+time /home/s_m774/software/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826.sai /home/s_m774/project/data/826T_1_sequence.txt > 826.sam
+
+# 827
+/home/s_m774/software/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 827.sai /home/s_m774/project/data/827T_1_sequence.txt > 827.sam
+
+# 832
+/home/s_m774/software/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 832.sai /home/s_m774/project/data/832T_1_sequence.txt > 832.sam
+
+wc -l *
+     59679 826.sai
+   1751864 826.sam
+   7005632 826T_1_sequence.txt
+     53846 827.sai
+   1553338 827.sam
+   6211528 827T_1_sequence.txt
+     96894 832.sai
+   1573320 832.sam
+  11337320 832T_1_sequence.txt
+
+
+
+
+
+
+
+
+# Found SNPs with samtools 1.7
+
+/home/s_m774/project/data/samtools
+
+
+
+# Step 1: view the reads in bam format
+# -b bam output
+# -o output file
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b /home/s_m774/project/data/samtools/826.sam -o 826.unsorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b /home/s_m774/project/data/samtools/827.sam -o 827.unsorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b /home/s_m774/project/data/samtools/832.sam -o 832.unsorted.bam
+
+# Step 2: sort the bam file
+# -o output file
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826.unsorted.bam -o 826.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 827.unsorted.bam -o 827.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 832.unsorted.bam -o 832.bam
+
+wc -l *.bam
+   332310 826.bam
+   566083 826.unsorted.bam
+   292437 827.bam
+   509986 827.unsorted.bam
+   536676 832.bam
+   920166 832.unsorted.bam
+   
+   
+# Step 3: faidx to build the fasta index 
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools faidx hg38.fa
+
+# Step 4: mpileup to count allels
+# -t AD Allele Depth
+# -g Genotype to BCF output
+# -f FASTA format index
+# Converted BCF to VCF with bcftools call
+# -c consensus caller
+# -v variant sites only output
+# -o output file
+
+time /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -t AD -gf hg38.fa 826.bam | /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -cv -o 826.vcf
+
+real    2m34.907s
+user    2m49.449s
+sys     0m1.794s
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -t AD -gf hg38.fa 827.bam | /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -cv -o 827.vcf
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -t AD -gf hg38.fa 832.bam | /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -cv -o 832.vcf
+
+wc -l *.vcf
+  10801 826.vcf
+  10582 827.vcf
+  17805 832.vcf
+
+
+
+
+
+
+
+# Prepared DBM Input sample.snps and sample.counts
+cp samtools/*.vcf dbm/
+
+
+
+# Step 1: Created sample.SNPs
+/home/s_m774/project/data/dbm
+
+grep -i '^chr' 826.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$8"\t"$5"\t"$3"\t"$4}' | sed s/,/\\t/g > 826.pos
+grep -i '^chr' 827.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$8"\t"$5"\t"$3"\t"$4}' | sed s/,/\\t/g > 827.pos
+grep -i '^chr' 832.vcf | cut -f 1,2,4,5,6,10 | sed s/:/\\t/g | awk '{print $1"\t"$2"\t"$8"\t"$5"\t"$3"\t"$4}' | sed s/,/\\t/g > 832.pos
+
+wc -l *.pos
+  10314 826.pos
+  10095 827.pos
+  17318 832.pos
+  37727 total
+
+# Filtered on chromosome 10 
+# Total number chromosome 10 SNP sites is 1746
+cat *.pos | grep -i '^chr10' | cut -f 1,2 | sort -k 2,2 -nu | awk '{print NR - 1"\t"$1"\t"$2"\t100"}' > sample.pos
+sed 's/^/s/' sample.pos > sample.snps
+wc -l sample.snps
+1747 sample.snps
+
+# sample.snps
+S0      chr10   292373  100
+S1      chr10   375416  100
+S2      chr10   587617  100
+S3      chr10   679803  100
+S4      chr10   679804  100
+S5      chr10   723051  100
+S6      chr10   725999  100
+S7      chr10   726001  100
+S8      chr10   789566  100
+S9      chr10   905724  100
+S10     chr10   991151  100
+
+...
+
+S1737   chr10   133333558       100
+S1738   chr10   133344451       100
+S1739   chr10   133347446       100
+S1740   chr10   133380084       100
+S1741   chr10   133431249       100
+S1742   chr10   133442100       100
+S1743   chr10   133454581       100
+S1744   chr10   133556556       100
+S1745   chr10   133564759       100
+S1746   chr10   133566184       100
+
+
+
+
+
+
+
+
+# Step 2: Created sample.counts
+
+# Used join to map 826.pos 827.pos 832.pos to the key sample.snps 
+# Used awk to populate empty records with 0
+# Used sed to convert space delimiter to tab delimiter
+# -a add unmatched rows 
+# -j join on column
+# -o output these columns
+join -a1 -j1 -o1.2,2.4,2.5 <(<sample.pos awk '{print $2":"$3"\t"$0}' | sort -k1,1) <(<826.pos awk '{print $1":"$2"\t"$0}' | sort -k1,1) | sort -n | sed 's/^/M S/' | awk '{print length($3) ? $0 : $1" "$2" 0 0" }' | sed "s/ /\t/g" > 826.counts
+join -a1 -j1 -o1.2,2.4,2.5 <(<sample.pos awk '{print $2":"$3"\t"$0}' | sort -k1,1) <(<827.pos awk '{print $1":"$2"\t"$0}' | sort -k1,1) | sort -n | sed 's/^/M S/' | awk '{print length($3) ? $0 : $1" "$2" 0 0" }' | sed "s/ /\t/g" > 827.counts
+join -a1 -j1 -o1.2,2.4,2.5 <(<sample.pos awk '{print $2":"$3"\t"$0}' | sort -k1,1) <(<832.pos awk '{print $1":"$2"\t"$0}' | sort -k1,1) | sort -n | sed 's/^/M S/' | awk '{print length($3) ? $0 : $1" "$2" 0 0" }' | sed "s/ /\t/g" > 832.counts
+
+wc -l *.counts
+   1747 826.counts
+   1747 827.counts
+   1747 832.counts
+   
+# 826.counts
+...
+
+M       S1737   0       0
+M       S1738   0       0
+M       S1739   0       1
+M       S1740   0       0
+M       S1741   0       0
+M       S1742   0       2
+M       S1743   0       0
+M       S1744   0       0
+M       S1745   0       0
+M       S1746   0       1
+
+# 827.counts
+...
+
+M       S1737   0       0
+M       S1738   0       0
+M       S1739   0       0
+M       S1740   0       1
+M       S1741   0       0
+M       S1742   0       0
+M       S1743   0       1
+M       S1744   0       0
+M       S1745   0       0
+M       S1746   0       0
+
+# 832.counts
+...
+
+M       S1737   0       1
+M       S1738   0       2
+M       S1739   0       0
+M       S1740   0       0
+M       S1741   0       2
+M       S1742   0       1
+M       S1743   0       0
+M       S1744   0       1
+M       S1745   0       1
+M       S1746   0       0
+  
+
+# Created sample.counts from 826.counts 827.counts 832.counts
+cut -f 3,4 827.counts | paste 826.counts - > 826.827.counts
+cut -f 3,4 832.counts | paste 826.827.counts - > sample.counts
+
+# Inserted DBM header 
+# -i is insert
+sed -i '1s/^/I\tSID\tI1\tI1\tI2\tI2\tI3\tI3\n/' sample.counts
+
+# sample.counts
+I       SID     I1      I1      I2      I2      I3      I3
+M       S0      0       0       0       0       0       1
+M       S1      0       0       0       0       0       1
+M       S2      0       1       0       0       0       0
+M       S3      0       0       0       1       0       0
+M       S4      0       0       0       1       0       0
+M       S5      0       0       0       0       0       1
+M       S6      0       0       0       0       0       1
+M       S7      0       0       0       0       0       1
+M       S8      0       0       0       0       1       2
+M       S9      0       0       0       0       0       1
+M       S10     0       0       0       1       0       0
+
+...
+
+M       S1737   0       0       0       0       0       1
+M       S1738   0       0       0       0       0       2
+M       S1739   0       1       0       0       0       0
+M       S1740   0       0       0       1       0       0
+M       S1741   0       0       0       0       0       2
+M       S1742   0       2       0       0       0       1
+M       S1743   0       0       0       1       0       0
+M       S1744   0       0       0       0       0       1
+M       S1745   0       0       0       0       0       1
+M       S1746   0       1       0       0       0       0
+
+#################################################################################
+# Running Real Data 
+#################################################################################
+
+/home/s_m774/project/run/dbm
+
+# Ran DBM on 826
+# Header is optional in 826.counts
+cp data/dbm/sample.snps run/dbm/826/826.snps
+cp data/dbm/826.counts run/dbm/826/
+sed -i '1s/^/I\tSID\tI1\tI1\n/' 826.counts
+/home/s_m774/software/DBM/dbm 826
+
+N=1 estimated proportion of FP sites = 0.000000
+N = 1(0), L = 1747, lambda=2.128792
+N=1, L=1747, ploidity=2, a=1.000000
+K=5
+
+...
+
+foward time = 0.000000 sec
+backward time = 0.040000 sec
+time1=1.040000 sec      time2=0.290000 sec
+summarize posteriors...done
+total time = 1sec
+
+# 826.g
+ID CHR POS I1 I1
+s0 chr10 292373 1 0
+s1 chr10 375416 1 0
+s2 chr10 587617 0 1
+s3 chr10 679803 1 0
+s4 chr10 679804 1 0
+s5 chr10 723051 0 0
+s6 chr10 725999 1 0
+s7 chr10 726001 1 0
+s8 chr10 789566 1 0
+s9 chr10 905724 0 1
+s10 chr10 991151 0 1
+
+
+
+
+# Ran DBM on 826 827 832
+cp data/dbm/sample.* run/dbm/sample/
+/home/s_m774/software/DBM/dbm sample
+
+N=3 estimated proportion of FP sites = 0.000016
+N = 3(0), L = 1747, lambda=3.263881
+N=3, L=1747, ploidity=2, a=0.510640
+K=9
+
+...
+
+foward time = 0.000000 sec
+backward time = 0.160000 sec
+time1=1.990000 sec      time2=0.720000 sec
+summarize posteriors...done
+total time = 3sec
+
+# sample.g
+ID CHR POS I1 I1 I2 I2 I3 I3
+s0 chr10 292373 1 0 1 0 1 0
+s1 chr10 375416 1 1 1 1 1 1
+s2 chr10 587617 1 1 1 0 0 1
+s3 chr10 679803 0 1 1 0 0 1
+s4 chr10 679804 0 1 1 1 1 0
+s5 chr10 723051 0 1 1 0 1 1
+s6 chr10 725999 1 1 1 1 1 1
+s7 chr10 726001 0 1 1 0 1 1
+s8 chr10 789566 0 1 1 0 1 0
+s9 chr10 905724 0 1 1 0 1 0
+s10 chr10 991151 0 1 1 1 1 1

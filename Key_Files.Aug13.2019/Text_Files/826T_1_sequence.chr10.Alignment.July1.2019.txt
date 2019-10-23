@@ -1,0 +1,763 @@
+#########################################
+# Create by: Allison Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Datasets/826T/6.29.2019
+# Alignment script for single end  826T_1_sequence.txt dataset
+#########################################
+# First we copy 826T_1_sequence.txt dataset
+# to the working directory
+# Next we run start the alignment process 
+# by running bwa with the following parameters: 
+#	aln: Find the SA coordinates of the input reads. Maximum maxSeedDiff differences are allowed in the 
+#	     first seedLen subsequence and maximum maxDiff differences are allowed in the whole sequence.
+#	-t:  Number of threads (multi-threading mode) [1] 
+#	-n:  Maximum edit distance if the value is INT, or the fraction of missing alignments given 2% uniform 
+#	     base error rate if FLOAT. In the latter case, the maximum edit distance is automatically chosen for different read lengths. [0.04]
+#	-I:  The input is in the Illumina 1.3+ read format (quality equals ASCII-64).
+##########################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.txt > 826T_1_sequence.sai
+[bwa_aln_core] calculate SA coordinate... 28.49 sec
+[bwa_aln_core] write to the disk... 0.04 sec
+[bwa_aln_core] 262144 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 27.38 sec
+[bwa_aln_core] write to the disk... 0.05 sec
+[bwa_aln_core] 524288 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 25.67 sec
+[bwa_aln_core] write to the disk... 0.04 sec
+[bwa_aln_core] 786432 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 29.03 sec
+[bwa_aln_core] write to the disk... 0.04 sec
+[bwa_aln_core] 1048576 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 28.31 sec
+[bwa_aln_core] write to the disk... 0.03 sec
+[bwa_aln_core] 1310720 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 28.63 sec
+[bwa_aln_core] write to the disk... 0.04 sec
+[bwa_aln_core] 1572864 sequences have been processed.
+[bwa_aln_core] calculate SA coordinate... 19.48 sec
+[bwa_aln_core] write to the disk... 0.03 sec
+[bwa_aln_core] 1751408 sequences have been processed.
+[main] Version: 0.7.17-r1188
+[main] CMD: /group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.txt
+[main] Real time: 43.615 sec; CPU: 205.205 sec
+
+[abj15@login2 6.29.2019]$ wc -l *
+    59151 826T_1_sequence.sai
+  7005632 826T_1_sequence.txt
+  7064783 total
+
+############################################
+# Next we take the .sai file  and 
+# convet it into one .sam file using the
+# samse	 command in bwa:
+# 	samse: Generate alignments in the SAM format given single-end reads. Repetitive hits will be randomly chosen.
+############################################
+
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.sai 826T_1_sequence.txt > 826T_1_sequence.bwa.sam
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.sai 826T_1_sequence.txt > 826T_1_sequence.bwa.sam
+[bwa_aln_core] convert to sequence coordinate... 12.66 sec
+[bwa_aln_core] refine gapped alignments... 0.74 sec
+[bwa_aln_core] print alignments... 0.60 sec
+[bwa_aln_core] 262144 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 21.20 sec
+[bwa_aln_core] refine gapped alignments... 0.70 sec
+[bwa_aln_core] print alignments... 0.54 sec
+[bwa_aln_core] 524288 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 12.80 sec
+[bwa_aln_core] refine gapped alignments... 0.51 sec
+[bwa_aln_core] print alignments... 0.37 sec
+[bwa_aln_core] 786432 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 13.64 sec
+[bwa_aln_core] refine gapped alignments... 0.54 sec
+[bwa_aln_core] print alignments... 0.36 sec
+[bwa_aln_core] 1048576 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 13.75 sec
+[bwa_aln_core] refine gapped alignments... 0.52 sec
+[bwa_aln_core] print alignments... 0.37 sec
+[bwa_aln_core] 1310720 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 15.15 sec
+[bwa_aln_core] refine gapped alignments... 0.49 sec
+[bwa_aln_core] print alignments... 0.38 sec
+[bwa_aln_core] 1572864 sequences have been processed.
+[bwa_aln_core] convert to sequence coordinate... 10.02 sec
+[bwa_aln_core] refine gapped alignments... 0.44 sec
+[bwa_aln_core] print alignments... 0.32 sec
+[bwa_aln_core] 1751408 sequences have been processed.
+[main] Version: 0.7.17-r1188
+[main] CMD: /group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa samse /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.sai 826T_1_sequence.txt
+[main] Real time: 112.199 sec; CPU: 108.210 sec
+
+[abj15@login2 6.29.2019]$ wc -l *
+  1751864 826T_1_sequence.bwa.sam
+    59151 826T_1_sequence.sai
+  7005632 826T_1_sequence.txt
+  8816647 total
+###################################################
+# Next we convert the .sam file into a .bam file via samtools
+###################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence.bwa.sam > 826T_1_sequence.bwa.bam
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+   1751864 826T_1_sequence.bwa.sam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9382624 total
+
+##################################################
+# Next we sort the newly created .bam file via samtools
+##################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence.bwa.bam -T tmpt.sorted -o 826T_1_sequence.bwa.bam.sorted
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+   1751864 826T_1_sequence.bwa.sam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9714657 total
+####################################################
+# Next we index the .bam file via samtools
+####################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_1_sequence.bwa.bam.sorted
+
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9724158 total
+
+####################################################
+# Next we extract chr10 from the .bam file
+# Website for instructions: https://carleshf87.wordpress.com/2013/10/28/extracting-reads-for-a-single-chromosome-from-bamsam-file-with-samtools/
+####################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10 > 826T_1_sequence.bwa.sam.sorted 
+ 
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9794139 total
+
+[abj15@login2 6.29.2019]$ head 826T_1_sequence.bwa.sam.sorted
+@HD     VN:1.5  SO:coordinate
+@SQ     SN:chr10        LN:133797422
+@SQ     SN:chr10_GL383545v1_alt LN:179254
+@SQ     SN:chr10_GL383546v1_alt LN:309802
+@SQ     SN:chr10_KI270824v1_alt LN:181496
+@SQ     SN:chr10_KI270825v1_alt LN:188315
+@SQ     SN:chr11        LN:135086622
+@SQ     SN:chr11_GL383547v1_alt LN:154407
+@SQ     SN:chr11_JH159136v1_alt LN:200998
+@SQ     SN:chr11_JH159137v1_alt LN:191409
+
+[abj15@login2 6.29.2019]$ tail 826T_1_sequence.bwa.sam.sorted
+ILLUMINA-BFC82F_0015_FC:7:32:8927:3576#CAGATC   0       chr10   133673914       0       70M     *       0       0       ATCGGCATTCCGGAGCCCAGGGTCCAGATTTGGCTTCAGAATGAGAGGTCACACCAGCTGAGGCAGCACC  IIIIIIIIIIIIIIGIIIIIIIHIIIIIIIIIIIIIIIIHIIIFIDIIBIIIBHHHHGIIEDIII>FFDD  XT:A:R  NM:i:2  X0:i:25 X1:i:0  XM:i:2  XO:i:0  XG:i:0  MD:Z:33T18G17
+ILLUMINA-BFC82F_0015_FC:7:106:16231:20741#CAGATC        16      chr10   133676177       0       70M     *       0       0       TCACGTCTCTCCGGCCCCCGAAAGGCTGGCCATGCCGACTGTTTGCTCCCGGAGCTCTGCGGGCACCCGG  58BDBBD2D8DDDDDDDDDDDDDDDDDDDDBDDDDDDDD>DDDDDD2DDDDDDD@DDDDDDDDD;DDBDD  XT:A:R  NM:i:0  X0:i:20 X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:64:13008:13154#CAGATC 16      chr10   133676185       0       70M     *       0       0       CTCCGGCCCCCGAAAGGCTGGCCATGCCGACTGTTTGCTCCCGGAGCTCTGCGGGCACCCGGAAACATGC  GB@G8ECC<DG@DGGGGGGGGGGBGGGGGEDGGGGDHHFHHHEGHG?GGDEGGGGG@DDGGGGG@GGEGG  XT:A:R  NM:i:0  X0:i:20 X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:63:2984:5300#CAGATC   0       chr10   133682735       0       70M     *       0       0       GGACGACGGAGGCGTGATTTTGGTTTCCGCGTGGCTTTGCCCTCTGCAAGGCGGCCTGTTGCTCACGCCT  BGGGGDG@DDGD>GG@GEGGEGBGGHHH:HDG?:GGGGGGHH@BG:BGGGE>D8EBGGGG<G3@GGG+G2  XT:A:R  NM:i:1  X0:i:12 X1:i:9  XM:i:1  XO:i:0  XG:i:0  MD:Z:67T2
+ILLUMINA-BFC82F_0015_FC:7:76:2005:18629#CAGATC  0       chr10   133743201       0       70M     *       0       0       TGGCTGGCTGTCCGGGCAGGCCCCCTGGCTGCACCTGCCGCAGTGCACAGTCCGGCTGAGGTGCAAGGGA  HHHHHH>HHHHHHHBHDEGH8GGGGG>@GGBGGGBB>DGDGG>FE8DAEGCHH@DDB<3DC1B#######  XT:A:R  NM:i:2  X0:i:21 X1:i:0  XM:i:2  XO:i:0  XG:i:0  MD:Z:22T42C4
+ILLUMINA-BFC82F_0015_FC:7:93:3787:15064#CAGATC  16      chr10   133752052       0       70M     *       0       0       GGACCCCCGCCCTCCGGGAAACCGGTCAGCGTCCGGCGCGGGCTGAGGGCTGGGCCCACAGCCGCCGCGC  DC9A10>EDDDDD>BGGGB<G,GDGGGBGEG=GGGGEG>EGGGGB:GG<GGGGGGGGDGGGGGBB@GDGG  XT:A:R  NM:i:1  X0:i:21 X1:i:0  XM:i:1  XO:i:0  XG:i:0  MD:Z:21A48
+ILLUMINA-BFC82F_0015_FC:7:56:14972:3216#CAGATC  16      chr10   133756450       0       70M     *       0       0       CTCCTGGCTGCACCTGCCGCAGTGCACAGTCCGGCTGAGGTGCACGGGAGCCCGCCGGCCTCTCTCTGCC  8282AB8?8?++@DDA<B<8<BEE@A==9,=?GDGGG4GD>GG>>GGGEA<B?B-DEEB:DGGGGGGGG:  XT:A:R  NM:i:0  X0:i:21 X1:i:2  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:79:2478:18408#CAGATC  16      chr10   133759127       0       70M     *       0       0       CTGCAGACTCCCCACGTTGCCGCACGCGGGAATCCATCGTCAGGCCATCACGCCGGGGAGGCATCTCCTC  CDHFEFDDADHEHDHHGDGBIDFGFIIHIDHGBIIH@IHDHFIHBIIIIDGGHIIGIIIIBIHIIGIIII  XT:A:R  NM:i:0  X0:i:19 X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:115:4383:17378#CAGATC 0       chr10   133763519       0       70M     *       0       0       AGTGCAAAGATATGTCACAAAGCCCCCTGTAGACAAATCCCTGAAAATTGTTACATCACCTGGGTGATCA  HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHBHHHHGHHHGHHHHHHHHHHHFHHGGGGFGEGGG  XT:A:R  NM:i:1  X0:i:5  X1:i:7  XM:i:1  XO:i:0  XG:i:0  MD:Z:41A28
+ILLUMINA-BFC82F_0015_FC:7:107:6499:6376#CAGATC  16      chr10   133786746       0       70M     *       0       0       ACCGTAAAGGCGGAGCAGCATTCTTCTCAGCACAGACGTTGGGGGTACTGCCTGCCTTTGGGATAACTCG  G@DGIIFIIGIFIIIGIIIHHGDHIIHIIIIIHIIGHFIHHIIIIGIIDIGIHHFHIIIIIIIFIIIIII  XT:A:R  NM:i:0  X0:i:4  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70 XA:Z:chr13,-114353625,70M,0;chr4,-190204189,70M,0;chr2,-242182987,70M,0;
+
+########################################
+# Next we take the new .sam.sorted file
+# containing only chr10 and convert it to a .bam file
+########################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence.bwa.sam.sorted > 826T_1_sequence_chr10.bwa.bam
+
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     13223 826T_1_sequence_chr10.bwa.bam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9807362 total
+##################################################
+Next we sort and index the chr10.bwa.bam file
+##################################################
+# Sorted bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.bwa.bam -T tmpt.sorted -o 826T_1_sequence_chr10.bwa.bam.sorted
+
+# Indexed bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_1_sequence_chr10.bwa.bam.sorted
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+   9821187 total
+[abj15@login2 6.29.2019]$ diff  826T_1_sequence_chr10.bwa.bam 826T_1_sequence_chr10.bwa.bam.sorted| wc -l
+0
+#####################################################################
+# Convert the chr10 .bam.sorted file into a .bcf file via 
+# samtools command:
+#	mpileup: Generate BCF or pileup for one or multiple BAM files. Alignment records are grouped by 
+#		 sample identifiers in @RG header lines. If sample identifiers are absent, each input file is regarded as one sample
+#	-d:	 INT, At a position, read maximally INT reads per input BAM. [250]
+#	-f:	 The faidx-indexed reference file in the FASTA format. The file can be optionally compressed by razip. [null]
+#	-g:	 Compute genotype likelihoods and output them in the binary call format (BCF).
+#	
+#####################################################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f /group/hon/hon3398o/0.course.files/Data/Reference/hg/chroms/chr10.fa 826T_1_sequence_chr10.bwa.bam.sorted > 826T_1_sequence_chr10.bcf
+[E::fai_build3] Failed to open FASTA index /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa.fai : Permission denied
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa 826T_1_sequence_chr10.bwa.bam.sorted > 826T_1_sequence_chr10.bcf
+[E::fai_build3] Failed to open FASTA index /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa.fai : Permission denied
+
+################################
+# Coppied chr10.fa to working directory and error was corrected
+################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.bwa.bam.sorted > 826T_1_sequence_chr10.bcf
+[mpileup] 1 samples in 1 input files
+[abj15@login2 6.29.2019]$ ls
+826T_1_sequence.bwa.bam             826T_1_sequence.bwa.sam         826T_1_sequence_chr10.bwa.bam             826T_1_sequence.sai  chr10.fa
+826T_1_sequence.bwa.bam.sorted      826T_1_sequence.bwa.sam.sorted  826T_1_sequence_chr10.bwa.bam.sorted      826T_1_sequence.txt  chr10.fa.fai
+826T_1_sequence.bwa.bam.sorted.bai  826T_1_sequence_chr10.bcf       826T_1_sequence_chr10.bwa.bam.sorted.bai  chr10
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+  12516678 total
+
+##############################################################
+# Next use bcftools to convert the .bcf file into a .vcf file 
+# Path for bcftools: /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools
+###############################################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.bcf -o 826T_1_sequence_chr10.vcf
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+  12517544 total
+#########################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view -H 826T_1_sequence_chr10.vcf > noheaders.826T_1_sequence_chr10.vcf
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+     69981 826T_1_sequence.bwa.sam.sorted
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+  12517924 total
+#############################################
+# Next we set a range on 826T_1_sequence_bwa.sam.sorted
+# as it contains only chr 10 
+# Referenced https://www.biostars.org/p/48719/ for instructions
+#############################################
+# Renames 826T_1_sequence.bwa.sam.sorted to reflect 
+# that it only contains chr10
+#############################
+
+mv 826T_1_sequence.bwa.sam.sorted 826T_1_sequence.chr10.bwa.sam.sorted
+
+########################################################
+########################################################
+# 1000 base range between positions 125737410-125738410
+########################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10:125737410-125738410 > 826T_1_sequence_chr10.1000range.sam
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       970 826T_1_sequence_chr10.1000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12518925 total
+
+[abj15@login2 6.29.2019]$ tail 826T_1_sequence_chr10.1000range.sam
+ILLUMINA-BFC82F_0015_FC:7:12:19056:14660#CAGATC 16      chr10   125738399       37      70M     *       0       0       GGGTCCCGAGGGGCTAGAGAAGCAGATGGCCTTGTTTTTGGACAAAAGTAAGTTGAATTGATGTGCAAAT  IIIBIGHIIIIIIIGHIIIIHIIIIIHIIIIIIIHHIIIIIIIIIIIIIIIIHIIIIIIIIIIIIIIIII  XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:25:2598:19324#CAGATC  0       chr10   125738400       37      70M     *       0       0       GGTCCCGAGGGGCTAGAGAAGCAGATGGCCTTGTTTTTGGACAAAAGTAAGTTGAATTGATGTGCAAATA  IIIIIIIIIIIIIIGHGIIIIIIHGHIHEIIGIIIIFIAGBFDGG9*4@>=?BBD;,:;;@B<B@<>EEE  XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:112:19287:7421#CAGATC 0       chr10   125738400       37      70M     *       0       0       GGTCCCGAGGGGCTAGAGAAGCAGATGGCCTTGTTTTTGGACAAAAGTAAGTTGAATTGATGTGCAAATA  GGDGGHHGHGHHGHHHHGEDGBGBGGE@GGHGBHHAHCDH:GGGGHHGHHGFGGDBHHH>HHHHHE<GGG  XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:13:6722:7254#CAGATC   16      chr10   125738400       37      70M     *       0       0       GGTCCCGAGGGGCTAGAGAAGCAGATGGCCTTGTTTTTGGACAAAAGTAAGTTGAATTGATGTGCAAATA  IGECEAFDEEGG>HDHEIIGIHBIIHIIHFHHIIIGIGIIAHHIIIIIIIIIIIIHIIIIIIIIIIIIII  XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+ILLUMINA-BFC82F_0015_FC:7:44:10729:19009#CAGATC 16      chr10   125738401       37      70M     *       0       0       GTCCCGAGGGGCTAGAGAAGCAGATGGCCTTGTTTTTGGACAAAAGTAAGTTGAATTGATGTGCAAATAA  HGFCEIIHHHHHIHHEIIIIGIHHEIIIDIGIGGEFIIIHHHIIIIFIIIIIIIIIIIIDIGIIIIHGII  XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:70
+
+
+##################################################################
+# Next we conver 826T_1_sequence_chr10.1000range.sam to a bam file
+################################################################## 
+
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence_chr10.1000range.sam > 826T_1_sequence_chr10.1000range.bam
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       970 826T_1_sequence_chr10.1000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12519009 total
+
+##################################################
+# Next we sort 826T_1_sequence_chr10.1000range.bam
+##################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.1000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.1000range.bam.sorted
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.1000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.1000range.bam.sorted
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+       970 826T_1_sequence_chr10.1000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12519124 total
+
+###################################
+# Next we index the sorted bam file 
+###################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_1_sequence_chr10.1000range.bam.sorted
+
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+         0 826T_1_sequence_chr10.1000range.bam.sorted.bai
+       970 826T_1_sequence_chr10.1000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12519124 total
+
+######################################################
+# Next we convert the sorted bam file into a bcf file 
+######################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.1000range.bam.sorted > 826T_1_sequence_chr10.1000range.bcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.1000range.bam.sorted > 826T_1_sequence_chr10.1000range.bcf
+[mpileup] 1 samples in 1 input files
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+         0 826T_1_sequence_chr10.1000range.bam.sorted.bai
+        79 826T_1_sequence_chr10.1000range.bcf
+       970 826T_1_sequence_chr10.1000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12519203 total
+
+#########################################
+# Next we convert the bcf file into a vcf 
+#########################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.1000range.bcf -o 826T_1_sequence_chr10.1000range.vcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.1000range.bcf -o 826T_1_sequence_chr10.1000range.vcf
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+         0 826T_1_sequence_chr10.1000range.bam.sorted.bai
+        79 826T_1_sequence_chr10.1000range.bcf
+       970 826T_1_sequence_chr10.1000range.sam
+       488 826T_1_sequence_chr10.1000range.vcf
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12519691 total
+
+########################################################
+########################################################
+# 2000 base range between positions 125736910-125738910
+########################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10:125736910-125738910 > 826T_1_sequence_chr10.2000range.sam
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10:125736910-125738910 > 826T_1_sequence_chr10.2000range.sam
+
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.2000range.sam
+1055 826T_1_sequence_chr10.2000range.sam
+
+##############################################
+# next we convert the sam file into a bam file 
+##############################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence_chr10.2000range.sam > 826T_1_sequence_chr10.2000range.bam
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.2000range.bam
+132 826T_1_sequence_chr10.2000range.bam
+
+############################
+# Next we sort the bam file 
+############################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.2000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.2000range.bam.sorted
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.2000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.2000range.bam.sorted
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.2000range.bam.sorted
+132 826T_1_sequence_chr10.2000range.bam.sorted
+
+######################################
+# index sorted bam file
+######################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_1_sequence_chr10.2000range.bam.sorted
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+         0 826T_1_sequence_chr10.1000range.bam.sorted.bai
+        79 826T_1_sequence_chr10.1000range.bcf
+       970 826T_1_sequence_chr10.1000range.sam
+       488 826T_1_sequence_chr10.1000range.vcf
+       132 826T_1_sequence_chr10.2000range.bam
+       132 826T_1_sequence_chr10.2000range.bam.sorted
+         0 826T_1_sequence_chr10.2000range.bam.sorted.bai
+      1055 826T_1_sequence_chr10.2000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12521010 total
+
+##################################
+# convert sorted bam into bcf 
+##################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.2000range.bam.sorted > 826T_1_sequence_chr10.2000range.bcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.2000range.bam.sorted > 826T_1_sequence_chr10.2000range.bcf
+[mpileup] 1 samples in 1 input files
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.2000range.bcf
+110 826T_1_sequence_chr10.2000range.bcf
+
+####################################
+# Convert bcf to vcf 
+####################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.2000range.bcf -o 826T_1_sequence_chr10.2000range.vcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.2000range.bcf -o 826T_1_sequence_chr10.2000range.vcf
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.2000range.vcf
+488 826T_1_sequence_chr10.2000range.vcf
+
+######################################
+# comparing 826T_1_sequence_chr10.1000range.vcf  826T_1_sequence_chr10.2000range.vcf
+# Currently uncertain of how similar these files should be
+######################################
+
+[abj15@login2 6.29.2019]$ diff 826T_1_sequence_chr10.1000range.vcf  826T_1_sequence_chr10.2000range.vcf | wc -l
+10
+
+[abj15@login2 6.29.2019]$ diff 826T_1_sequence_chr10.1000range.vcf  826T_1_sequence_chr10.2000range.vcf
+4c4
+< ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.1000range.bam.sorted
+---
+> ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.2000range.bam.sorted
+485,486c485,486
+< ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.1000range.vcf 826T_1_sequence_chr10.1000range.bcf; Date=Mon Jul  1 00:53:24 2019
+< #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.1000range.bam.sorted
+---
+> ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.2000range.vcf 826T_1_sequence_chr10.2000range.bcf; Date=Mon Jul  1 01:14:55 2019
+> #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.2000range.bam.sorted
+
+########################################################
+########################################################
+# 2000 base range between positions 125735910-125739910
+########################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10:125735910-125739910 > 826T_1_sequence_chr10.4000range.sam
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 826T_1_sequence.bwa.bam.sorted chr10:125735910-125739910 > 826T_1_sequence_chr10.4000range.sam
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.4000range.sam
+1168 826T_1_sequence_chr10.4000range.sam
+
+#####################################################
+# Next we conver the sam file into a bam file
+#####################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence_chr10.4000range.sam> 826T_1_sequence_chr10.4000range.bam 
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T_1_sequence_chr10.4000range.sam> 826T_1_sequence_chr10.4000range.bam
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.4000range.bam
+183 826T_1_sequence_chr10.4000range.bam
+
+##############################
+# Next we sort the bam file
+##############################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.4000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.4000range.bam.sorted
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_1_sequence_chr10.4000range.bam -T tmpt.sorted -o 826T_1_sequence_chr10.4000range.bam.sorted
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.4000range.bam.sorted
+183 826T_1_sequence_chr10.4000range.bam.sorted
+
+###################################
+# next we index the sorted bam file 
+###################################
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_1_sequence_chr10.4000range.bam.sorted
+[abj15@login2 6.29.2019]$ wc -l *
+    565977 826T_1_sequence.bwa.bam
+    332033 826T_1_sequence.bwa.bam.sorted
+      9501 826T_1_sequence.bwa.bam.sorted.bai
+   1751864 826T_1_sequence.bwa.sam
+       115 826T_1_sequence_chr10.1000range.bam
+       115 826T_1_sequence_chr10.1000range.bam.sorted
+         0 826T_1_sequence_chr10.1000range.bam.sorted.bai
+        79 826T_1_sequence_chr10.1000range.bcf
+       970 826T_1_sequence_chr10.1000range.sam
+       488 826T_1_sequence_chr10.1000range.vcf
+       132 826T_1_sequence_chr10.2000range.bam
+       132 826T_1_sequence_chr10.2000range.bam.sorted
+         0 826T_1_sequence_chr10.2000range.bam.sorted.bai
+       110 826T_1_sequence_chr10.2000range.bcf
+      1055 826T_1_sequence_chr10.2000range.sam
+       488 826T_1_sequence_chr10.2000range.vcf
+       183 826T_1_sequence_chr10.4000range.bam
+       183 826T_1_sequence_chr10.4000range.bam.sorted
+         0 826T_1_sequence_chr10.4000range.bam.sorted.bai
+      1168 826T_1_sequence_chr10.4000range.sam
+     19540 826T_1_sequence_chr10.bcf
+     13223 826T_1_sequence_chr10.bwa.bam
+     13223 826T_1_sequence_chr10.bwa.bam.sorted
+       602 826T_1_sequence_chr10.bwa.bam.sorted.bai
+     69981 826T_1_sequence.chr10.bwa.sam.sorted
+       866 826T_1_sequence_chr10.vcf
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+         0 chr10
+   2675950 chr10.fa
+         1 chr10.fa.fai
+       380 noheaders.826T_1_sequence_chr10.vcf
+wc: trash: Is a directory
+         0 trash
+  12523142 total
+
+###################################################
+# Next we convert the sorted bam file to a bcf file
+###################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.4000range.bam.sorted > 826T_1_sequence_chr10.4000range.bcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.4000range.bam.sorted > 826T_1_sequence_chr10.4000range.bcf
+[mpileup] 1 samples in 1 input files
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.4000range.bcf
+143 826T_1_sequence_chr10.4000range.bcf
+
+##############################################
+# Next we convert the bcf file into a vcf 
+##############################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.4000range.bcf -o 826T_1_sequence_chr10.4000range.vcf
+
+[abj15@login2 6.29.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_1_sequence_chr10.4000range.bcf -o 826T_1_sequence_chr10.4000range.vcf
+
+[abj15@login2 6.29.2019]$ wc -l 826T_1_sequence_chr10.4000range.vcf
+488 826T_1_sequence_chr10.4000range.vcf
+
+#############################################
+# comparing the differences between 826T_1_sequence_chr10.4000range.vcf
+# & 826T_1_sequence_chr10.2000range.vcf, which was only 10 lines differnece
+# from 826T_1_sequence_chr10.1000range.vcf
+#############################################
+
+[abj15@login2 6.29.2019]$ diff 826T_1_sequence_chr10.4000range.vcf 826T_1_sequence_chr10.2000range.vcf
+4c4
+< ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.4000range.bam.sorted
+---
+> ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.2000range.bam.sorted
+485,486c485,486
+< ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.4000range.vcf 826T_1_sequence_chr10.4000range.bcf; Date=Mon Jul  1 02:46:05 2019
+< #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.4000range.bam.sorted
+---
+> ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.2000range.vcf 826T_1_sequence_chr10.2000range.bcf; Date=Mon Jul  1 02:44:54 2019
+> #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.2000range.bam.sorted
+[abj15@login2 6.29.2019]$ diff 826T_1_sequence_chr10.4000range.vcf 826T_1_sequence_chr10.1000range.vcf
+4c4
+< ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.4000range.bam.sorted
+---
+> ##samtoolsCommand=samtools mpileup -g -d 8000 -f chr10.fa 826T_1_sequence_chr10.1000range.bam.sorted
+485,486c485,486
+< ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.4000range.vcf 826T_1_sequence_chr10.4000range.bcf; Date=Mon Jul  1 02:46:05 2019
+< #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.4000range.bam.sorted
+---
+> ##bcftools_callCommand=call -c -v -o 826T_1_sequence_chr10.1000range.vcf 826T_1_sequence_chr10.1000range.bcf; Date=Mon Jul  1 00:53:24 2019
+> #CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T_1_sequence_chr10.1000range.bam.sorted
+
+wc -l 826T_1_sequence_chr10.1000range.vcf
+	488 826T_1_sequence_chr10.1000range.vcf
+wc -l 826T_1_sequence_chr10.2000range.vcf
+	488 826T_1_sequence_chr10.2000range.vcf
+wc -l 826T_1_sequence_chr10.4000range.vcf
+	488 826T_1_sequence_chr10.4000range.vcf
+
+###################
+# few diffreneces
+###################
+
+
+
+

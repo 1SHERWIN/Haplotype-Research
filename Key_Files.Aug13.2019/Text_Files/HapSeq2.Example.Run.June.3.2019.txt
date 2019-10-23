@@ -1,0 +1,230 @@
+###########################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/HapSeq2/6.1.2019
+# Mannual: https://github.com/ZhiGroup/HapSeq2/blob/master/HapSeq-Manual.pdf
+# Tutorial: http://wiki.ssg.uab.edu/display/swdev/HapSeq2+Tutorial
+###########################
+# Reinstalling and running HapSeq2
+
+[abj15@login2 HapSeq2]$ ls
+HapSeq2-master  HapSeq2-master.zip
+[abj15@login2 HapSeq2]$ cd HapSeq2-master
+[abj15@login2 HapSeq2-master]$ ls
+hapseq2.01  HapSeq2-Manual.pdf  HapSeq2_pipeline.tgz  HapSeq-Manual.pdf  HepSeq2.html  index.html  README.md
+[abj15@login2 HapSeq2-master]$ tar xzvf HapSeq2_pipeline.tgz
+HapSeq2_pipeline/
+HapSeq2_pipeline/sites.vcf
+HapSeq2_pipeline/run_bam_parser.pl
+.
+.
+HapSeq2_pipeline/BAMs/NA12775.bam.bai
+HapSeq2_pipeline/BAMs/NA12812.bam.bai
+HapSeq2_pipeline/BAMs/NA12044.bam.bai
+HapSeq2_pipeline/BAMs/NA12342.bam
+[abj15@login2 HapSeq2-master]$ ls
+hapseq2.01  HapSeq2-Manual.pdf  HapSeq2_pipeline  HapSeq2_pipeline.tgz  HapSeq-Manual.pdf  HepSeq2.html  index.html  README.md
+[abj15@login2 HapSeq2-master]$ cd HapSeq2_pipeline
+[abj15@login2 HapSeq2_pipeline]$ ls
+bam_parser  BAMs  CEU.sample.ID.txt  hapseq2  mach_to_vcf_phased.pl  Makefile  Omni.recode.vcf  run_bam_parser.pl  sites.vcf
+
+# Working Directory: /home/abj15/Research.Project/Run/HapSeq2/6.1.2019
+# Example Run, preparing input
+
+[abj15@login2 6.1.2019]$ cp /home/abj15/Research.Project/Software/HapSeq2/HapSeq2-master/HapSeq2_pipeline/* .
+[abj15@login2 6.1.2019]$ mkdir BAMs
+[abj15@login2 6.1.2019]$ cd BAMs/
+[abj15@login2 BAMs]$ cp /home/abj15/Research.Project/Software/HapSeq2/HapSeq2-master/HapSeq2_pipeline/BAMs/* .
+[abj15@login2 6.1.2019]$ ls
+bam_parser  BAMs  CEU.sample.ID.txt  hapseq2  mach_to_vcf_phased.pl  Makefile  Omni.recode.vcf  run_bam_parser.pl  sites.vcf  tmp_out
+
+
+[abj15@login2 6.1.2019]$ perl run_bam_parser.pl CEU.sample.ID.txt BAMs sites.vcf tmp_out/
+./bam_parser BAMs/NA06984.bam sites.vcf tmp_out//NA06984 1
+bam_parser started...
+loaded 813 entries; 3 of them are non-ref-non-alt
+.
+.
+.
+done writing count, jump, and read files
+./bam_parser BAMs/NA12890.bam sites.vcf tmp_out//NA12890 98
+bam_parser started...
+loaded 394 entries; 5 of them are non-ref-non-alt
+
+done writing count, jump, and read files
+[abj15@login2 6.1.2019]$ ls
+bam_parser  BAMs  CEU.sample.ID.txt  hapseq2  mach_to_vcf_phased.pl  Makefile  Omni.recode.vcf  run_bam_parser.pl  sites.vcf  tmp_out
+
+[abj15@login2 6.1.2019]$ cd tmp_out/
+[abj15@login2 tmp_out]$ ls
+NA06984.count.txt  NA10851.count.txt  NA11930.count.txt  NA12045.count.txt  NA12286.count.txt  NA12716.count.txt  NA12813.count.txt
+NA06984.jump1.txt  NA10851.jump1.txt  NA11930.jump1.txt  NA12045.jump1.txt  NA12286.jump1.txt  NA12716.jump1.txt  NA12813.jump1.txt
+NA06984.jump2.txt  NA10851.jump2.txt  NA11930.jump2.txt  NA12045.jump2.txt  NA12286.jump2.txt  NA12716.jump2.txt  NA12813.jump2.txt
+
+[abj15@login2 6.1.2019]$ cat tmp_out/*.count.txt > count.txt
+[abj15@login2 6.1.2019]$ cat tmp_out/*.jump1.txt > jump1.txt
+[abj15@login2 6.1.2019]$ cat tmp_out/*.jump2.txt > jump2.txt
+[abj15@login2 6.1.2019]$ cat tmp_out/*.read.txt > read.txt
+[abj15@login2 6.1.2019]$ cat sites.vcf |grep -v '#'| cut -f 2,4,5 > sites.txt
+[abj15@login2 6.1.2019]$ ls
+bam_parser         hapseq2                Makefile           sites.txt
+BAMs               jump1.txt              Omni.recode.vcf    sites.vcf
+CEU.sample.ID.txt  jump2.txt              read.txt           tmp_out
+count.txt          mach_to_vcf_phased.pl  run_bam_parser.pl
+[abj15@login2 6.1.2019]$ wc -l *
+   6484 bam_parser
+wc: BAMs: Is a directory
+      0 BAMs
+     98 CEU.sample.ID.txt
+     98 count.txt
+    995 hapseq2
+   5396 jump1.txt
+   5240 jump2.txt
+     83 mach_to_vcf_phased.pl
+      7 Makefile
+     12 Omni.recode.vcf
+  20118 read.txt
+     30 run_bam_parser.pl
+    100 sites.txt
+    100 sites.vcf
+wc: tmp_out: Is a directory
+      0 tmp_out
+  38761 total
+
+#
+# Running HapSeq2 now that the input files are constructed
+#
+[abj15@login2 6.1.2019]$ ./hapseq2 --readCounts count.txt --polymorphicSites sites.txt --readHap jump1.txt --seqReadFile read.txt --seed 1 --readForwOpt 1 --mcmcHap 2 -mcmcScale 05 -o res-hapseq -seqError 0.01 --phase --geno -- quality -r 20
+
+
+HapSeq: Implemented by Degui Zhi and Kui Zhang in 2011 and 2012
+HapSeq is based on Thunder, with Thanks to Goncalo Abecasis and Yun Li
+
+
+The following parameters are in effect:
+
+Available Options
+            Shotgun Sequences : --polymorphicSites [sites.txt],
+                                --readCounts [count.txt], --seqError [1.5e-03]
+               Optional Files : --crossoverMap [], --errorMap [],
+                                --physicalMap [cmcScale]
+               Markov Sampler : --seed [1], --burnin, --rounds [20]
+                   Haplotyper : --states, --errorRate [0.01], --weighted,
+                                --compact
+                   Imputation : --geno [ON], --quality [ON], --dosage, --mle
+                 Output Files : --prefix [res-hapseq], --phase [ON],
+                                --uncompressed [ON], --mldetails
+               Interim Output : --sampleInterval, --interimInterval
+        HapSeq (jumping read) : --readForwOpt [1], --readSampOpt,
+                                --readEditOpt, --readHapFile [jump1.txt]
+        HapSeq (MCMC Phasing) : --mcmcHap [2], --seqReadFile [read.txt],
+                                --mcmcScale [5], --runTimeOpt
+   HapSeq (Additional Option) : --popWeights [0.00]
+
+
+WARNING -
+Problems encountered parsing command line:
+
+Command line parameter 05 (#16) ignored
+Command line parameter -seqError (#19) ignored
+Command line parameter 0.01 (#20) ignored
+
+Loaded information on 100 polymorphic sites
+
+
+Processing input files and allocating memory for haplotyping
+               Haplotyping engine (max) ... 15.5 mb
+
+Checking sequence reads file ...  done
+
+          Memory for Jumping Reads (KZ) ... 16.3 mb
+           Memory for MCMC Phasing (KZ) ... 11.4 mb
+
+Loading sequence reads file ...  done!
+
+
+Loading jumping reads information ...  done!
+
+            Haplotyping engine (actual) ... 15.5 mb
+                      Consensus builder ... 71.3 kb
+                      Dosage Calculator ... 20.1 kb
+Memory allocated successfully
+
+Found initial haplotype set
+
+Markov Chain iteration 1 [154 mosaic crossovers]
+Markov Chain iteration 2 [122 mosaic crossovers]
+Markov Chain iteration 3 [115 mosaic crossovers]
+.
+.
+.
+Markov Chain iteration 17 [51 mosaic crossovers]
+Markov Chain iteration 18 [51 mosaic crossovers]
+Markov Chain iteration 19 [48 mosaic crossovers]
+Markov Chain iteration 20 [45 mosaic crossovers]
+
+Merged sampled haplotypes to generate consensus
+   Consensus estimated to have 43.5 errors in missing genotypes and 10.5 flips in haplotypes
+
+Wrote out file [res-hapseq] with phased chromosomes ...
+Wrote out file [res-hapseq.geno] with imputed genotypes ...
+Wrote out file [res-hapseq.qc] with quality scores...
+Wrote out file [res-hapseq.info] with marker information
+Wrote out file [res-hapseq.rec] with mosaic crossover rates ...
+Wrote out file [res-hapseq.erate] with per marker error rates ...
+
+Estimated mismatch rate in Markov model is: 0.00027
+Analysis took 51 seconds
+
+[abj15@login2 6.1.2019]$ more res-hapseq
+1->1 HAPLO1 acgaaggtggggctttcgtatgggaggcgttttgagtgaccgaaaccgccagatcgccaggaggtggatcgggggccgatagatccttttgtcactcatg
+1->1 HAPLO2 acgaaggtggggctttcgtatgggaggcgttttgagtgaccgaaaccgccagatcgccaggaggtggatcgggggccgatagatccttttgtcactcatg
+2->2 HAPLO1 acgaaggcggggcttccgtatgggaggcgtcctgagcgaccgaagccgccagatcgccaggaggtggatcgggggccgatagacccttttgtccctcatg
+2->2 HAPLO2 acgaaggtggggctttcgtatgggaggcgttttgagtgaccgaaaccgccagatcgccaggaggtggatcgggggccgatagatccttttgtcactcatg
+3->3 HAPLO1 acgaaggtggggctttcgtatgggaggcgttttgagtgaccgaaaccgccagatcgccaggaggtggatcgggggccgatagatccttttgtcactcatg
+.
+.
+
+#
+# Convert HapSeq2 results into VCF format
+#
+
+[abj15@login2 6.1.2019]$ perl mach_to_vcf_phased.pl -m res-hapseq -s sites.txt -i CEU.sample.ID.txt > res-hapseq.vcf
+[abj15@login2 6.1.2019]$ more res-hapseq.vcf
+##fileformat=VCFv4.0
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  NA06984 NA06985 NA06986 NA06989 NA06994 NA07000 NA07037 NA07048 NA07051 NA07056 NA07346 NA07347
+NA07357 NA10847 NA10851 NA11829 NA11830 NA11831 NA11832 NA11840 NA11843 NA11881 NA11892 NA11893 NA11894 NA11918 NA11919 NA11920 NA11930 NA11931 NA11932 NA11933 NA11992
+NA11993 NA11994 NA11995 NA12003 NA12004 NA12005 NA12006 NA12043 NA12044 NA12045 NA12046 NA12058 NA12144 NA12154 NA12155 NA12156 NA12234 NA12249 NA12272 NA12273 NA12275
+NA12282 NA12283 NA12286 NA12287 NA12340 NA12341 NA12342 NA12347 NA12348 NA12383 NA12399 NA12400 NA12413 NA12414 NA12489 NA12546 NA12716 NA12717 NA12718 NA12748 NA12749
+NA12750 NA12751 NA12761 NA12763 NA12775 NA12776 NA12777 NA12778 NA12812 NA12813 NA12814 NA12815 NA12827 NA12828 NA12829 NA12830 NA12842 NA12843 NA12872 NA12873 NA12874
+NA12889 NA12890
+20      6975891 .       A       G       1       .       .       GT      0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0
+20      6975897 .       C       T       1       .       .       GT      0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
+
+#########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

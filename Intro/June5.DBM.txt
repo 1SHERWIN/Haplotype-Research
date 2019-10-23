@@ -1,0 +1,61 @@
+# Created by: Sherwin Massoudian
+
+############################################
+# Installation
+############################################
+
+/home/s_m774/software/DBM
+
+[s_m774@login1 DBM]$ tar xvf dbm.tar
+ceuyri.counts
+ceuyri.fix
+ceuyri.liks
+ceuyri.ref
+ceuyri.snps
+cmd.txt
+dbm
+plot.R
+README.txt
+[s_m774@login1 DBM]$ ls
+ceuyri.counts  ceuyri.fix  ceuyri.liks  ceuyri.ref  ceuyri.snps  cmd.txt  dbm  dbm.tar  plot.R  README.txt
+
+############################################
+# Running example data 
+############################################
+
+# From README.txt 
+# <Input Files>
+# At least two files are required for running DBM: the SNP file and the Read Count file (or Likelihood file).
+# However, if you are only interested in segmenting known haplotypes, the Read Count file (or Likelihood file) may
+# be omitted,
+#
+# <Output Format>
+# The phasing result will be output to a file called [input].g, e.g., "test.g" if the input file has name "test".
+# The output format is similar to Read Count file, but with the read counts replaced by haplotype alleles. If in the SNP file
+# the actual nucleotides are provided, then the actual nucleotides will be output as haplotypes.
+# DBM also output ".pop" file, which is the fragmentation of haplotypes (for phasing) or population origins (for admixture mapping).
+
+# From cmd.txt
+#for phasing and genotyping, call
+./dbm ceuyri
+#to use reference haplotypes, call
+./dbm ceuyri -fixAllele ceuyri.ref
+#to segment known (reference) haplotypes only, call
+./dbm ceuyri -N 0 -fixAllele ceuyri.ref
+#to further infer population stratification, call
+./dbm ceuyri -m 1 -fixPop ceuyri.fix
+
+/home/s_m774/software/
+[s_m774@login2 software]$ cp DBM/ceuyri.* run/DBM/
+
+/home/s_m774/software/run/DBM
+[s_m774@login2 DBM]$ /home/s_m774/software/DBM/dbm  ceuyri
+[s_m774@login2 DBM]$ ls
+ceuyri.counts  ceuyri.fix  ceuyri.g  ceuyri.liks  ceuyri.pop  ceuyri.popr  ceuyri.pops  ceuyri.ref  ceuyri.snps
+
+# output in ceuyri.g
+ID CHR POS I1 I1 I2 I2 I3 I3 I4 I4 I5 I5 I6 I6 I7 I7 I8 I8 I9 I9 I10 I10 I11 I11 I12 I12 I13 I13 I14 I14 I15 I15 I16 I16 I17 I17 I18 I18 I19 I19 I20 I20
+S0 chr1 29002141 C T C T C T C C C T C T C T C C C T C C C T C C T T C C C T T T T T T T C T T C
+S1 chr1 29005709 C C G C G G C G G C G C C C G G C C G G C C G C G G C C C G C C G C C G G C C G
+S2 chr1 29005993 A A A A A A A A G A G A A A G G A A G A A A G A G G A A G G A A G A A G G A A G
+S3 chr1 29007134 C C C C C C C C C C C C C C C C C C G C C C C C C C C C C C C C C C C C C C C C

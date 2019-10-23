@@ -1,0 +1,185 @@
+#####################################
+# Created by: Allsion Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/HapCompass/7.7.2019
+# Mannual: https://www.brown.edu/Research/Istrail_Lab/resources/hapcompass_manual.html
+# HapCOmpass run on whole pair end 826T dataset
+#####################################
+# First we copy the required .bam & .vcf files 
+# needed to run HapCompass into the working directory
+#####################################
+
+[abj15@login1 7.7.2019]$ cp /home/abj15/Research.Project/Datasets/whole_pair_end_datasets/826T/7.6.2019/826T.bwa.bam.sorted .
+[abj15@login1 7.7.2019]$ cp /home/abj15/Research.Project/Datasets/whole_pair_end_datasets/826T/7.6.2019/826T.vcf .
+
+[abj15@login1 7.7.2019]$ wc -l *
+   746201 826T.bwa.bam.sorted
+    19014 826T.vcf
+   765215 total
+
+#########################################
+# Run HapCompass 
+# Refernce Mannual for example script
+# Example usage:
+# java -Xmx1g -jar hapcompass.jar –bam example/example.bam –vcf example/62_ID0.txt -o example/out
+#########################################
+
+java -jar /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar -bam 826T.bwa.bam.sorted -vcf 826T.vcf -o 826T.haplotype.output
+
+[abj15@login1 7.7.2019]$ wc -l *
+   746201 826T.bwa.bam.sorted
+     9734 826T.haplotype.output_frags.txt
+     1710 826T.haplotype.output_MWER_solution.txt
+        0 826T.haplotype.output_phasedSolution.txt
+    14623 826T.haplotype.output_reads.sam
+    14623 826T.haplotype.output_reduced_representation.sam
+     4012 826T.haplotype.output_reduced_representation.vcf
+    19014 826T.vcf
+   809917 total
+
+#########################################
+
+[abj15@login1 7.7.2019]$ more 826T.haplotype.output_MWER_solution.txt
+BLOCK   5073543 5073662 10      11      6.0     chr10
+VAR_POS_5073543 5073543 10      1       0
+VAR_POS_5073662 5073662 11      0       1
+
+BLOCK   11169665        11169807        19      21      2.0     chr10
+VAR_POS_11169665        11169665        19      1       0
+VAR_POS_11169710        11169710        20      0       1
+VAR_POS_11169807        11169807        21      0       1
+
+BLOCK   25466803        25466872        34      35      1.0     chr10
+VAR_POS_25466803        25466803        34      0       1
+VAR_POS_25466872        25466872        35      0       1
+
+BLOCK   29602531        29602536        41      42      3.0     chr10
+VAR_POS_29602531        29602531        41      0       1
+VAR_POS_29602536        29602536        42      0       1
+
+BLOCK   29919349        29919350        43      44      2.0     chr10
+VAR_POS_29919349        29919349        43      0       1
+VAR_POS_29919350        29919350        44      0       1
+.
+.
+.
+BLOCK   27708880        27708985        54      55      45.0    chr16
+VAR_POS_27708880        27708880        54      0       1
+VAR_POS_27708985        27708985        55      0       1
+
+BLOCK   34159222        34159388        68      69      5.0     chr16
+VAR_POS_34159222        34159222        68      0       1
+VAR_POS_34159388        34159388        69      0       1
+
+BLOCK   49020053        49020060        73      74      3.0     chr16
+VAR_POS_49020053        49020053        73      1       0
+VAR_POS_49020060        49020060        74      0       1
+.
+.
+.
+BLOCK   153982018       153982019       74      75      2.0     chrX
+VAR_POS_153982018       153982018       74      0       1
+VAR_POS_153982019       153982019       75      0       1
+
+BLOCK   154929926       154930010       84      85      57.0    chrX
+VAR_POS_154929926       154929926       84      1       0
+VAR_POS_154930010       154930010       85      0       1
+
+###################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

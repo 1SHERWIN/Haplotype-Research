@@ -1,0 +1,27 @@
+#######################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/SDhaP/7.15.2019_826T_chr10.PE
+# Manual: https://sourceforge.net/projects/sdhap/files/
+# SDhap run on pair-end 826T chr10 dataset
+########################################
+
+cp /home/abj15/Research.Project/Run/PEATH/7.15.2019_826T_chr10.PE/826T_chr10.PE.fragment.file 826T_chr10_SDhaP_fragment.file
+
+head 826T_chr10_SDhaP_fragment.file
+120 805
+1 ILLUMINA-BFC82F_0015_FC:7:64:7651:1758#CAGATC 805 000 >:8
+1 ILLUMINA-BFC82F_0015_FC:7:108:5730:12500#CAGATC 805 111 >>>
+1 ILLUMINA-BFC82F_0015_FC:7:48:6479:8263#CAGATC_MP 803 11111 >>:>>
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 803 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 738 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 738 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:41:5957:2033#CAGATC_MP 738 11 D@
+
+##########################################
+# run AltHap on fragment file 
+##########################################
+
+/home/abj15/Research.Project/Software/SDhaP/software/./hap 826T_chr10_SDhaP_fragment.file 826T_chr10_SDhaP_haplotype.txt 2
+Segmentation fault

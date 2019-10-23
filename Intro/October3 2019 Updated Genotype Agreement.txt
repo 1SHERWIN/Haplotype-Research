@@ -1,0 +1,192 @@
+
+October 1, 2019 SS Tuesday check Sherwin's work on comparing the genotypes of DBM and HapSeq2
+
+/home/s_m774/data/compare/individuals
+
+paste 826dbmGenotype.txt 826hapseq2Genotype.txt |head -n 120  > /home/s_s355/Oct1.2019.dbm.hapseq/826.dbm.hapseq.txt
+
+cp /home/s_m774/data/compare/individuals/826*  /home/s_s355/Oct1.2019.dbm.hapseq/
+
+cd /home/s_s355/Oct1.2019.dbm.hapseq
+head 826dbmGenotype.txt >826dbm.10line
+head 826hapseq2Genotype.txt  >826hapseq.10line
+
+perl /home/s_m774/software/perl/getPoints.pl   826dbm.10line   826hapseq.10line
+# Strict genotype agreement: 9/10
+# Non-Strict genotype agreement: 9.5/10
+
+# For the first 10 SNV or SNPs, the correct answer should be
+# Strict: 4/10 
+# No-strict gentoype: 4 + 6*0.5 = 7/10 
+# We can get this based on simple manualy count 
+
+> dbm.hapseq.826<-read.table("826.dbm.hapseq.txt", header=F)
+> dbm.hapseq.826
+    V1 V2 V3 V4 strict  non-strict
+1    T  T  T  C   0  0.5 
+2    T  C  T  C  
+3    T  A  T  T   0  0.5 
+4    T  G  G  G   0  0.5
+5    G  A  G  A
+6    C  A  C  C   0  0.5 
+7    A  A  A  A
+8    T  G  T  T   0  0.5 
+9    G  T  G  G   0  0.5 
+10   T  C  T  C
+11   T  C  C  C   0  0.5 
+12   G  A  A  G
+13   G  C  G  C
+14   A  G  G  G   0  0.5 
+15   T  A  T  T   0  0.5 
+16   A  G  A  G
+17   C  G  G  G   0  0.5 
+18   T  A  T  T   0  0.5 
+19   A  G  G  G   0  0.5 
+20   C  T  C  C   0  0.5 
+21   G  A  G  A
+22   C  G  C  G
+23   A  A  A  C   0  0.5 
+24   C  T  C  T
+25   G  G  G  A   0  0.5 
+26   A  A  A  A
+27   G  A  G  G   0  0.5 
+28   A  G  A  A   0  0.5 
+29   C  T  C  C   0  0.5 
+30   T  C  T  C
+31   T  C  T  C
+32   T  G  T  G
+33   G  G  G  G
+34   A  A  A  A
+35   G  G  G  G
+36   T  C  T  C
+37   T  T  T  T
+38   G  G  C  C
+39   T  T  T  T
+40   G  C  G  G   0  0.5 
+41   G  G  G  G
+42   G  G  G  G
+43   C  C  C  C
+44   A  T  T  T   0 0.5 
+45   G  A  G  A 
+46   A  G  G  A
+47   C  C  T  C   0 0.5 
+48   T  T  T  T
+49   C  A  C  A
+50   A  A  A  G   0 0.5 
+51   C  T  C  C   0 0.5
+52   A  T  A  A   0 0.5
+53   T  C  C  T
+54   C  T  C  C   0 0.5
+55   A  A  A  A
+56   G  A  A  A   0 0.5
+57   C  A  C  C   0 0.5
+58   A  G  A  A   0 0.5
+59   T  T  T  T
+60   C  T  C  T
+61   G  A  A  A
+62   A  G  G  G   0 0.5
+63   C  G  C  C   0 0.5
+64   G  G  G  G
+65   C  C  C  T   0 0.5
+66   G  A  G  G   0 0.5
+67   A  A  T  A   0 0.5
+68   C  C  C  C
+69   C  T  T  T   0 0.5
+70   C  T  C  C   0 0.5
+71   A  G  G  G   0 0.5
+72   G  A  G  A
+73   C  A  C  C   0 0.5
+74   G  A  G  G   0 0.5
+75   G  C  C  C   0 0.5
+76   A  C  C  C   0 0.5
+77   G  C  G  G   0 0.5
+78   C  C  C  C
+79   C  G  C  C   0 0.5
+80   C  T  T  T   0 0.5
+81   G  A  A  A   0 0.5
+82   T  C  C  T
+83   C  T  C  C   0 0.5
+84   T  T  T  T
+85   T  G  G  G   0 0.5
+86   C  A  C  C   0 0.5
+87   T  C  C  C   0 0.5
+88   C  G  G  G   0 0.5
+89   A  G  G  G   0 0.5
+90   C  C  C  C
+91   A  G  G  A
+92   T  A  T  T   0 0.5
+93   T  C  C  C   0 0.5
+94   T  T  T  C   0 0.5
+95   G  A  A  A   0 0.5
+96   C  G  G  G   0 0.5
+97   A  C  C  C   0 0.5
+98   C  G  G  G   0 0.5
+99   G  G  G  G   
+100  G  A  G  G   0 0.5
+101  T  T  G  G   0   0   **
+102  A  A  C  A   0 0.5
+103  G  G  G  G
+104  A  G  A  A   0 0.5
+105  T  C  C  C   0 0.5
+106  G  G  G  G
+107  C  C  C  C
+108  G  G  G  A   0 0.5
+109  T  T  C  T   0 0.5
+110  G  G  A  G   0 0.5
+111  A  C  C  A  
+112  T  G  T  T   0 0.5
+113  T  T  T  C   0 0.5
+114  C  C  T  C   0 0.5
+115  T  T  T  T
+116  T  G  G  T
+117  C  C  C  C
+118  A  A  A  A
+119  A  G  G  G
+120  C  C  C  C
+
+# SS count manually on Oct 1, 2019: 
+
+Strict: 52/120   --> 104/240 
+Non-strict: 52 + 67*0.5 = 85.5 
+
+##############################################
+# Created by: Sherwin Massoudian
+# Updated genotype agreement code getPoints.pl
+##############################################
+
+# Corrected genotype agreement counting in getPoints.pl
+
+/home/s_m774/data/compare/individuals
+
+perl /home/s_m774/software/perl/getPoints.pl 826dbmGenotype.txt 826hapseq2Genotype.txt
+perl /home/s_m774/software/perl/getPoints.pl 827dbmGenotype.txt 827hapseq2Genotype.txt
+perl /home/s_m774/software/perl/getPoints.pl 832dbmGenotype.txt 832hapseq2Genotype.txt
+perl /home/s_m774/software/perl/getPoints.pl 847dbmGenotype.txt 847hapseq2Genotype.txt
+perl /home/s_m774/software/perl/getPoints.pl 850dbmGenotype.txt 850hapseq2Genotype.txt
+
+# 826
+Strict genotype agreement: 49/120
+Non-Strict genotype agreement: 83.5/120
+Job took 0 seconds
+
+# 827
+Strict genotype agreement: 48/120
+Non-Strict genotype agreement: 81.5/120
+Job took 0 seconds
+
+# 832
+Strict genotype agreement: 60/120
+Non-Strict genotype agreement: 88.5/120
+Job took 0 seconds
+
+# 847
+Strict genotype agreement: 45/120
+Non-Strict genotype agreement: 78/120
+Job took 0 seconds
+
+# 850
+Strict genotype agreement: 62/120
+Non-Strict genotype agreement: 87.5/120
+Job took 0 seconds
+
+

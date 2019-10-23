@@ -1,0 +1,88 @@
+################################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/PEATH/7.15.2019_826T_chr10.PE
+# Manual:https://github.com/jcna99/PEATH
+# PEATH run on pair end 826T chr10 dataset
+###########################
+
+module load gcc/7.2.0
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/PEATH 826T_chr10.PE.fragment.file 826T_chr10_PEATH_haplotype.txt
+29   29   120  3.09053   3   0.107628
+
+####################################
+
+more 826T_chr10_PEATH_haplotype.txt
+Block Number: 1  Block Length: 2  Phased Length: 2  Number of Reads: 6  Start position: 53  Weighted MEC: 0.00840427  MEC: 0
+53       0       1
+54       1       0
+********
+Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 2  Start position: 84  Weighted MEC: 0.00104331  MEC: 0
+84       0       1
+85       1       0
+86       1       0
+********
+Block Number: 3  Block Length: 2  Phased Length: 2  Number of Reads: 3  Start position: 177  Weighted MEC: 0.000725419  MEC: 0
+177      1       0
+178      1       0
+********
+Block Number: 4  Block Length: 2  Phased Length: 2  Number of Reads: 2  Start position: 180  Weighted MEC: 0.000633957  MEC: 0
+180      1       0
+181      1       0
+********
+Block Number: 5  Block Length: 3  Phased Length: 3  Number of Reads: 27  Start position: 251  Weighted MEC: 0.0197091  MEC: 0
+251      1       0
+252      0       1
+253      1       0
+********
+Block Number: 6  Block Length: 2  Phased Length: 2  Number of Reads: 6  Start position: 255  Weighted MEC: 0.00173618  MEC: 0
+255      1       0
+256      0       1
+********
+Block Number: 7  Block Length: 2  Phased Length: 2  Number of Reads: 2  Start position: 411  Weighted MEC: 0.00101087  MEC: 0
+411      1       0
+412      1       0
+********
+Block Number: 8  Block Length: 2  Phased Length: 2  Number of Reads: 5  Start position: 452  Weighted MEC: 0.00115119  MEC: 0
+452      1       0
+453      1       0
+********
+Block Number: 9  Block Length: 2  Phased Length: 2  Number of Reads: 7  Start position: 527  Weighted MEC: 0.00377134  MEC: 0
+527      1       0
+528      1       0
+********
+Block Number: 10  Block Length: 2  Phased Length: 2  Number of Reads: 20  Start position: 643  Weighted MEC: 1.01547  MEC: 1
+643      1       0
+644      0       1
+********
+Block Number: 11  Block Length: 2  Phased Length: 2  Number of Reads: 36  Start position: 738  Weighted MEC: 0.0203004  MEC: 0
+738      1       0
+739      1       0
+********
+Block Number: 12  Block Length: 5  Phased Length: 5  Number of Reads: 4  Start position: 803  Weighted MEC: 2.01657  MEC: 2
+803      0       1
+804      0       1
+805      1       0
+806      1       0
+807      1       0
+********
+#######################################
+#######################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

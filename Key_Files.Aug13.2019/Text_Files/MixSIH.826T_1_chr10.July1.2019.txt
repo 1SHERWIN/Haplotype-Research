@@ -1,0 +1,87 @@
+#####################################################
+# Created by: Allison Bertie Johnson
+# Working Directory: 
+# Mannual: https://sites.google.com/site/hmatsu1226/software/mixsih
+# MixSIH: Running on single-end dataset 826T_1_sequence, only chr10
+######################################################
+# Per MixSIH's mannual description the input file
+# should be able to be created from a HapCUT2 fragment file
+######################################################
+
+[abj15@login2 7.1.2019]$ cp /home/abj15/Research.Project/Run/HapCUT2/7.1.2019/826T_1_chr10_frag.file . 
+awk '{print $1,$2,$3,$4}' 826T_1_chr10_frag.file > 826T_1_chr10_MixSIH.frag.file
+
+[abj15@login2 7.1.2019]$ wc -l *
+  10 826T_1_chr10_frag.file
+  10 826T_1_chr10_MixSIH.frag.file
+  20 total
+
+[abj15@login2 7.1.2019]$ more 826T_1_chr10_MixSIH.frag.file
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC 306 10
+##############################################
+#Next the total line count must be added to 
+# 826T_1_chr10_MixSIH.frag.file via WinSCP
+##############################################
+
+
+[abj15@login2 7.1.2019]$ more 826T_1_chr10_MixSIH.frag.file
+11
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10
+1 ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC 306 10
+
+#########################################################
+# Next we run mixSIH on 826T.MixSIH.frag.space.file
+# and review the output files
+#########################################################
+
+/home/abj15/Research.Project/Software/MixSIH/MixSIH/MixSIH -a 0.05 826T_1_chr10_MixSIH.frag.file 826T_1_chr10_profile.txt 26T_1_chr10_haplotype.txt
+
+[abj15@login2 7.1.2019]$ /home/abj15/Research.Project/Software/MixSIH/MixSIH/MixSIH -a 0.05 826T_1_chr10_MixSIH.frag.file 826T_1_chr10_profile.txt 826T_1_chr10_haplotype.txt
+
+[abj15@login2 7.1.2019]$ wc -l *
+     10 826T_1_chr10_frag.file
+      4 826T_1_chr10_haplotype.txt
+     11 826T_1_chr10_MixSIH.frag.file
+      4 826T_1_chr10_profile.txt
+wc: trash: Is a directory
+      0 trash
+     29 total
+
+[abj15@login2 7.1.2019]$ more 826T_1_chr10_haplotype.txt
+BLOCK: offset: 306 len: 2 phased: 2
+306     0       1
+307     1       0
+********
+
+#######################################################
+#######################################################
+
+
+
+
+
+
+
+
+
+
+
+
+

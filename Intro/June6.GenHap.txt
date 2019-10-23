@@ -1,0 +1,130 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Paper https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-2691-y
+# Download https://github.com/andrea-tango/GenHap
+# Installation
+#################################################################################
+
+# From readme.md
+Compilation
+GenHap has been developed and tested on Ubuntu Linux but should work also on MacOS X.
+
+GeneHap depends on:
+
+Message Passing Interface (MPI),
+which is used to distribute the optimizations, exploiting a Master-Slave distributed programming paradigm. 
+For unix like operating systems, we suggest to download mpich as high performance and widely portable implementation of MPI.
+
+In order to compile GenHap, we provide a bash script (compile.sh).
+
+The resulting executable file (named GenHap) is a standalone executable program.
+
+
+/home/s_m774/software
+[s_m774@login1 software]$ unzip GenHap-master.zip
+Archive:  GenHap-master.zip
+7eca2f303cd7802dcd2a9cdd05276d4e4b7a1242
+   creating: GenHap-master/
+  inflating: GenHap-master/LICENSE
+  inflating: GenHap-master/Models.zip
+  inflating: GenHap-master/README.md
+  inflating: GenHap-master/compile.sh
+   creating: GenHap-master/src/
+  inflating: GenHap-master/src/chromosome.cpp
+  inflating: GenHap-master/src/genHap.cpp
+  inflating: GenHap-master/src/gene.cpp
+  inflating: GenHap-master/src/geneticAlgorithm.cpp
+  inflating: GenHap-master/src/geneticOperation.cpp
+   creating: GenHap-master/src/headers/
+  inflating: GenHap-master/src/headers/classes.hpp
+  inflating: GenHap-master/src/headers/libraries.hpp
+  inflating: GenHap-master/src/reader.cpp
+
+
+/home/s_m774/software/GenHap
+
+# Will need to use a LEAP module to load a newer version of GCC that is compliant with C++11
+
+module avail 
+module load gcc/7.2.0 openmpi/2.1.1
+module list
+Currently Loaded Modulefiles:
+  1) rocks-openmpi   2) gcc/7.2.0       3) openmpi/2.1.1  
+
+./compile.sh
+
+
+#################################################################################
+# Running example data 
+#################################################################################
+
+# From readme.md 
+Input parameters
+In oder to run GenHap, the following parameter must be provided:
+
+-i to specify the input file containing the reads in input (in WIF format).
+Optional parameters could be provided:
+
+-o to specify the output folder;
+-n to indicate the file name containing the estimated haplotypes;
+-g to specify the number of reads composing each sub-matrix of each sub-problem;
+-v to enable or disable the verbose modality;
+-s to save or not save the files containing the partitions and fragment matrix;
+-x to enable or disable the masking of the ambiguous positions in the output haplotypes with a X;
+-p to specify the file containing the GA settings.
+Notice that when -g=0, for each haplotype block B GenHap automatically sets -g equal to the mean coverage of B to partition the reads. 
+
+For example, GenHap can be executed with the following command:
+mpiexec -np 4 ./GenHap -i Models/Freq_100/10000SNPs_60x/PacBio/Model_0.wif -o Output/Freq_100/10000SNPs_60x/PacBio
+
+which will save the estimated haplotypes solution in files haplotypes (one file for each haplotype block) into the folder Output/Freq_100/10000SNPs_60x/PacBio. 
+In this case, GenHap exploits 4 cores to perform the required optimizations.
+
+By running GenHap without specifying any parameter, all the above parameters will be listed.
+
+
+
+/home/s_m774/software/run/GenHap
+module load gcc/7.2.0 openmpi/2.1.1
+module list
+Currently Loaded Modulefiles:
+  1) rocks-openmpi   2) gcc/7.2.0       3) openmpi/2.1.1  
+  
+# 1st run
+mpiexec -np 4 /home/s_m774/software/GenHap/GenHap2 -i /home/s_m774/software/run/GenHap/Models/Freq_100/1000SNPs_60x/PacBio/Model_0.wif 
+************************************************************************************************************************
+GenHap: Genetic Algorithm for Haplotype Assembly
+
+ * Using /home/s_m774/software/run/GenHap/Models/Freq_100/1000SNPs_60x/PacBio/Model_0.wif as input wif file
+ * Using output as output folder
+ * Using haplotypes as file name containing the estimated haplotypes
+ * Verbose modality disabled
+ * Not saving partitions and fragment matrix
+ * Not enabling traditional all-heterozygous assumption
+ * Masking ambiguous positions
+
+ * Number of reads: 300
+ * Number of SNPs:  983
+
+ * Detected 1 haplotype block
+
+ * Start 10 optimizations
+ * Using 4 cores
+************************************************************************************************************************
+Elapsed time  1.03 seconds
+************************************************************************************************************************
+
+/home/s_m774/software/run/GenHap/output
+
+# output to information.txt
+Number of reads: 300
+Number of columns: 983
+Maximum coverage: 53
+Minimum coverage: 2
+Average coverage: 30
+Number of haplotype blocks: 1
+Block (0) gamma equal to 30 for each sub-matrix
+
+# output to haplotypes0.txt
+X01100100000110100010011101000110100100101011111111010001010000100100010001010111100010110010010000011011010111101000001101010100110000110011001110101111111101100000110100101111
+

@@ -1,0 +1,643 @@
+######################################################################################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/HapCompass/6.8.2019
+# Website to download algorithm: http://www.brown.edu/Research/Istrail_Lab/hapcompass.php
+# website for manual: https://www.brown.edu/Research/Istrail_Lab/resources/hapcompass_manual.html
+######################################################################################################
+# Example Run
+
+[abj15@login2 6.8.2019]$ cd example.run/
+[abj15@login2 example.run]$ cp /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/example/* .
+[abj15@login2 example.run]$ ls
+62_ID0.vcf  example.bam  input_frags.txt
+
+[abj15@login2 example.run]$ java -jar hapcompass.jar --bam example.bam --vcf 62_ID0.vcf --output output.file
+The following arguments were passed to HapCompass
+--bam example.bam --vcf 62_ID0.vcf --output output.file
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/example.run/example.bam
+Took 0 seconds to load the VCF file.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/example.run/example.bam with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 855 alleles.
+Successfully loaded output.file_frags.txt containing 855 alleles in 377 reads.
+Took 0 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 898
+The number of bases in reads that do not match a SNP allele: 0
+The number of reads which failed due to flags: 0. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quali ty checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 0
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr1 with 62 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 1
+[abj15@login2 example.run]$ ls
+62_ID0.vcf   hapcompass.jar   output.file_frags.txt          output.file_phasedSolution.txt  output.file_reduced_representation.sam
+example.bam  input_frags.txt  output.file_MWER_solution.txt  output.file_reads.sam           output.file_reduced_representation.vcf
+
+[abj15@login2 example.run]$ wc -l *
+      64 62_ID0.vcf
+      15 example.bam
+   43464 hapcompass.jar
+     377 input_frags.txt
+     377 output.file_frags.txt
+      64 output.file_MWER_solution.txt
+       0 output.file_phasedSolution.txt
+     566 output.file_reads.sam
+     566 output.file_reduced_representation.sam
+      64 output.file_reduced_representation.vcf
+   45557 total
+
+#
+# OUTPUT_PREFIX_<ALGORITHM>_solution.txt
+# Contains a list of blocks and phasings. A new block is shown by BLOCK 
+# <start_position_of_block> <end_position> <start_snp_number> <end_snp_number> <score>
+# then a list of SNPs in the block...
+# <snp_id> <snp_position> <snp_number> <hap_0_allele> <hap_1_allele>
+
+[abj15@login2 example.run]$ more output.file_MWER_solution.txt
+BLOCK   1       62      1       62      612.0001220703125       chr1
+rs5766699       1       1       0       1
+rs4823599       2       2       0       1
+rs7292231       3       3       0       1
+rs5767537       4       4       0       1
+rs738667        5       5       0       1
+rs738668        6       6       0       1
+rs738669        7       7       0       1
+rs5767541       8       8       0       1
+rs5767542       9       9       0       1
+rs5767543       10      10      0       1
+rs738670        11      11      0       1
+rs738671        12      12      0       1
+rs4823601       13      13      0       1
+rs5767545       14      14      0       1
+rs5767546       15      15      0       1
+rs5767547       16      16      0       1
+rs6007611       17      17      0       1
+rs4823602       18      18      0       1
+rs56917047      19      19      0       1
+SNP_POS_47554968        20      20      1       0
+rs910542        21      21      0       1
+rs910543        22      22      0       1
+rs754892        23      23      0       1
+rs2337240       24      24      0       1
+rs761738        25      25      0       1
+rs761739        26      26      0       1
+rs4823471       27      27      0       1
+rs4823472       28      28      0       1
+rs9626946       29      29      0       1
+rs4823603       30      30      0       1
+rs4823473       31      31      0       1
+rs5005650       32      32      0       1
+rs5005651       33      33      0       1
+rs9626947       34      34      0       1
+rs17763276      35      35      0       1
+rs34960717      36      36      0       1
+rs9626949       37      37      0       1
+rs12169244      38      38      0       1
+rs4823605       39      39      0       1
+rs4823606       40      40      0       1
+rs5767553       41      41      0       1
+rs34154253      42      42      1       0
+rs5767554       43      43      0       1
+rs6007617       44      44      0       1
+rs9626953       45      45      0       1
+rs9626954       46      46      0       1
+rs66883383      47      47      0       1
+rs5766705       48      48      0       1
+rs5766706       49      49      0       1
+rs6008051       50      50      0       1
+rs6007618       51      51      0       1
+rs4621265       52      52      0       1
+rs2337241       53      53      0       1
+rs4823607       54      54      0       1
+rs4823608       55      55      0       1
+rs6008052       56      56      0       1
+rs9626956       57      57      0       1
+rs73170482      58      58      0       1
+rs9626957       59      59      0       1
+rs6008055       60      60      0       1
+rs5766708       61      61      0       1
+rs738672        62      62      0       1
+
+
+############################################################
+############################################################
+# 826T Dataset
+
+[abj15@login2 6.8.2019]$ ls
+826T
+[abj15@login2 6.8.2019]$ cd 826T/
+[abj15@login2 826T]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019/1mil.826T.bwa.bam.sorted .
+[abj15@login2 826T]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019/1mil.826T.vcf .
+
+[abj15@login2 826T]$ ls
+1mil.826T.bwa.bam.sorted  1mil.826T.vcf
+
+[abj15@login2 826T]$ java -jar hapcompass.jar --bam 1mil.826T.bwa.bam.sorted --vcf 1mil.826T.vcf --output out
+
+The following arguments were passed to HapCompass
+--bam 1mil.826T.bwa.bam.sorted --vcf 1mil.826T.vcf --output out
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/826T/1mil.826T.bwa.bam.sorted
+Took 0 seconds to load the VCF file.
+Processed 1000000 fragments.
+Processed 2000000 fragments.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/826T/1mil.826T.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 11084 alleles.
+Successfully loaded out_frags.txt containing 11084 alleles in 5311 reads.
+Took 14 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 70408
+The number of bases in reads that do not match a SNP allele: 1653
+The number of reads which failed due to flags: 11038. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 93485
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 115 variants.
+.
+.
+.
+Finished processing reference chrY with 1 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 15
+
+[abj15@login2 826T]$ ls
+1mil.826T.bwa.bam.sorted  hapcompass.jar           out_frags.txt          out_phasedSolution.txt  out_reduced_representation.sam
+1mil.826T.vcf             noheaders.1mil.826T.vcf  out_MWER_solution.txt  out_reads.sam           out_reduced_representation.vcf
+
+[abj15@login2 826T]$ wc -l *
+   432171 1mil.826T.bwa.bam.sorted
+    13022 1mil.826T.vcf
+    43464 hapcompass.jar
+    12536 noheaders.1mil.826T.vcf
+     5311 out_frags.txt
+     1261 out_MWER_solution.txt
+        0 out_phasedSolution.txt
+     7957 out_reads.sam
+     7957 out_reduced_representation.sam
+     2904 out_reduced_representation.vcf
+   526583 total
+
+[abj15@login2 826T]$ more out_MWER_solution.txt
+BLOCK   5073543 5073662 7       8       4.0     chr10
+VAR_POS_5073543 5073543 7       1       0
+VAR_POS_5073662 5073662 8       0       1
+
+BLOCK   29602531        29602536        30      31      2.0     chr10
+VAR_POS_29602531        29602531        30      0       1
+VAR_POS_29602536        29602536        31      0       1
+
+BLOCK   43119934        43120185        41      43      17.0    chr10
+VAR_POS_43119934        43119934        41      1       0
+VAR_POS_43120057        43120057        42      0       1
+VAR_POS_43120185        43120185        43      1       0
+
+BLOCK   49493413        49493450        51      52      5.0     chr10
+VAR_POS_49493413        49493413        51      0       1
+VAR_POS_49493450        49493450        52      0       1
+
+BLOCK   87960736        87960738        72      73      5.0     chr10
+VAR_POS_87960736        87960736        72      0       1
+VAR_POS_87960738        87960738        73      0       1
+
+BLOCK   113089594       113089640       86      87      11.0    chr10
+VAR_POS_113089594       113089594       86      1       0
+VAR_POS_113089640       113089640       87      0       1
+
+BLOCK   125737861       125738019       101     102     27.0    chr10
+VAR_POS_125737861       125737861       101     0       1
+VAR_POS_125738019       125738019       102     0       1
+
+BLOCK   132858318       132858336       114     115     3.0     chr10
+VAR_POS_132858318       132858318       114     0       1
+VAR_POS_132858336       132858336       115     0       1
+
+############################################################
+############################################################
+# 827T Dataset
+
+[abj15@login2 6.8.2019]$ mkdir 827T
+[abj15@login2 6.8.2019]$ cd 827T/
+
+[abj15@login2 827T]$ cp /home/abj15/Research.Project/Datasets/827T/6.8.2019/1mil.827T.bwa.bam.sorted .
+[abj15@login2 827T]$ cp /home/abj15/Research.Project/Datasets/827T/6.8.2019/1mil.827T.vcf .
+[abj15@login2 827T]$ cp /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar .
+[abj15@login2 827T]$ ls
+1mil.827T.bwa.bam.sorted  1mil.827T.vcf  hapcompass.jar
+
+[abj15@login2 827T]$ java -jar hapcompass.jar --bam 1mil.827T.bwa.bam.sorted --vcf 1mil.827T.vcf --output out
+
+The following arguments were passed to HapCompass
+--bam 1mil.827T.bwa.bam.sorted --vcf 1mil.827T.vcf --output out
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/827T/1mil.827T.bwa.bam.sorted
+Took 4 seconds to load the VCF file.
+Processed 1000000 fragments.
+Processed 2000000 fragments.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/827T/1mil.827T.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 12110 alleles.
+Successfully loaded out_frags.txt containing 12110 alleles in 5614 reads.
+Took 9 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 74394
+The number of bases in reads that do not match a SNP allele: 1982
+The number of reads which failed due to flags: 18577. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 78849
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 140 variants.
+Finished processing reference chr11 with 106 variants.
+Finished processing reference chr12 with 113 variants.
+Finished processing reference chr13 with 97 variants.
+Finished processing reference chr14 with 76 variants.
+Finished processing reference chr15 with 104 variants.
+Finished processing reference chr16 with 194 variants.
+Finished processing reference chr17 with 108 variants.
+Finished processing reference chr18 with 74 variants.
+Finished processing reference chr19 with 161 variants.
+Finished processing reference chr1 with 182 variants.
+Finished processing reference chr20 with 80 variants.
+Finished processing reference chr21 with 36 variants.
+Finished processing reference chr22 with 89 variants.
+Finished processing reference chr2 with 252 variants.
+Finished processing reference chr3 with 279 variants.
+Finished processing reference chr4 with 88 variants.
+Finished processing reference chr5 with 170 variants.
+Finished processing reference chr6 with 76 variants.
+Finished processing reference chr7 with 201 variants.
+Finished processing reference chr8 with 169 variants.
+Finished processing reference chr9 with 140 variants.
+Finished processing reference chrX with 82 variants.
+Finished processing reference chrY with 1 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 15
+
+[abj15@login2 827T]$ ls
+1mil.827T.bwa.bam.sorted  hapcompass.jar  out_MWER_solution.txt   out_reads.sam                   out_reduced_representation.vcf
+1mil.827T.vcf             out_frags.txt   out_phasedSolution.txt  out_reduced_representation.sam
+
+[abj15@login2 827T]$ wc -l *
+   433375 1mil.827T.bwa.bam.sorted
+    14750 1mil.827T.vcf
+    43464 hapcompass.jar
+     5614 out_frags.txt
+     1425 out_MWER_solution.txt
+        0 out_phasedSolution.txt
+     8142 out_reads.sam
+     8142 out_reduced_representation.sam
+     3020 out_reduced_representation.vcf
+   517932 total
+
+[abj15@login2 827T]$ more out_MWER_solution.txt
+BLOCK   1233504 1233561 2       3       1.0     chr10
+VAR_POS_1233504 1233504 2       0       1
+VAR_POS_1233561 1233561 3       0       1
+
+BLOCK   17791550        17791662        11      12      2.0     chr10
+VAR_POS_17791550        17791550        11      0       1
+VAR_POS_17791662        17791662        12      0       1
+
+BLOCK   30359964        30359972        23      24      1.0     chr10
+VAR_POS_30359964        30359964        23      1       0
+VAR_POS_30359972        30359972        24      0       1
+
+BLOCK   36950498        36950637        30      31      1.0     chr10
+VAR_POS_36950498        36950498        30      1       0
+VAR_POS_36950637        36950637        31      0       1
+
+BLOCK   37832062        37832069        32      35      66.0    chr10
+VAR_POS_37832062        37832062        32      0       1
+VAR_POS_37832065        37832065        33      0       1
+VAR_POS_37832068        37832068        34      0       1
+VAR_POS_37832069        37832069        35      0       1
+
+BLOCK   43111088        43111239        40      41      5.0     chr10
+VAR_POS_43111088        43111088        40      1       0
+VAR_POS_43111239        43111239        41      0       1
+
+BLOCK   43119934        43120185        45      46      2.0     chr10
+VAR_POS_43119934        43119934        45      0       1
+VAR_POS_43120185        43120185        46      0       1
+
+--More--(3%)
+
+############################################################
+############################################################
+# 832T Dataset
+
+[abj15@login2 6.8.2019]$ mkdir 832T
+[abj15@login2 6.8.2019]$ cd 832T/
+[abj15@login2 832T]$ cp /home/abj15/Research.Project/Datasets/832T/6.8.2019/1mil.832T.bwa.bam.sorted .
+[abj15@login2 832T]$ cp /home/abj15/Research.Project/Datasets/832T/6.8.2019/1mil.832T.vcf .
+[abj15@login2 832T]$ cp /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar .
+[abj15@login2 832T]$ ls
+1mil.832T.bwa.bam.sorted  1mil.832T.vcf  hapcompass.jar
+
+[abj15@login2 832T]$ java -jar hapcompass.jar --bam 1mil.832T.bwa.bam.sorted --vcf 1mil.832T.vcf --output out
+
+The following arguments were passed to HapCompass
+--bam 1mil.832T.bwa.bam.sorted --vcf 1mil.832T.vcf --output out
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/832T/1mil.832T.bwa.bam.sorted
+Took 0 seconds to load the VCF file.
+Processed 1000000 fragments.
+Processed 2000000 fragments.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/832T/1mil.832T.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 10814 alleles.
+Successfully loaded out_frags.txt containing 10814 alleles in 5089 reads.
+Took 11 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 57849
+The number of bases in reads that do not match a SNP allele: 1650
+The number of reads which failed due to flags: 13391. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 103975
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 172 variants.
+Finished processing reference chr11 with 133 variants.
+Finished processing reference chr12 with 157 variants.
+Finished processing reference chr13 with 59 variants.
+Finished processing reference chr14 with 73 variants.
+Finished processing reference chr15 with 113 variants.
+Finished processing reference chr16 with 205 variants.
+Finished processing reference chr17 with 116 variants.
+Finished processing reference chr18 with 77 variants.
+Finished processing reference chr19 with 159 variants.
+Finished processing reference chr1 with 233 variants.
+Finished processing reference chr20 with 105 variants.
+Finished processing reference chr21 with 56 variants.
+Finished processing reference chr22 with 103 variants.
+Finished processing reference chr2 with 288 variants.
+Finished processing reference chr3 with 280 variants.
+Finished processing reference chr4 with 117 variants.
+Finished processing reference chr5 with 156 variants.
+Finished processing reference chr6 with 122 variants.
+Finished processing reference chr7 with 152 variants.
+Finished processing reference chr8 with 141 variants.
+Finished processing reference chr9 with 119 variants.
+Finished processing reference chrX with 74 variants.
+Finished processing reference chrY with 3 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 12
+
+[abj15@login2 832T]$ ls
+1mil.832T.bwa.bam.sorted  hapcompass.jar  out_MWER_solution.txt   out_reads.sam                   out_reduced_representation.vcf
+1mil.832T.vcf             out_frags.txt   out_phasedSolution.txt  out_reduced_representation.sam
+[abj15@login2 832T]$ wc -l *
+   444096 1mil.832T.bwa.bam.sorted
+    15183 1mil.832T.vcf
+    43464 hapcompass.jar
+     5089 out_frags.txt
+     1333 out_MWER_solution.txt
+        0 out_phasedSolution.txt
+     7658 out_reads.sam
+     7658 out_reduced_representation.sam
+     3215 out_reduced_representation.vcf
+   527696 total
+
+[abj15@login2 832T]$ more out_MWER_solution.txt
+BLOCK   1216932 1217136 3       4       1.0     chr10
+VAR_POS_1216932 1216932 3       1       0
+VAR_POS_1217136 1217136 4       0       1
+
+BLOCK   1233561 1233656 5       6       5.0     chr10
+VAR_POS_1233561 1233561 5       0       1
+VAR_POS_1233656 1233656 6       0       1
+
+BLOCK   3011174 3011248 10      11      22.0    chr10
+VAR_POS_3011174 3011174 10      1       0
+VAR_POS_3011248 3011248 11      0       1
+
+BLOCK   7491154 7491172 16      17      1.0     chr10
+VAR_POS_7491154 7491154 16      0       1
+VAR_POS_7491172 7491172 17      0       1
+
+BLOCK   7591378 7591398 18      21      18.0    chr10
+VAR_POS_7591378 7591378 18      0       1
+VAR_POS_7591393 7591393 19      0       1
+VAR_POS_7591394 7591394 20      0       1
+VAR_POS_7591398 7591398 21      0       1
+
+--More--
+
+############################################################
+############################################################
+# 847T Dataset
+
+[abj15@login2 6.8.2019]$ mkdir 847T
+[abj15@login2 6.8.2019]$ cd 847T/
+[abj15@login2 847T]$ cp /home/abj15/Research.Project/Datasets/847T/6.8.2019/1mil.847T.bwa.bam.sorted .
+[abj15@login2 847T]$ cp /home/abj15/Research.Project/Datasets/847T/6.8.2019/1mil.847T.vcf .
+[abj15@login2 847T]$ cp /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar .
+[abj15@login2 847T]$ ls
+1mil.847T.bwa.bam.sorted  1mil.847T.vcf  hapcompass.jar
+
+[abj15@login2 847T]$ java -jar hapcompass.jar --bam 1mil.847T.bwa.bam.sorted --vcf 1mil.847T.vcf --output out
+
+The following arguments were passed to HapCompass
+--bam 1mil.847T.bwa.bam.sorted --vcf 1mil.847T.vcf --output out
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/847T/1mil.847T.bwa.bam.sorted
+Took 0 seconds to load the VCF file.
+Processed 1000000 fragments.
+Processed 2000000 fragments.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/847T/1mil.847T.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 12919 alleles.
+Successfully loaded out_frags.txt containing 12919 alleles in 6070 reads.
+Took 13 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 70514
+The number of bases in reads that do not match a SNP allele: 1864
+The number of reads which failed due to flags: 11164. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 102144
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 102 variants.
+Finished processing reference chr11 with 139 variants.
+Finished processing reference chr12 with 152 variants.
+Finished processing reference chr13 with 81 variants.
+Finished processing reference chr14 with 71 variants.
+Finished processing reference chr15 with 67 variants.
+Finished processing reference chr16 with 122 variants.
+Finished processing reference chr17 with 84 variants.
+Finished processing reference chr18 with 73 variants.
+Finished processing reference chr19 with 177 variants.
+Finished processing reference chr1 with 167 variants.
+Finished processing reference chr20 with 83 variants.
+Finished processing reference chr21 with 47 variants.
+Finished processing reference chr22 with 85 variants.
+Finished processing reference chr2 with 237 variants.
+Finished processing reference chr3 with 245 variants.
+Finished processing reference chr4 with 64 variants.
+Finished processing reference chr5 with 156 variants.
+Finished processing reference chr6 with 105 variants.
+Finished processing reference chr7 with 168 variants.
+Finished processing reference chr8 with 121 variants.
+Finished processing reference chr9 with 121 variants.
+Finished processing reference chrX with 69 variants.
+Finished processing reference chrY with 1 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 14
+
+[abj15@login2 847T]$ ls
+1mil.847T.bwa.bam.sorted  hapcompass.jar  out_MWER_solution.txt   out_reads.sam                   out_reduced_representation.vcf
+1mil.847T.vcf             out_frags.txt   out_phasedSolution.txt  out_reduced_representation.sam
+
+[abj15@login2 847T]$ wc -l *
+   428902 1mil.847T.bwa.bam.sorted
+    11583 1mil.847T.vcf
+    43464 hapcompass.jar
+     6070 out_frags.txt
+     1256 out_MWER_solution.txt
+        0 out_phasedSolution.txt
+     8588 out_reads.sam
+     8588 out_reduced_representation.sam
+     2739 out_reduced_representation.vcf
+   511190 total
+
+[abj15@login2 847T]$ more out_MWER_solution.txt
+
+BLOCK   5073715 5073891 5       6       1.0     chr10
+VAR_POS_5073715 5073715 5       1       0
+VAR_POS_5073891 5073891 6       0       1
+
+BLOCK   35607772        35608089        23      25      22.0    chr10
+VAR_POS_35607772        35607772        23      1       0
+VAR_POS_35608029        35608029        24      0       1
+VAR_POS_35608089        35608089        25      0       1
+
+BLOCK   43100299        43100520        29      32      23.0    chr10
+VAR_POS_43100299        43100299        29      0       1
+VAR_POS_43100314        43100314        30      0       1
+VAR_POS_43100333        43100333        31      0       1
+VAR_POS_43100520        43100520        32      0       1
+
+BLOCK   49472987        49473213        43      44      3.0     chr10
+VAR_POS_49472987        49472987        43      1       0
+VAR_POS_49473213        49473213        44      0       1
+
+
+--More--
+
+############################################################
+############################################################
+# 850T Dataset
+
+[abj15@login2 6.8.2019]$ mkdir 850T
+[abj15@login2 6.8.2019]$ cd 850T/
+[abj15@login2 850T]$ cp /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar .
+[abj15@login2 850T]$ cp /home/abj15/Research.Project/Datasets/850T/6.8.2019/1mil.850T.vcf .
+[abj15@login2 850T]$ cp /home/abj15/Research.Project/Datasets/850T/6.8.2019/1mil.850T.bwa.bam.sorted .
+[abj15@login2 850T]$ ls
+1mil.850T.bwa.bam.sorted  1mil.850T.vcf  hapcompass.jar
+
+[abj15@login2 850T]$ java -jar hapcompass.jar --bam 1mil.850T.bwa.bam.sorted --vcf 1mil.850T.vcf --output out
+
+The following arguments were passed to HapCompass
+--bam 1mil.850T.bwa.bam.sorted --vcf 1mil.850T.vcf --output out
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/850T/1mil.850T.bwa.bam.sorted
+Took 0 seconds to load the VCF file.
+Processed 1000000 fragments.
+Processed 2000000 fragments.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/6.8.2019/850T/1mil.850T.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 9158 alleles.
+Successfully loaded out_frags.txt containing 9158 alleles in 4304 reads.
+Took 12 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 55390
+The number of bases in reads that do not match a SNP allele: 1686
+The number of reads which failed due to flags: 22063. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 116818
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 172 variants.
+Finished processing reference chr11 with 179 variants.
+Finished processing reference chr12 with 180 variants.
+Finished processing reference chr13 with 122 variants.
+Finished processing reference chr14 with 90 variants.
+Finished processing reference chr15 with 137 variants.
+Finished processing reference chr16 with 179 variants.
+Finished processing reference chr17 with 137 variants.
+Finished processing reference chr18 with 115 variants.
+Finished processing reference chr19 with 248 variants.
+Finished processing reference chr1 with 326 variants.
+Finished processing reference chr20 with 76 variants.
+Finished processing reference chr21 with 57 variants.
+Finished processing reference chr22 with 88 variants.
+Finished processing reference chr2 with 325 variants.
+Finished processing reference chr3 with 315 variants.
+Finished processing reference chr4 with 149 variants.
+Finished processing reference chr5 with 176 variants.
+Finished processing reference chr6 with 177 variants.
+Finished processing reference chr7 with 227 variants.
+Finished processing reference chr8 with 168 variants.
+Finished processing reference chr9 with 155 variants.
+Finished processing reference chrX with 71 variants.
+Finished processing reference chrY with 20 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 13
+
+[abj15@login2 850T]$ ls
+1mil.850T.bwa.bam.sorted  hapcompass.jar  out_MWER_solution.txt   out_reads.sam                   out_reduced_representation.vcf
+1mil.850T.vcf             out_frags.txt   out_phasedSolution.txt  out_reduced_representation.sam
+
+[abj15@login2 850T]$ wc -l *
+   465970 1mil.850T.bwa.bam.sorted
+    24291 1mil.850T.vcf
+    43464 hapcompass.jar
+     4304 out_frags.txt
+     1296 out_MWER_solution.txt
+        0 out_phasedSolution.txt
+     6413 out_reads.sam
+     6413 out_reduced_representation.sam
+     3891 out_reduced_representation.vcf
+   556042 total
+
+[abj15@login2 850T]$ more out_MWER_solution.txt
+
+BLOCK   1737155 1737195 6       7       0.0     chr10
+VAR_POS_1737155 1737155 6       1       0
+VAR_POS_1737195 1737195 7       0       1
+
+BLOCK   25412412        25412670        29      31      5.0     chr10
+VAR_POS_25412412        25412412        29      1       0
+VAR_POS_25412642        25412642        30      0       1
+VAR_POS_25412670        25412670        31      1       0
+
+BLOCK   29545069        29545185        39      43      149.0   chr10
+VAR_POS_29545069        29545069        39      0       1
+VAR_POS_29545074        29545074        40      0       1
+VAR_POS_29545166        29545166        41      0       1
+VAR_POS_29545176        29545176        42      0       1
+VAR_POS_29545185        29545185        43      0       1
+
+BLOCK   29602232        29602331        44      45      10.0    chr10
+VAR_POS_29602232        29602232        44      0       1
+VAR_POS_29602331        29602331        45      0       1
+
+BLOCK   35607420        35607643        50      51      1.0     chr10
+VAR_POS_35607420        35607420        50      0       1
+VAR_POS_35607643        35607643        51      0       1
+
+BLOCK   41859916        41859940        57      58      11.0    chr10
+VAR_POS_41859916        41859916        57      0       1
+VAR_POS_41859940        41859940        58      0       1
+
+BLOCK   42070479        42070606        59      62      12.0    chr10
+VAR_POS_42070479        42070479        59      0       1
+VAR_POS_42070481        42070481        60      0       1
+VAR_POS_42070582        42070582        61      0       1
+VAR_POS_42070606        42070606        62      1       0
+
+--More--
+
+####################################################################
+####################################################################

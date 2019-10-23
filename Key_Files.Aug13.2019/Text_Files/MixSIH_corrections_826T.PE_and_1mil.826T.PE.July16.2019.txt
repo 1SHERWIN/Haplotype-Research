@@ -1,0 +1,354 @@
+#######################################
+# Created by: Allison Bertie Johnson 
+# working Directory: /home/abj15/Research.Project/Run/MixSIH/7.16.2019_corrections
+# Manual: https://sites.google.com/site/hmatsu1226/software/mixsih
+# MixSIH reformating input fragment file: corrected
+######################################
+
+[abj15@login1 7.16.2019_corrections]$ ls
+1mil_826T.PE  826T_chr10.SE  826T_PE
+
+cd 1mil_826T.PE/
+cp /home/abj15/Research.Project/Run/MixSIH/6.16.2019.1mil_826T.PE/1mil.826T.frag.file .
+
+cd ../826T_chr10.SE/
+cp /home/abj15/Research.Project/Run/MixSIH/7.1.2019.826T_1_chr10.SE/826T_1_chr10_frag.file .
+
+cd ../826T_PE/
+cp /home/abj15/Research.Project/Run/MixSIH/7.7.2019_826T.PE/826T_fragment.file .
+
+############################################
+# last 1 million reads of 826T dataset
+############################################
+
+awk '{if ($1==1) print $0}' 1mil.826T.frag.file | sort -n -k 3 > 1mil.826T_1_.frag.file
+
+head 1mil.826T_1_.frag.file
+1 ILLUMINA-BFC82F_0015_FC:7:116:16101:13756#CAGATC_MP 37 10 II
+1 ILLUMINA-BFC82F_0015_FC:7:78:4374:7639#CAGATC_MP 37 10 >>
+1 ILLUMINA-BFC82F_0015_FC:7:82:15989:20831#CAGATC_MP 37 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:91:7109:3542#CAGATC_MP 37 01 >>
+1 ILLUMINA-BFC82F_0015_FC:7:102:9883:3792#CAGATC 120 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:105:14336:5881#CAGATC 120 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:101:10831:14049#CAGATC_MP 170 10 IG
+1 ILLUMINA-BFC82F_0015_FC:7:114:9228:9877#CAGATC_MP 170 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:56:13316:9101#CAGATC_MP 170 01 GI
+1 ILLUMINA-BFC82F_0015_FC:7:59:5247:8199#CAGATC_MP 170 10 4G
+
+awk '{if ($1==2) print $0}' 1mil.826T.frag.file | sort -n -k 3 > 1mil.826T_2_.frag.file
+
+head 1mil.826T_2_.frag.file
+2 ILLUMINA-BFC82F_0015_FC:7:58:15061:18363#CAGATC_MP 170 1 172 1 II
+2 ILLUMINA-BFC82F_0015_FC:7:94:14755:3844#CAGATC_MP 170 1 172 1 HI
+2 ILLUMINA-BFC82F_0015_FC:7:107:16773:4728#CAGATC_MP 815 0 817 0 II
+2 ILLUMINA-BFC82F_0015_FC:7:111:1400:18934#CAGATC_MP 815 0 817 0 HH
+2 ILLUMINA-BFC82F_0015_FC:7:111:9349:18278#CAGATC_MP 815 0 817 0 II
+2 ILLUMINA-BFC82F_0015_FC:7:59:12207:18402#CAGATC_MP 815 0 817 00 III
+2 ILLUMINA-BFC82F_0015_FC:7:85:15804:17060#CAGATC_MP 815 0 817 0 II
+2 ILLUMINA-BFC82F_0015_FC:7:88:3960:18806#CAGATC_MP 815 0 817 1 II
+2 ILLUMINA-BFC82F_0015_FC:7:98:11503:14198#CAGATC_MP 815 0 817 0 G>
+2 ILLUMINA-BFC82F_0015_FC:7:98:12133:9689#CAGATC_MP 815 0 817 1 II
+
+echo 4861 > 4861.txt
+head 4861.txt
+4861
+
+cat 4861.txt 1mil.826T_1_.frag.file 1mil.826T_2_.frag.file > 1mil.826T_3_frag.file
+
+head 1mil.826T_3_frag.file
+4861
+1 ILLUMINA-BFC82F_0015_FC:7:116:16101:13756#CAGATC_MP 37 10 II
+1 ILLUMINA-BFC82F_0015_FC:7:78:4374:7639#CAGATC_MP 37 10 >>
+1 ILLUMINA-BFC82F_0015_FC:7:82:15989:20831#CAGATC_MP 37 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:91:7109:3542#CAGATC_MP 37 01 >>
+1 ILLUMINA-BFC82F_0015_FC:7:102:9883:3792#CAGATC 120 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:105:14336:5881#CAGATC 120 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:101:10831:14049#CAGATC_MP 170 10 IG
+1 ILLUMINA-BFC82F_0015_FC:7:114:9228:9877#CAGATC_MP 170 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:56:13316:9101#CAGATC_MP 170 01 GI
+
+tail 1mil.826T_3_frag.file
+2 ILLUMINA-BFC82F_0015_FC:7:98:8761:11999#CAGATC_MP 8093 0 8095 0 FG
+2 ILLUMINA-BFC82F_0015_FC:7:53:19774:20604#CAGATC_MP 9150 0 9152 1 II
+2 ILLUMINA-BFC82F_0015_FC:7:64:1527:20878#CAGATC_MP 9150 1 9152 0 >>
+2 ILLUMINA-BFC82F_0015_FC:7:74:8744:18006#CAGATC_MP 9150 1 9152 0 IH
+2 ILLUMINA-BFC82F_0015_FC:7:92:17200:16798#CAGATC_MP 9150 1 9152 0 HI
+2 ILLUMINA-BFC82F_0015_FC:7:99:3582:15198#CAGATC_MP 9150 1 9152 0 HI
+2 ILLUMINA-BFC82F_0015_FC:7:112:1759:5536#CAGATC_MP 9487 1 9489 1 >@
+2 ILLUMINA-BFC82F_0015_FC:7:79:8781:20203#CAGATC_MP 9487 1 9489 1 >F
+2 ILLUMINA-BFC82F_0015_FC:7:117:8659:9915#CAGATC_MP 10500 0 10502 0 II
+2 ILLUMINA-BFC82F_0015_FC:7:78:3460:8613#CAGATC_MP 11002 0 11004 0 II
+
+sort -n -k 3 1mil.826T_3_frag.file > 1mil.826T_MixSIH_frag.txt
+
+head 1mil.826T_MixSIH_frag.txt
+4861
+1 ILLUMINA-BFC82F_0015_FC:7:116:16101:13756#CAGATC_MP 37 10 II
+1 ILLUMINA-BFC82F_0015_FC:7:78:4374:7639#CAGATC_MP 37 10 >>
+1 ILLUMINA-BFC82F_0015_FC:7:82:15989:20831#CAGATC_MP 37 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:91:7109:3542#CAGATC_MP 37 01 >>
+1 ILLUMINA-BFC82F_0015_FC:7:102:9883:3792#CAGATC 120 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:105:14336:5881#CAGATC 120 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:101:10831:14049#CAGATC_MP 170 10 IG
+1 ILLUMINA-BFC82F_0015_FC:7:114:9228:9877#CAGATC_MP 170 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:56:13316:9101#CAGATC_MP 170 01 GI
+####################################
+# run MixSIH on 1mil.826T_MixSIH_frag.txt
+####################################
+
+/home/abj15/Research.Project/Software/MixSIH/MixSIH/MixSIH -a 0.05 1mil.826T_MixSIH_frag.txt 1mil.826T_MixSIH_profile.txt 1mil.826T_MixSIH_haplotype.tx
+
+wc -l *
+   4582 1mil.826T_1_.frag.file
+    278 1mil.826T_2_.frag.file
+   4861 1mil.826T_3_frag.file
+   4860 1mil.826T.frag.file
+   4861 1mil.826T_MixSIH_frag.txt
+   1195 1mil.826T_MixSIH_haplotype.tx
+   1195 1mil.826T_MixSIH_profile.txt
+      1 4861.txt
+  21833 total
+
+more 1mil.826T_MixSIH_haplotype.tx
+BLOCK: offset: 37 len: 2 phased: 2
+37      1       0
+38      0       1
+********
+BLOCK: offset: 120 len: 2 phased: 2
+120     0       1
+121     0       1
+********
+BLOCK: offset: 170 len: 3 phased: 3
+170     1       0
+171     0       1
+172     1       0
+********
+BLOCK: offset: 213 len: 2 phased: 2
+213     0       1
+214     0       1
+********
+BLOCK: offset: 336 len: 2 phased: 2
+336     0       1
+337     0       1
+********
+BLOCK: offset: 419 len: 2 phased: 2
+419     1       0
+420     0       1
+********
+BLOCK: offset: 480 len: 2 phased: 2
+480     0       1
+481     0       1
+********
+BLOCK: offset: 527 len: 2 phased: 2
+527     0       1
+528     0       1
+********
+BLOCK: offset: 638 len: 2 phased: 2
+638     0       1
+639     0       1
+********
+BLOCK: offset: 663 len: 2 phased: 2
+663     1       0
+664     0       1
+********
+BLOCK: offset: 764 len: 2 phased: 2
+764     1       0
+765     0       1
+********
+BLOCK: offset: 815 len: 4 phased: 4
+815     1       0
+816     1       0
+817     1       0
+818     1       0
+********
+BLOCK: offset: 835 len: 2 phased: 2
+835     0       1
+836     0       1
+********
+#################################
+#################################
+# Next we format 826T chr10 SE dataset
+# working Directory: /home/abj15/Research.Project/Run/MixSIH/7.16.2019_corrections/826T_chr10.SE
+#################################
+ more 826T_1_chr10_frag.file
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10 @F
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10 FF
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01 >F
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01 EF
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10 EF
+1 ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC 306 10 <F
+
+##########################################
+# all values for first column for segment number are equal to 1
+# reformatting is not needed 
+##########################################
+##########################################
+# Next we format 826T PE dataset
+# working Directory: /home/abj15/Research.Project/Run/MixSIH/7.16.2019_corrections/826T_PE
+##########################################
+
+wc -l *
+8851 826T_fragment.file
+[abj15@login1 826T_PE]$ head 826T_fragment.file
+1 ILLUMINA-BFC82F_0015_FC:7:64:7651:1758#CAGATC 805 000 >:8
+1 ILLUMINA-BFC82F_0015_FC:7:108:5730:12500#CAGATC 805 111 >>>
+1 ILLUMINA-BFC82F_0015_FC:7:48:6479:8263#CAGATC_MP 803 11111 >>:>>
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 803 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 738 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 738 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:41:5957:2033#CAGATC_MP 738 11 D@
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 738 00 II
+
+awk '{print $1}' 826T_fragment.file | sort |uniq -c
+   8293 1
+    558 2
+
+awk '{ if ($1==1) print $0}' 826T_fragment.file > 826T_1_frag.file
+
+awk '{ if ($1==2) print $0}' 826T_fragment.file > 826T_2_frag.file
+
+wc -l *
+   8293 826T_1_frag.file
+    558 826T_2_frag.file
+   8851 826T_fragment.file
+  17702 total
+
+echo 8852 >8852.txt
+
+
+cat 8852.txt 826T_1_frag.file 826T_2_frag.file > 826T_3_frag.file
+
+head 826T_3_frag.file
+8852
+1 ILLUMINA-BFC82F_0015_FC:7:64:7651:1758#CAGATC 805 000 >:8
+1 ILLUMINA-BFC82F_0015_FC:7:108:5730:12500#CAGATC 805 111 >>>
+1 ILLUMINA-BFC82F_0015_FC:7:48:6479:8263#CAGATC_MP 803 11111 >>:>>
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 803 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 738 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 738 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:41:5957:2033#CAGATC_MP 738 11 D@
+
+sort -n -k 3 826T_3_frag.file > 826T_PE_MixSIH_frag.txt
+
+head 826T_PE_MixSIH_frag.txt
+8852
+1 ILLUMINA-BFC82F_0015_FC:7:116:16101:13756#CAGATC_MP 53 10 II
+1 ILLUMINA-BFC82F_0015_FC:7:36:18345:9079#CAGATC_MP 53 01 >>
+1 ILLUMINA-BFC82F_0015_FC:7:38:2799:18153#CAGATC_MP 53 10 IF
+1 ILLUMINA-BFC82F_0015_FC:7:78:4374:7639#CAGATC_MP 53 10 >>
+1 ILLUMINA-BFC82F_0015_FC:7:82:15989:20831#CAGATC_MP 53 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:91:7109:3542#CAGATC_MP 53 01 >>
+2 ILLUMINA-BFC82F_0015_FC:7:40:5034:3935#CAGATC_MP 84 1 86 0 BH
+1 ILLUMINA-BFC82F_0015_FC:7:16:13081:14567#CAGATC_MP 85 11 DI
+1 ILLUMINA-BFC82F_0015_FC:7:102:9883:3792#CAGATC 177 00 II
+############################## 
+# Run MixSIH on 826T PE dataset
+##############################
+
+/home/abj15/Research.Project/Software/MixSIH/MixSIH/MixSIH -a 0.05 826T_PE_MixSIH_frag.txt 826T_PE_MixSIH_profile.txt 826T_PE_MixSIH_haplotype.tx
+
+wc -l *
+   8293 826T_1_frag.file
+    558 826T_2_frag.file
+   8852 826T_3_frag.file
+   8851 826T_fragment.file
+   8852 826T_PE_MixSIH_frag.txt
+   1639 826T_PE_MixSIH_haplotype.tx
+   1639 826T_PE_MixSIH_profile.txt
+      1 8852.txt
+  38685 total
+
+more 826T_PE_MixSIH_haplotype.tx
+BLOCK: offset: 53 len: 2 phased: 2
+53      1       0
+54      0       1
+********
+BLOCK: offset: 84 len: 3 phased: 3
+84      1       0
+85      0       1
+86      0       1
+********
+BLOCK: offset: 177 len: 2 phased: 2
+177     0       1
+178     0       1
+********
+BLOCK: offset: 180 len: 2 phased: 2
+180     0       1
+181     0       1
+********
+BLOCK: offset: 251 len: 3 phased: 3
+251     1       0
+252     0       1
+253     1       0
+********
+BLOCK: offset: 255 len: 2 phased: 2
+255     1       0
+256     0       1
+********
+BLOCK: offset: 411 len: 2 phased: 2
+411     0       1
+412     0       1
+********
+BLOCK: offset: 452 len: 2 phased: 2
+452     0       1
+453     0       1
+********
+BLOCK: offset: 527 len: 2 phased: 2
+527     0       1
+528     0       1
+********
+BLOCK: offset: 643 len: 2 phased: 2
+643     1       0
+644     0       1
+********
+BLOCK: offset: 738 len: 2 phased: 2
+738     0       1
+739     0       1
+********
+BLOCK: offset: 803 len: 5 phased: 5
+803     1       0
+804     1       0
+805     1       0
+806     1       0
+807     1       0
+********
+#####################################
+#####################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

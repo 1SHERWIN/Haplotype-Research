@@ -1,0 +1,66 @@
+# Formatted PEATH output
+
+/home/s_m774/data/peath
+
+perl /home/s_m774/software/perl/formatPEATH.pl 826chr10PEATH.txt outputV2.txt
+
+
+# outputV2.txt
+53       0       1      1       Block Number: 1  Block Length: 2  Phased Length: 2  Number of Reads: 6  Start position: 53  Weighted MEC: 0.00840427  MEC: 0
+54       1       0      1       Block Number: 1  Block Length: 2  Phased Length: 2  Number of Reads: 6  Start position: 53  Weighted MEC: 0.00840427  MEC: 0
+84       0       1      2       Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 2  Start position: 84  Weighted MEC: 0.00104331  MEC: 0
+85       1       0      2       Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 2  Start position: 84  Weighted MEC: 0.00104331  MEC: 0
+86       1       0      2       Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 2  Start position: 84  Weighted MEC: 0.00104331  MEC: 0
+177      1       0      3       Block Number: 3  Block Length: 2  Phased Length: 2  Number of Reads: 3  Start position: 177  Weighted MEC: 0.000725419  MEC: 0
+178      1       0      3       Block Number: 3  Block Length: 2  Phased Length: 2  Number of Reads: 3  Start position: 177  Weighted MEC: 0.000725419  MEC: 0
+180      1       0      4       Block Number: 4  Block Length: 2  Phased Length: 2  Number of Reads: 2  Start position: 180  Weighted MEC: 0.000633957  MEC: 0
+181      1       0      4       Block Number: 4  Block Length: 2  Phased Length: 2  Number of Reads: 2  Start position: 180  Weighted MEC: 0.000633957  MEC: 0
+
+
+
+
+
+
+
+# Formatted HapCompass output
+
+/home/s_m774/data/hapcompass
+
+perl /home/s_m774/software/perl/formatHapCompass.pl 826chr10hapcompass.txt outputV2.txt
+
+# outputV2.txt
+AR_POS_5073543 5073543 10      1       0       1       BLOCK   5073543 5073662 10      11      6.0     chr10
+VAR_POS_5073662 5073662 11      0       1       1       BLOCK   5073543 5073662 10      11      6.0     chr10
+VAR_POS_11169665        11169665        19      1       0       2       BLOCK   11169665        11169807        19      21      2.0     chr10
+VAR_POS_11169710        11169710        20      0       1       2       BLOCK   11169665        11169807        19      21      2.0     chr10
+VAR_POS_11169807        11169807        21      0       1       2       BLOCK   11169665        11169807        19      21      2.0     chr10
+VAR_POS_25466803        25466803        34      0       1       3       BLOCK   25466803        25466872        34      35      1.0     chr10
+VAR_POS_25466872        25466872        35      0       1       3       BLOCK   25466803        25466872        34      35      1.0     chr10
+VAR_POS_29602531        29602531        41      0       1       4       BLOCK   29602531        29602536        41      42      3.0     chr10
+VAR_POS_29602536        29602536        42      0       1       4       BLOCK   29602531        29602536        41      42      3.0     chr10
+VAR_POS_29919349        29919349        43      0       1       5       BLOCK   29919349        29919350        43      44      2.0     chr10
+
+
+
+
+# Formatted HapCut2 output
+
+/home/s_m774/data/hapcut2
+
+perl /home/s_m774/software/perl/formatHapCut2.pl 826chr10hapcut2.txt outputV2.txt
+
+# outputV2.txt
+53      1       0       chr10   5073543 C       T       0/1:166,0,45    0       .       100.00  1       BLOCK: offset: 53 len: 2 phased: 2 SPAN: 119 fragments 6
+54      0       1       chr10   5073662 T       C       0/1:255,0,255   0       .       100.00  1       BLOCK: offset: 53 len: 2 phased: 2 SPAN: 119 fragments 6
+84      1       0       chr10   11169665        C       A       0/1:33,3,0      0       .       32.03   2       BLOCK: offset: 84 len: 3 phased: 3 SPAN: 142 fragments 2
+85      0       1       chr10   11169710        A       G       0/1:103,0,20    0       .       33.81   2       BLOCK: offset: 84 len: 3 phased: 3 SPAN: 142 fragments 2
+86      0       1       chr10   11169807        T       A       0/1:31,0,57     0       .       65.61   2       BLOCK: offset: 84 len: 3 phased: 3 SPAN: 142 fragments 2
+177     0       1       chr10   29602531        C       G       0/1:31,0,62     0       .       100.00  3       BLOCK: offset: 177 len: 2 phased: 2 SPAN: 5 fragments 3
+178     0       1       chr10   29602536        T       G       0/1:31,0,55     0       .       100.00  3       BLOCK: offset: 177 len: 2 phased: 2 SPAN: 5 fragments 3
+180     1       0       chr10   29919349        T       C       0/1:32,0,32     0       .       71.64   4       BLOCK: offset: 180 len: 2 phased: 2 SPAN: 1 fragments 2
+181     1       0       chr10   29919350        G       T       0/1:32,0,32     0       .       71.64   4       BLOCK: offset: 180 len: 2 phased: 2 SPAN: 1 fragments 2
+
+
+
+
+

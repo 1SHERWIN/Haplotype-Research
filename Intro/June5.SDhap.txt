@@ -1,0 +1,67 @@
+# Created by: Sherwin Massoudian
+# Working Directory: /home/s_m774/software/SDhap
+# SDhap download https://sourceforge.net/projects/sdhap/
+# Paper https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1408-5
+
+############################################
+# Installation
+############################################
+
+/home/s_m774/software/SDhap
+unzip software.zip
+Archive:  software.zip
+   creating: software/
+  inflating: software/README.txt
+  inflating: software/README.txt~
+  inflating: software/SDhaP.c
+  inflating: software/SDhaP.c~
+  inflating: software/SDhaP_poly.c
+  inflating: software/poly_frag.py
+
+/home/s_m774/software/SDhap
+# from README.txt
+After downloading the C codes, change your directory to the folder in which SDhaP is stored. To compile SDhaP, use
+
+gcc SDhaP.c -o hap -L/usr/lib64/atlas -llapack -lcblas -I/usr/include/atlas
+
+"hap" is the executable. Note that ATLAS and LAPACK need to be installed on your machine for SDhaP to work.
+
+/home/s_m774/software/SDhap
+gcc SDhaP.c -o hap -L/usr/lib64/atlas -llapack -lcblas -I/usr/include/atlas
+[s_m774@login2 SDhap]$ ls
+hap  poly_frag.py  README.txt  README.txt~  SDhaP.c  SDhaP.c~  SDhaP_poly.c
+
+############################################
+# Running example data 
+############################################
+
+# Sample data located here https://sourceforge.net/projects/sdhap/files/
+/home/s_m774/software/run
+[s_m774@login1 run]$ unzip Fosmid_all_chromosomes.zip
+
+
+# from README.txt
+To run SDhaP, use the following command
+
+./hap /home/local/altair/Fosmid/chr1.matrix.SORTED /home/local/altair/Fosmid/phase.txt
+
+The second argument is the input file and the third argument is the output file containing the phased haplotypes.
+
+# 1st run
+/home/s_m774/software/run/SDhap
+[s_m774@login1 SDhap]$ /home/s_m774/software/SDhap/hap /home/s_m774/software/run/SDhap/Fosmid_all_chromosomes/chr1.matrix.SORTED /home/s_m774/software/run/SDhap/phase.txt
+Time to read data 4.950000
+Time to haplotype 6.020000
+Total MEC of all blocks= 7386
+
+[s_m774@login1 SDhap]$ ls
+Fosmid_all_chromosomes  phase.txt
+
+# output to phase.txt
+Block 1  Length of haplotype block 14    Number of reads 14      Total MEC 6
+3        1       0
+4        1       0
+5        1       0
+6        1       0
+7        1       0
+8        1       0

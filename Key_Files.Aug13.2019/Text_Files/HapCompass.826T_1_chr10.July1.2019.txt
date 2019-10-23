@@ -1,0 +1,95 @@
+####################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/HapCompass/7.1.2019
+# Mannual: https://www.brown.edu/Research/Istrail_Lab/resources/hapcompass_manual.html
+# HapCompass run on chr10 of 826T_1
+####################################
+
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.bwa.bam.sorted .
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.vcf .
+[abj15@login1 7.1.2019]$ ls
+826T_1_sequence_chr10.bwa.bam.sorted  826T_1_sequence_chr10.vcf
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+  14089 total
+
+#########################################
+# Run HapCompass on chr10 826T_1 dataset
+# Refernce Mannual for example script
+# Example usage:
+# java -Xmx1g -jar hapcompass.jar –bam example/example.bam –vcf example/62_ID0.txt -o example/out
+#########################################
+
+[abj15@login1 7.1.2019]$ module load java/1.8.0_162
+[abj15@login1 7.1.2019]$ which java
+/share/apps/java/jdk1.8.0_162/bin/java
+[abj15@login1 7.1.2019]$ java -version
+java version "1.8.0_162"
+Java(TM) SE Runtime Environment (build 1.8.0_162-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.162-b12, mixed mode)
+
+[abj15@login1 7.1.2019]$ module list
+Currently Loaded Modulefiles:
+  1) rocks-openmpi    2) java/1.8.0_162
+
+[abj15@login1 7.1.2019]$ java -jar /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar -bam 826T_1_sequence_chr10.bwa.bam.sorted -vcf 826T_1_sequence_chr10.vcf -o 826T_1_sequence_chr10.haplotype.output
+The following arguments were passed to HapCompass
+-bam 826T_1_sequence_chr10.bwa.bam.sorted -vcf 826T_1_sequence_chr10.vcf -o 826T_1_sequence_chr10.haplotype.output
+Found the following BAM/SAM files for processing...
+/gpfs/home/abj15/Research.Project/Run/HapCompass/7.1.2019/826T_1_sequence_chr10.bwa.bam.sorted
+Took 0 seconds to load the VCF file.
+Successfully processed /gpfs/home/abj15/Research.Project/Run/HapCompass/7.1.2019/826T_1_sequence_chr10.bwa.bam.sorted with downsampling probability 1.0
+Successfully created fragment file. Processed a total of 20 alleles.
+Successfully loaded 826T_1_sequence_chr10.haplotype.output_frags.txt containing 20 alleles in 10 reads.
+Took 0 seconds to load the SAM file(s).
+The following information contains properties of the data read from SAM/BAM files only.
+The number of bases in reads that match a SNP allele: 1631
+The number of bases in reads that do not match a SNP allele: 11
+The number of reads which failed due to flags: 0. The following flags indicate an unusable read: read unmapped, not primary alignment, read fails platform/vendor quality checks, or read is PCR or optical duplicate
+The number of reads with no reference alignment in the VCF file: 0
+Skipped a total of 0 non primary alignments (number included in bad flags).
+The total number of reads passing all filters but not aligned to a valid reference sequence: 0
+Finished processing reference chr10 with 71 variants.
+Took 0 seconds to run the MWER algorithm.
+0
+Total time of execution: 0
+
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+     10 826T_1_sequence_chr10.haplotype.output_frags.txt
+      4 826T_1_sequence_chr10.haplotype.output_MWER_solution.txt
+      0 826T_1_sequence_chr10.haplotype.output_phasedSolution.txt
+     13 826T_1_sequence_chr10.haplotype.output_reads.sam
+     13 826T_1_sequence_chr10.haplotype.output_reduced_representation.sam
+     73 826T_1_sequence_chr10.haplotype.output_reduced_representation.vcf
+    866 826T_1_sequence_chr10.vcf
+  14202 total
+
+########################################
+# Output format:
+#
+# OUTPUT_PREFIX_<ALGORITHM>_solution.txt
+# Contains a list of blocks and phasings. A new block is shown by BLOCK 
+# <start_position_of_block> <end_position> <start_snp_number> <end_snp_number> <score>
+# then a list of SNPs in the block...
+# <snp_id> <snp_position> <snp_number> <hap_0_allele> <hap_1_allele>
+########################################
+
+[abj15@login1 7.1.2019]$ more 826T_1_sequence_chr10.haplotype.output_MWER_solution.txt
+BLOCK   113089594       113089640       57      58      10.0    chr10
+VAR_POS_113089594       113089594       57      1       0
+VAR_POS_113089640       113089640       58      0       1
+
+[abj15@login1 7.1.2019]$ more  826T_1_sequence_chr10.haplotype.output_frags.txt
+1       ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC chr10 56 0 H 57 1 H
+1       ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC chr10 56 1 @ 57 0 I
+1       ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC chr10 56 1 H 57 0 I
+1       ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC   chr10 56 1 D 57 0 I
+1       ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC   chr10 56 1 D 57 0 I
+1       ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC    chr10 56 0 > 57 1 I
+1       ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC   chr10 56 0 E 57 1 G
+1       ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC        chr10 56 0 H 57 1 F
+1       ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC chr10 56 1 E 57 0 I
+1       ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC chr10 56 1 < 57 0 H
+#########################################
