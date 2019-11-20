@@ -1,0 +1,111 @@
+####################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/HapCUT2/7.1.2019
+# Manual: https://github.com/vibansal/HapCUT2
+# HapCUT2: Running on chr10 of the single-end dataset 826T_1_sequence
+####################################
+# Copy sorted bam file & vcf to working directory
+####################################
+
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.bwa.bam.sorted .
+[abj15@login1 7.1.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.29.2019/826T_1_sequence_chr10.vcf .
+
+[abj15@login1 7.1.2019]$ wc -l *
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+  14089 total
+
+#####################################
+# First step in HapCUT2: extractHAIRS
+#####################################
+
+/home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 826T_1_sequence_chr10.bwa.bam.sorted --VCF 826T_1_sequence_chr10.vcf --out 826T_1_chr10_frag.file
+
+[abj15@login1 7.1.2019]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 826T_1_sequence_chr10.bwa.bam.sorted --VCF 826T_1_sequence_chr10.vcf --out 826T_1_chr10_frag.file
+
+Extracting haplotype informative reads from bamfiles 826T_1_sequence_chr10.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 826T_1_sequence_chr10.vcf has 380 variants
+vcffile 826T_1_sequence_chr10.vcf chromosomes 1 hetvariants 71 380
+reading sorted bamfile 826T_1_sequence_chr10.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+
+[abj15@login1 7.1.2019]$ wc -l *
+     10 826T_1_chr10_frag.file
+  13223 826T_1_sequence_chr10.bwa.bam.sorted
+    866 826T_1_sequence_chr10.vcf
+  14099 total
+
+[abj15@login1 7.1.2019]$ more 826T_1_chr10_frag.file
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10 @F
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10 FF
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01 >F
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01 EF
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10 EF
+1 ILLUMINA-BFC82F_0015_FC:7:107:11920:1523#CAGATC 306 10 <F
+
+##########################################
+# compared the difference between HapCUT &
+# HapCUT2's fragment file created from the 
+# extractHAIRS command
+##########################################
+
+[abj15@login1 7.1.2019]$ diff 826T_1_chr10_frag.file /home/abj15/Research.Project/Run/HapCUT/7.1.2019/826T_chr10_fragment_matrix.file | wc -l
+0
+
+########################
+# Files are identical 
+########################
+########################
+# Second set of HapCUT2
+########################
+
+/home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 826T_1_chr10_frag.file --vcf 826T_1_sequence_chr10.vcf --output 826T_1_sequence_chr10.haplotype.file
+
+[abj15@login2 7.1.2019]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 826T_1_chr10_frag.file --vcf 826T_1_sequence_chr10.vcf --output 826T_1_sequence_chr10.haplotype.file
+
+[2019:07:01 07:40:46] fragment file: 826T_1_chr10_frag.file
+[2019:07:01 07:40:46] variantfile (VCF format):826T_1_sequence_chr10.vcf
+[2019:07:01 07:40:46] haplotypes will be output to file: 826T_1_sequence_chr10.haplotype.file
+[2019:07:01 07:40:46] solution convergence cutoff: 5
+[2019:07:01 07:40:46] QVoffset: 33
+
+[2019:07:01 07:40:46] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:07:01 07:40:46] read 380 variants from 826T_1_sequence_chr10.vcf file
+[2019:07:01 07:40:46] no of non-trivial connected components 1 max-Degree 10 connected variants 2 coverage-per-variant 10.000000
+[2019:07:01 07:40:46] fragments 10 snps 380 component(blocks) 1
+[2019:07:01 07:40:46] processed fragment file and variant file: fragments 10 variants 380
+[2019:07:01 07:40:46] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 826T_1_sequence_chr10.haplotype.file
+
+[abj15@login2 7.1.2019]$ wc -l 826T_1_sequence_chr10.haplotype.file
+3 826T_1_sequence_chr10.haplotype.file
+
+[abj15@login2 7.1.2019]$ more 826T_1_sequence_chr10.haplotype.file
+BLOCK: offset: 306 len: 2 phased: 2 SPAN: 46 fragments 10
+306     1       0       chr10   113089594       C       T       0/1:144,0,106   0       .       100.00
+307     0       1       chr10   113089640       C       T       0/1:129,0,165   0       .       100.00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

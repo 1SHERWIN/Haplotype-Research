@@ -1,0 +1,113 @@
+####################################
+# created by: Allison Bertie Johnson 
+# working directory: /home/abj15/Research.Project/Run/HapCompass/8.13.2019.10mil_NA12891.father.wget
+# HapCompass run of NA12891 (wget) 10 million (chr10) reads dataset
+# directory of data: /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.wget_Alignment
+####################################
+
+cp /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.wget_Alignment/10mil_ERR194160_chr10.vcf .
+cp /home/abj15/Research.Project/Datasets/NA12891.Father/8.13.2019.wget_Alignment/10mil_ERR194160_chr10.bwa.bam.sorted .
+
+wc -l *
+  113087 10mil_ERR194160_chr10.bwa.bam.sorted
+    5613 10mil_ERR194160_chr10.vcf
+  118700 total
+
+############################
+# running HapCompass
+############################
+
+module load java/1.8.0_162
+
+java -jar /home/abj15/Research.Project/Software/HapCompass/hapcompass_v0.8.2/hapcompass.jar -bam 10mil_ERR194160_chr10.bwa.bam.sorted -vcf 10mil_ERR194160_chr10.vcf -o 10mil_ERR194160_chr10.haplotype.output
+
+wc -l *
+  113087 10mil_ERR194160_chr10.bwa.bam.sorted
+    9151 10mil_ERR194160_chr10.haplotype.output_frags.txt
+    2421 10mil_ERR194160_chr10.haplotype.output_MWER_solution.txt
+       0 10mil_ERR194160_chr10.haplotype.output_phasedSolution.txt
+   14324 10mil_ERR194160_chr10.haplotype.output_reads.sam
+   14324 10mil_ERR194160_chr10.haplotype.output_reduced_representation.sam
+    2189 10mil_ERR194160_chr10.haplotype.output_reduced_representation.vcf
+    5613 10mil_ERR194160_chr10.vcf
+  161109 total
+
+more 10mil_ERR194160_chr10.haplotype.output_MWER_solution.txt
+BLOCK   5032290 5032348 1       6       179.0   chr10
+VAR_POS_5032290 5032290 1       0       1
+VAR_POS_5032305 5032305 2       0       1
+VAR_POS_5032319 5032319 3       0       1
+VAR_POS_5032327 5032327 4       0       1
+VAR_POS_5032338 5032338 5       0       1
+VAR_POS_5032348 5032348 6       0       1
+
+BLOCK   15209318        15209554        7       36      2399.0  chr10
+VAR_POS_15209318        15209318        7       1       0
+VAR_POS_15209322        15209322        8       1       0
+VAR_POS_15209323        15209323        9       1       0
+VAR_POS_15209326        15209326        10      1       0
+VAR_POS_15209334        15209334        11      1       0
+VAR_POS_15209352        15209352        12      1       0
+VAR_POS_15209364        15209364        13      1       0
+VAR_POS_15209372        15209372        14      1       0
+VAR_POS_15209392        15209392        15      1       0
+VAR_POS_15209398        15209398        16      1       0
+VAR_POS_15209399        15209399        17      1       0
+VAR_POS_15209419        15209419        18      1       0
+VAR_POS_15209423        15209423        19      1       0
+VAR_POS_15209429        15209429        20      1       0
+VAR_POS_15209442        15209442        21      0       1
+VAR_POS_15209443        15209443        22      1       0
+VAR_POS_15209485        15209485        23      0       1
+VAR_POS_15209487        15209487        24      0       1
+VAR_POS_15209493        15209493        25      0       1
+VAR_POS_15209502        15209502        26      0       1
+VAR_POS_15209503        15209503        27      0       1
+VAR_POS_15209523        15209523        28      0       1
+VAR_POS_15209529        15209529        29      0       1
+VAR_POS_15209531        15209531        30      0       1
+VAR_POS_15209533        15209533        31      0       1
+VAR_POS_15209541        15209541        32      0       1
+VAR_POS_15209543        15209543        33      0       1
+VAR_POS_15209547        15209547        34      0       1
+VAR_POS_15209548        15209548        35      0       1
+VAR_POS_15209554        15209554        36      0       1
+
+BLOCK   38573363        38573546        41      57      350.00006103515625      chr10
+VAR_POS_38573363        38573363        41      1       0
+VAR_POS_38573374        38573374        42      1       0
+VAR_POS_38573388        38573388        43      1       0
+VAR_POS_38573437        38573437        44      1       0
+VAR_POS_38573486        38573486        45      1       0
+VAR_POS_38573489        38573489        46      1       0
+VAR_POS_38573492        38573492        47      1       0
+VAR_POS_38573497        38573497        48      1       0
+VAR_POS_38573498        38573498        49      1       0
+VAR_POS_38573509        38573509        50      1       0
+VAR_POS_38573515        38573515        51      1       0
+VAR_POS_38573517        38573517        52      1       0
+VAR_POS_38573526        38573526        53      1       0
+VAR_POS_38573535        38573535        54      1       0
+VAR_POS_38573537        38573537        55      1       0
+VAR_POS_38573541        38573541        56      0       1
+VAR_POS_38573546        38573546        57      0       1
+
+
+##################################
+##################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

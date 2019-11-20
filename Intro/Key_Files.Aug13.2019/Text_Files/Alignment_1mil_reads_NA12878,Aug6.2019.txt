@@ -1,0 +1,278 @@
+################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Datasets/NA12878/8.6.2019.Alignment_1mil
+# alignment of the last 1 million reads for NA12878
+################################
+# Location of NA12878 fastq files
+# /home/abj15/Research.Project/Datasets/NA12878/7.22.2019.SRR9091899.fastq_dump/SRR9091899
+#################################
+
+cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa .
+
+
+tail -4000000 /home/abj15/Research.Project/Datasets/NA12878/7.22.2019.SRR9091899.fastq_dump/SRR9091899/SRR9091899_1.fastq >1mil_SRR9091899_1.fastq
+tail -4000000 /home/abj15/Research.Project/Datasets/NA12878/7.22.2019.SRR9091899.fastq_dump/SRR9091899/SRR9091899_2.fastq >1mil_SRR9091899_2.fastq
+
+wc -l *
+  4000000 1mil_SRR9091899_1.fastq
+  4000000 1mil_SRR9091899_2.fastq
+  2675950 chr10.fa
+ 10675950 total
+#######################
+# Run bwa alignment 
+#######################
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 1mil_SRR9091899_1.fastq >1mil_SRR9091899_1.sai
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 1mil_SRR9091899_2.fastq > 1mil_SRR9091899_2.sai
+
+wc -l *
+  4000000 1mil_SRR9091899_1.fastq
+    32676 1mil_SRR9091899_1.sai
+  4000000 1mil_SRR9091899_2.fastq
+    29839 1mil_SRR9091899_2.sai
+  2675950 chr10.fa
+ 10738465 total
+
+###############################
+# create sam file
+###############################
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa sampe -a -P /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 1mil_SRR9091899_1.sai 1mil_SRR9091899_2.sai 1mil_SRR9091899_1.fastq 1mil_SRR9091899_2.fastq > 1mil_SRR9091899.bwa.sam
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+   2000456 1mil_SRR9091899.bwa.sam
+   2675950 chr10.fa
+  12738921 total
+
+###############################
+# awk '{if ($1 != "@SQ") print $0}' 1mil_SRR9091899.bwa.sam > noheaders.1mil_SRR9091899.bwa.sam
+# wc -l noheaders.1mil_SRR9091899.bwa.sam
+#2000001 noheaders.1mil_SRR9091899.bwa.sam
+#
+# about 50% aligned
+#
+################################
+# convert sam to bam file 
+################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 1mil_SRR9091899.bwa.sam > 1mil_SRR9091899.bwa.bam
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+   2000456 1mil_SRR9091899.bwa.sam
+   2675950 chr10.fa
+  13399674 total
+
+###########################
+# sort bam file 
+###########################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 1mil_SRR9091899.bwa.bam -T tmpt.sorted -o 1mil_SRR9091899.bwa.bam.sorted
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+   2000456 1mil_SRR9091899.bwa.sam
+   2675950 chr10.fa
+  14054970 total
+
+########################
+# index sorted bam file
+########################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 1mil_SRR9091899.bwa.bam.sorted
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+   2675950 chr10.fa
+  14069017 total
+
+
+###############################
+# extract chr 10 
+###############################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -h 1mil_SRR9091899.bwa.bam.sorted chr10 > 1mil_SRR9091899_chr10.sam.sorted
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+       695 1mil_SRR9091899_chr10.sam.sorted
+   2675950 chr10.fa
+  14069712 total
+
+###############################
+# convert chr10 sam to bam file
+###############################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 1mil_SRR9091899_chr10.sam.sorted > 1mil_SRR9091899_chr10.bam.sorted
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+       126 1mil_SRR9091899_chr10.bam.sorted
+       695 1mil_SRR9091899_chr10.sam.sorted
+   2675950 chr10.fa
+  14069838 total
+
+#####################################################################
+# Convert the chr10 .bam.sorted file into a .bcf file via samtools
+#####################################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f chr10.fa 1mil_SRR9091899_chr10.bam.sorted > 1mil_SRR9091899_chr10.bcf
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+       126 1mil_SRR9091899_chr10.bam.sorted
+       478 1mil_SRR9091899_chr10.bcf
+       695 1mil_SRR9091899_chr10.sam.sorted
+   2675950 chr10.fa
+         1 chr10.fa.fai
+  14070317 total
+
+##############################################################
+# Next use bcftools to convert the .bcf file into a .vcf file 
+###############################################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 1mil_SRR9091899_chr10.bcf -o 1mil_SRR9091899_chr10.vcf
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+       126 1mil_SRR9091899_chr10.bam.sorted
+       478 1mil_SRR9091899_chr10.bcf
+       695 1mil_SRR9091899_chr10.sam.sorted
+       500 1mil_SRR9091899_chr10.vcf
+   2675950 chr10.fa
+         1 chr10.fa.fai
+
+######################################
+# Then we remove the headers
+######################################
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view -H 1mil_SRR9091899_chr10.vcf > noheaders.1mil_SRR9091899_chr10.vcf
+
+wc -l *
+   4000000 1mil_SRR9091899_1.fastq
+     32676 1mil_SRR9091899_1.sai
+   4000000 1mil_SRR9091899_2.fastq
+     29839 1mil_SRR9091899_2.sai
+    660753 1mil_SRR9091899.bwa.bam
+    655296 1mil_SRR9091899.bwa.bam.sorted
+     14047 1mil_SRR9091899.bwa.bam.sorted.bai
+   2000456 1mil_SRR9091899.bwa.sam
+       126 1mil_SRR9091899_chr10.bam.sorted
+       478 1mil_SRR9091899_chr10.bcf
+       695 1mil_SRR9091899_chr10.sam.sorted
+       500 1mil_SRR9091899_chr10.vcf
+   2675950 chr10.fa
+         1 chr10.fa.fai
+        14 noheaders.1mil_SRR9091899_chr10.vcf
+
+########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

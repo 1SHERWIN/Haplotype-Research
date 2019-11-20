@@ -1,0 +1,98 @@
+########################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Run/PEATH/7.16.2019
+# manual: https://github.com/jcna99/PEATH
+# PEATH ran on datasets 826T_1_chr10.SE & 
+# whole pair end data for 826T
+########################################
+# 826T chr 10 single end dataset
+########################################
+
+cp /home/abj15/Research.Project/Run/AltHap/7.1.2019.826T_1_chr10.SE/826T_1_sequence_chr10.fragment.txt .
+
+head 826T_1__chr10.PEATH.fragment.txt
+10 306
+1 ILLUMINA-BFC82F_0015_FC:7:89:17069:19906#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:114:4711:19232#CAGATC 306 10 @F
+1 ILLUMINA-BFC82F_0015_FC:7:41:19362:17629#CAGATC 306 10 FF
+1 ILLUMINA-BFC82F_0015_FC:7:32:3909:3444#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:86:1862:8302#CAGATC 306 10 DF
+1 ILLUMINA-BFC82F_0015_FC:7:9:3206:4034#CAGATC 306 01 >F
+1 ILLUMINA-BFC82F_0015_FC:7:9:5085:15524#CAGATC 306 01 EF
+1 ILLUMINA-BFC82F_0015_FC:7:115:18649:14916#CAGATC 306 01 FF
+1 ILLUMINA-BFC82F_0015_FC:7:93:11782:21271#CAGATC 306 10 EF
+
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/PEATH 826T_1__chr10.PEATH.fragment.txt 826T_1_chr10.PEATH.haplotype.txt
+2   2   10  9.99621   10   0.0126583
+[abj15@login1 7.16.2019_826T_chr10.SE]$ wc -l *
+  11 826T_1__chr10.PEATH.fragment.txt
+   4 826T_1_chr10.PEATH.haplotype.txt
+  12 826T_1_sequence_chr10.fragment.txt
+   0 F
+  27 total
+[abj15@login1 7.16.2019_826T_chr10.SE]$ head 826T_1_chr10.PEATH.haplotype.txt
+Block Number: 1  Block Length: 2  Phased Length: 2  Number of Reads: 10  Start position: 306  Weighted MEC: 9.99621  MEC: 10
+306      1       0
+307      1       0
+********
+
+####################################
+# 826T whole PE dataset
+####################################
+cp /home/abj15/Research.Project/Run/AltHap/7.7.2019.826T.PE/826T_fragment.file .
+
+######################
+# reformat column # on first line 
+######################
+
+head 826T_PEATH.fragment.file
+8851 9983
+1 ILLUMINA-BFC82F_0015_FC:7:64:7651:1758#CAGATC 805 000 >:8
+1 ILLUMINA-BFC82F_0015_FC:7:108:5730:12500#CAGATC 805 111 >>>
+1 ILLUMINA-BFC82F_0015_FC:7:48:6479:8263#CAGATC_MP 803 11111 >>:>>
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 803 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 738 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 738 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:41:5957:2033#CAGATC_MP 738 11 D@
+
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/PEATH 826T_PEATH.fragment.file 826T_PEATH.haplotype.txt
+Segmentation fault
+
+wc -l *
+   8853 826T_fragment.file
+   8852 826T_PEATH.fragment.file
+    928 826T_PEATH.haplotype.txt
+  18633 total
+
+head 826T_PEATH.haplotype.txt
+Block Number: 1  Block Length: 2  Phased Length: 2  Number of Reads: 6  Start position: 53  Weighted MEC: 0.00840427  MEC: 0
+53       0       1
+54       1       0
+********
+Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 2  Start position: 84  Weighted MEC: 0.00104331  MEC: 0
+84       0       1
+85       1       0
+86       1       0
+********
+Block Number: 3  Block Length: 2  Phased Length: 2  Number of Reads: 3  Start position: 177  Weighted MEC: 0.000725419  MEC: 0
+
+#####################################
+#####################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

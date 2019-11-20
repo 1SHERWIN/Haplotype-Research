@@ -1,0 +1,282 @@
+#####################################
+# Created by: Allison Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Datasets/whole_pair_end_datasets/826T/7.6.2019
+# Alignment of pair-end 826T Dataset
+#####################################
+# we copy the needed:
+#	1. pair-end datsets for 826T 
+# 	2. Refernce genome 
+#####################################
+
+[abj15@login1 7.6.2019]$ cp /group/hon/hon3398o/0.course.files/Data/seq.data/826T_1_sequence.txt .
+[abj15@login1 7.6.2019]$ cp /group/hon/hon3398o/0.course.files/Data/seq.data/826T_2_sequence.txt .
+[abj15@login1 7.6.2019]$ cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/April5.2018.hg38.24chr.fa .
+
+#######################################
+# Next we align 826T_1 & 826T_2 via BAW
+#######################################
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.txt > 826T_1_sequence.sai
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa aln -t 8 -n 2 -I /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_2_sequence.txt > 826T_2_sequence.sai
+
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+  61765433 April5.2018.hg38.24chr.fa
+  75893350 total
+########################################
+############################################################
+# Next we take the newly create .sai files and 
+# convet them into one .sam file
+############################################################
+
+/group/hon/hon3398o/0.course.files/software/bwa-0.7.17/bwa sampe -a -P /group/hon/hon3398o/0.course.files/Data/Reference/align.index/hg38.align.index/bwa-0.7.17.hg38.index/hg38.fa 826T_1_sequence.sai 826T_2_sequence.sai 826T_1_sequence.txt 826T_2_sequence.txt > 826T.bwa.sam
+
+[abj15@login1 7.6.2019]$ wc -l *
+   3503272 826T.bwa.sam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+  61765433 April5.2018.hg38.24chr.fa
+  79396622 total
+
+##################################################
+# Next we convert the newly created .sam file into .bam file using samtools
+# Path for samtools: /group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools
+##################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -S -b 826T.bwa.sam > 826T.bwa.bam
+
+[abj15@login1 7.6.2019]$ wc -l *
+   1224800 826T.bwa.bam
+   3503272 826T.bwa.sam
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+  61765433 April5.2018.hg38.24chr.fa
+  80621422 total
+
+##################################################
+# Next we sort the newly created .bam file via samtools
+##################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T.bwa.bam -T tmpt.sorted -o 826T.bwa.bam.sorted
+
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+   1224800 826T.bwa.bam
+    746201 826T.bwa.bam.sorted
+   3503272 826T.bwa.sam
+  61765433 April5.2018.hg38.24chr.fa
+  81367623 total
+
+
+
+###################################################
+# Next we index the sorted bam file .bam.sorted 
+###################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T.bwa.bam.sorted
+
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+   1224800 826T.bwa.bam
+    746201 826T.bwa.bam.sorted
+     23868 826T.bwa.bam.sorted.bai
+   3503272 826T.bwa.sam
+  61765433 April5.2018.hg38.24chr.fa
+  81391491 total
+
+###############################################################
+# Using samtools convert the .bam.sorted file into a .bcf file
+###############################################################
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -d 8000 -f April5.2018.hg38.24chr.fa 826T.bwa.bam.sorted > 826T.bcf
+
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+    768499 826T.bcf
+   1224800 826T.bwa.bam
+    746201 826T.bwa.bam.sorted
+     23868 826T.bwa.bam.sorted.bai
+   3503272 826T.bwa.sam
+  61765433 April5.2018.hg38.24chr.fa
+        24 April5.2018.hg38.24chr.fa.fai
+  82160014 total
+
+##############################################################
+# Next use bcftools to convert the .bcf file into a .vcf file 
+# Path for bcftools: /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools
+###############################################################
+
+[abj15@login1 7.6.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T.bcf -o 826T.vcf
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+    768499 826T.bcf
+   1224800 826T.bwa.bam
+    746201 826T.bwa.bam.sorted
+     23868 826T.bwa.bam.sorted.bai
+   3503272 826T.bwa.sam
+     19014 826T.vcf
+  61765433 April5.2018.hg38.24chr.fa
+        24 April5.2018.hg38.24chr.fa.fai
+  82179028 total
+
+########################################
+# Remove the headers from the .vcf file
+########################################
+
+[abj15@login1 7.6.2019]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view -H 826T.vcf > noheaders.826T.vcf
+[abj15@login1 7.6.2019]$ wc -l *
+     59151 826T_1_sequence.sai
+   7005632 826T_1_sequence.txt
+     57502 826T_2_sequence.sai
+   7005632 826T_2_sequence.txt
+    768499 826T.bcf
+   1224800 826T.bwa.bam
+    746201 826T.bwa.bam.sorted
+     23868 826T.bwa.bam.sorted.bai
+   3503272 826T.bwa.sam
+     19014 826T.vcf
+  61765433 April5.2018.hg38.24chr.fa
+        24 April5.2018.hg38.24chr.fa.fai
+     18528 noheaders.826T.vcf
+  82197556 total
+########################################
+########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

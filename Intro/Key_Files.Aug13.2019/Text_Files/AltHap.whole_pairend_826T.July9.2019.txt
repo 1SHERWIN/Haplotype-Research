@@ -1,0 +1,104 @@
+##########################################
+# Created by: Allison Bertie Johnson 
+# Working Directory:
+# Manual: 
+# AltHap run on whole pair-end 826T dataset
+##########################################
+
+cp /home/abj15/Research.Project/Run/HapCUT2/7.7.2019/826T_fragment.file .
+
+################################
+# using WinSCP
+# Add the read# & Colum# values
+################################
+
+[abj15@login1 7.7.2019]$ wc -l *
+   486 826T_fragment.col3.file
+  8851 826T_fragment.file
+  9337 total
+
+[abj15@login1 7.7.2019]$ awk '{print $3}' 826T_fragment.file | sort  > 826T_fragment.col3.file
+[abj15@login1 7.7.2019]$ tail 826T_fragment.col3.file
+9729
+9729
+9729
+9729
+9729
+977
+9826
+9870
+9983
+9983
+
+[abj15@login1 7.7.2019]$ head 826T_fragment.file
+8851
+9983
+1 ILLUMINA-BFC82F_0015_FC:7:64:7651:1758#CAGATC 805 000 >:8
+1 ILLUMINA-BFC82F_0015_FC:7:108:5730:12500#CAGATC 805 111 >>>
+1 ILLUMINA-BFC82F_0015_FC:7:48:6479:8263#CAGATC_MP 803 11111 >>:>>
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 803 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 738 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 738 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 738 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 738 00 GH
+#################################################################
+
+ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2, '826T_fragment.file', '826T.Haplotype.txt');exit"
+
+                                                                        < M A T L A B (R) >
+                                                              Copyright 1984-2019 The MathWorks, Inc.
+                                                          R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                            May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+
+
+
+wc -l *
+wc: 6.27.2019: read: Is a directory
+wc: 7.2.2019: read: Is a directory
+   18521 826T.Haplotype.txt
+    8853 826T_fragment.file
+     227 AltHap.m
+       2 AltHapSimple.sh
+     674 LICENSE
+     117 README.md
+    1003 sim0.haplotype.output.txt
+    6772 sim0.txt
+       1 simple_example.m
+wc: trash: read: Is a directory
+   36170 total
+
+
+more 826T.Haplotype.txt
+MEC: 1415
+CPU Time: 534.140369
+Recovered Haplotype:
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+0 1
+1 0
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+0 1
+1 0
+1 0
+.
+.
+.
+######################################################

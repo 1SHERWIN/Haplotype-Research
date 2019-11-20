@@ -1,0 +1,648 @@
+###########################
+# Created by: Allison Bertie Johsnon 
+# Working Directory: /Users/abj15/NGS.Software/AltHap/AltHap-master
+# Mannual: https://github.com/realabolfazl/AltHap
+# AltHap: Run different fragment files with read & column info & compare with diff
+###########################
+# First we regenerate a fragment file for 826T dataset using the extractHAIRS command from HapCUT2
+###########################
+
+[abj15@login2 ~]$ cd Research.Project/Run/AltHap/
+[abj15@login2 AltHap]$ mkdir 6.21.2019
+[abj15@login2 AltHap]$ cd 6.21.2019/
+[abj15@login2 6.21.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019                                                                                        /1mil.826T.bwa.bam.sorted .
+[abj15@login2 6.21.2019]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019                                                                                        /1mil.826T.vcf .
+[abj15@login2 6.21.2019]$ ls
+1mil.826T.bwa.bam.sorted  1mil.826T.vcf
+[abj15@login2 6.21.2019]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.826T.bwa.bam.sorted --VCF 1mil.826T.vcf --out 826T.fragment.txt
+
+Extracting haplotype informative reads from bamfiles 1mil.826T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 1mil.826T.vcf has 12536 variants
+vcffile 1mil.826T.vcf chromosomes 24 hetvariants 2902 12536
+reading sorted bamfile 1mil.826T.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+processing reads mapped to chrom "chr11"
+cleaning buffer for prev chrom fragments 2275
+chrom "chr11_JH159137v1_alt" not in VCF file, skipping all reads for this chrom....
+cleaning buffer for prev chrom fragments 2898
+chrom "chr11_KI270721v1_random" not in VCF file, skipping all reads for this chrom....
+chrom "chr11_KI270827v1_alt" not in VCF file, skipping all reads for this chrom....
+chrom "chr11_KI270831v1_alt" not in VCF file, skipping all reads for this chrom....
+.
+.
+.
+chrom "chrUn_KI270753v1" not in VCF file, skipping all reads for this chrom....
+chrom "chrUn_KI270754v1" not in VCF file, skipping all reads for this chrom....
+processing reads mapped to chrom "chrX"
+processing reads mapped to chrom "chrY"
+cleaning buffer for prev chrom fragments 2611
+
+[abj15@login2 6.21.2019]$ wc -l 826T.fragment.txt
+4860 826T.fragment.txt
+[abj15@login2 6.21.2019]$ more 826T.fragment.txt
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00 GH
+#####################################
+# Next copy the newly generated fragment file "826T.fragment.txt" 
+# to the AltHap directory in the tag212853.cs.txstate.edu
+#####################################
+
+TAG212853:AltHap-master abj15$ sftp abj15@leap.txstate.edu
+Texas State University
+
+Use of Computer and network facilities requires prior
+authorization. Unauthorized  access is  prohibited.
+Usage may be subject to security testing and monitoring.
+Abuse is subject to criminal prosecution. Use of these
+facilities implies agreement to comply with the policies
+of Texas State University.
+
+Password:
+Connected to leap.txstate.edu.
+sftp> cd Research.Project/Run/AltHap/6.21.2019
+sftp> ls
+1mil.826T.bwa.bam.sorted    1mil.826T.vcf               826T.fragment.txt
+sftp> get 826T.fragment.txt
+Fetching /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.fragment.txt to 826T.fragment.txt
+/gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.fragment.txt                                                              100%  296KB  10.1MB/s   00:00
+sftp> quit
+TAG212853:AltHap-master abj15$ ls
+826T.fragment.txt               AltHapSimple.sh                 README.md                       simple_example.m
+AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq             trash
+AltHap.m                        LICENSE                         sim0.txt
+########################################
+# Next we need to take the first 4 columns and 
+# create a new fragment file 826T.col1_4.fragment.txt
+########################################
+
+TAG212853:AltHap-master abj15$ awk '{print $1,$2,$3,$4}' > 826T.fragmentcols1_4.txt
+
+TAG212853:AltHap-master abj15$ more 826T.fragmentcols1_4.txt
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:53:11040:17247#CAGATC_MP 480 00
+
+###########################################
+# want to see the number of unique columns 
+###########################################
+TAG212853:AltHap-master abj15$ awk '{ print $3 }' 826T.fragmentcols1_4.txt | sort -n | uniq  > 826T.fragment.col3.sort.uniq
+
+############################
+TAG212853:AltHap-master abj15$ wc -l *
+     352 826T.fragment.col3.sort.uniq
+    4860 826T.fragment.txt
+    4860 826T.fragmentcols1_4.txt
+    1003 AltHap-output.example.run.txt
+     227 AltHap.m
+       2 AltHapSimple.sh
+     331 June19.2019.history.txt
+     674 LICENSE
+     117 README.md
+     737 sim0.col5.sort.uniq
+    6772 sim0.txt
+       1 simple_example.m
+wc: trash: read: Is a directory
+   19936 total
+
+#######################################
+# need to add read number and column number to fragment file
+#######################################
+
+TAG212853:AltHap-master abj15$ sftp abj15@leap.txstate.edu
+Texas State University
+
+Use of Computer and network facilities requires prior
+authorization. Unauthorized  access is  prohibited.
+Usage may be subject to security testing and monitoring.
+Abuse is subject to criminal prosecution. Use of these
+facilities implies agreement to comply with the policies
+of Texas State University.
+
+Password:
+Connected to leap.txstate.edu.
+sftp> cd Research.Project/Run/AltHap/6.21.2019
+sftp> ls
+1mil.826T.bwa.bam.sorted  1mil.826T.vcf             826T.fragment.txt
+sftp> put 826T.fragmentcols1_4.txt
+Uploading 826T.fragmentcols1_4.txt to /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.fragmentcols1_4.txt
+826T.fragmentcols1_4.txt                                                                                                              100%  280KB  10.2MB/s   00:00
+sftp> ls
+1mil.826T.bwa.bam.sorted    1mil.826T.vcf               826T.fragment.txt           826T.fragmentcols1_4.txt
+sftp> quit
+TAG212853:AltHap-master abj15$ ls
+826T.fragment.col3.sort.uniq    AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq             trash
+826T.fragment.txt               AltHap.m                        LICENSE                         sim0.txt
+826T.fragmentcols1_4.txt        AltHapSimple.sh                 README.md                       simple_example.m
+TAG212853:AltHap-master abj15$ ls
+826T.fragment.col3.sort.uniq    AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq             trash
+826T.fragment.txt               AltHap.m                        LICENSE                         sim0.txt
+826T.fragmentcols1_4.txt        AltHapSimple.sh                 README.md                       simple_example.m
+TAG212853:AltHap-master abj15$ sfpt
+-bash: sfpt: command not found
+TAG212853:AltHap-master abj15$ sftp abj15@leap.txstate.edu
+Texas State University
+
+Use of Computer and network facilities requires prior
+authorization. Unauthorized  access is  prohibited.
+Usage may be subject to security testing and monitoring.
+Abuse is subject to criminal prosecution. Use of these
+facilities implies agreement to comply with the policies
+of Texas State University.
+
+Password:
+Password:
+Connected to leap.txstate.edu.
+sftp> cd Research.Project/Run/AltHap/6.21.2019
+sftp> ls
+1mil.826T.bwa.bam.sorted    1mil.826T.vcf               826T.col.num.12529.txt      826T.fragment.txt
+sftp> get 826T.col.num.12529.txt
+Fetching /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.col.num.12529.txt to 826T.col.num.12529.txt
+/gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.col.num.12529.txt                                                         100%  280KB   1.2MB/s   00:00
+sftp> cp 826T.col.num.12529.txt 826T.col.num.3##.txt
+Invalid command.
+sftp> ls
+1mil.826T.bwa.bam.sorted    1mil.826T.vcf               826T.col.num.12529.txt      826T.fragment.txt
+sftp> ls
+1mil.826T.bwa.bam.sorted    1mil.826T.vcf               826T.col.num.12529.txt      826T.col.num.352.txt        826T.fragment.txt
+sftp> get 826T.com.num.352.txt
+File "/gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.com.num.352.txt" not found.
+sftp> get  826T.col.num.352.txt
+Fetching /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.col.num.352.txt to 826T.col.num.352.txt
+/gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.col.num.352.txt                                                           100%  280KB  10.2MB/s   00:00
+sftp> quit
+TAG212853:AltHap-master abj15$ ls
+826T.col.num.12529.txt          826T.fragment.txt               AltHap.m                        LICENSE                         sim0.txt
+826T.col.num.352.txt            826T.fragmentcols1_4.txt        AltHapSimple.sh                 README.md                       simple_example.m
+826T.fragment.col3.sort.uniq    AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq             trash
+
+TAG212853:AltHap-master abj15$ more 826T.col.num.12529.txt
+4860
+12529
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:53:11040:17247#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:66:6049:6396#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:97:1900:8654#CAGATC_MP 480 11
+
+TAG212853:AltHap-master abj15$ more 826T.col.num.352.txt
+4860
+352
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00
+
+##################################################################
+# Next we run AltHap on both file and compare their differences
+# using general script outline:
+# matlab -nojvm -r "AltHap(ploidy,'input_file.txt','output_file.txt');exit"
+##################################################################
+# Error message running 826T.col.num.12529.txt through AltHap
+##################################################################
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2, '826T.col.num.12529.txt','826T.col.12529.Haplotype.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+Nonfinite endpoints or increment for colon operator in index.
+
+Error in AltHap (line 54)
+        R(i - start + 1,str2double(line{j*2+1})+1:str2double(line{j*2+1})+length(line{j*2+2})) = ...
+
+>> quit
+TAG212853:AltHap-master abj15$ ls
+826T.col.num.12529.txt          826T.fragmentcols1_4.txt        June19.2019.history.txt         sim0.col5.sort.uniq
+826T.col.num.352.txt            AltHap-output.example.run.txt   LICENSE                         sim0.txt
+826T.fragment.col3.sort.uniq    AltHap.m                        README.md                       simple_example.m
+826T.fragment.txt               AltHapSimple.sh                 history.6.27.2019.txt           trash
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.col.num.12529.txt','826T.col.12529.haplotype.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+Nonfinite endpoints or increment for colon operator in index.
+
+Error in AltHap (line 54)
+        R(i - start + 1,str2double(line{j*2+1})+1:str2double(line{j*2+1})+length(line{j*2+2})) = ...
+
+###################################################################
+# Error message after running 826T.col.num.352.txt through AltHap
+###################################################################
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.col.num.352.txt','826T.col.352.haplotype.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+Nonfinite endpoints or increment for colon operator in index.
+
+Error in AltHap (line 54)
+        R(i - start + 1,str2double(line{j*2+1})+1:str2double(line{j*2+1})+length(line{j*2+2})) = ...
+
+####################################################################
+# Reran example script and data to verify AltHap.m worked correctly
+####################################################################
+
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(3, 'sim0.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+TAG212853:AltHap-master abj15$ l
+-bash: l: command not found
+TAG212853:AltHap-master abj15$ ls
+826T.col.num.12529.txt          826T.fragmentcols1_4.txt        AltHapSimple.sh                 history.6.27.2019.txt           trash
+826T.col.num.352.txt            AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq
+826T.fragment.col3.sort.uniq    AltHap-output.txt               LICENSE                         sim0.txt
+826T.fragment.txt               AltHap.m                        README.md                       simple_example.m
+TAG212853:AltHap-master abj15$ more AltHap-output.
+AltHap-output.: No such file or directory
+TAG212853:AltHap-master abj15$ more AltHap-output.txt
+MEC: 353
+CPU Time: 24.199041
+Recovered Haplotype:
+0 1 1
+1 0 1
+0 0 1
+1 1 1
+0 1 1
+1 0 0
+ 
+##############################
+# no issues with example data
+##############################
+
+###############################################
+# Notice that the word count for the 
+# example data 'sim0.txt' is not the same as
+# the read number listed in on its first line
+################################################
+
+TAG212853:AltHap-master abj15$ wc -l *
+    4862 826T.col.num.12529.txt
+    4862 826T.col.num.352.txt
+     352 826T.fragment.col3.sort.uniq
+    4860 826T.fragment.txt
+    4860 826T.fragmentcols1_4.txt
+    1003 AltHap-output.example.run.txt
+     227 AltHap.m
+       2 AltHapSimple.sh
+     331 June19.2019.history.txt
+     674 LICENSE
+     117 README.md
+     408 history.6.27.2019.txt
+     737 sim0.col5.sort.uniq
+
+    6772 sim0.txt
+
+       1 simple_example.m
+wc: trash: read: Is a directory
+   30068 total
+
+TAG212853:AltHap-master abj15$ more sim0.txt
+7486
+1000
+2 RID_0 389 10 705 1
+2 RID_1 404 10111 718 1101
+1 RID_2 36 1 401 11
+2 RID_3 686 11 949 10
+
+
+wc -l for sim0.txt = 6772
+while the read number count = 7486
+
+#############################################
+# Attempt to run 826t.framgment file cols 1-4
+# to see is error persist when no read & column number are provied
+#############################################
+
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.fragmentcols1_4.txt','826T.cols1_4.haplotype.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+Nonfinite endpoints or increment for colon operator in index.
+
+Error in AltHap (line 54)
+        R(i - start + 1,str2double(line{j*2+1})+1:str2double(line{j*2+1})+length(line{j*2+2})) = ...
+
+
+>> quit
+TAG212853:AltHap-master abj15$ more 826T.fragmentcols1_4.txt
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00
+
+#################################################################
+# This error message persists even when read and column number are not provided
+#################################################################
+# Running the original fragment file created by HapCUT2's extractHAIRS command
+#################################################################
+
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.fragment.txt','826T.raw.fragment.output.txt');exit"
+
+                                                                       < M A T L A B (R) >
+                                                             Copyright 1984-2019 The MathWorks, Inc.
+                                                         R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                           May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+TAG212853:AltHap-master abj15$ ls
+826T.col.num.12529.txt          826T.fragmentcols1_4.txt        AltHap.m                        README.md                       simple_example.m
+826T.col.num.352.txt            826T.raw.fragment.output.txt    AltHapSimple.sh                 history.6.27.2019.txt           trash
+826T.fragment.col3.sort.uniq    AltHap-output.example.run.txt   June19.2019.history.txt         sim0.col5.sort.uniq
+826T.fragment.txt               AltHap-output.txt               LICENSE                         sim0.txt
+TAG212853:AltHap-master abj15$ more 826T.raw.fragment.output.txt
+MEC: 512
+CPU Time: 215.591228
+Recovered Haplotype:
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+
+TAG212853:AltHap-master abj15$ more 826T.fragment.txt
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00 DI
+
+##################################################
+# Error on line 54 is not resent
+# The only difference between 826T.fragment.txt & 
+# 826T.fragmentcols1_4.txt is the quality score 
+##############################################################
+# Next we will add the read number and column number 
+# to the origianal fragment file that includes quality scores
+##############################################################
+# Using WinSCP, I added read number and column number to the raw/original fragment file
+##############################################################
+
+TAG212853:AltHap-master abj15$ sftp abj15@leap.txstate.edu
+Texas State University
+
+Use of Computer and network facilities requires prior
+authorization. Unauthorized  access is  prohibited.
+Usage may be subject to security testing and monitoring.
+Abuse is subject to criminal prosecution. Use of these
+facilities implies agreement to comply with the policies
+of Texas State University.
+Password:
+Connected to leap.txstate.edu.
+
+sftp> cd Research.Project/Run/AltHap/6.21.2019
+sftp> ls
+1mil.826T.bwa.bam.sorted                1mil.826T.vcf
+826T.col.num.12529.txt                  826T.col.num.352.txt
+826T.frag.col.num.12529.txt             826T.frag.col.num.352.txt
+826T.fragment.txt
+sftp> get 826T.frag.col.num*
+Fetching /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.frag.col.nu                                                                                         m.12529.txt to 826T.frag.col.num.12529.txt
+/gpfs/home/abj15/Research.Project/Run/AltHap/ 100%  296KB   1.3MB/s   00:00
+Fetching /gpfs/home/abj15/Research.Project/Run/AltHap/6.21.2019/826T.frag.col.nu                                                                                         m.352.txt to 826T.frag.col.num.352.txt
+/gpfs/home/abj15/Research.Project/Run/AltHap/ 100%  296KB   7.6MB/s   00:00
+sftp> ls
+1mil.826T.bwa.bam.sorted                1mil.826T.vcf
+826T.col.num.12529.txt                  826T.col.num.352.txt
+826T.frag.col.num.12529.txt             826T.frag.col.num.352.txt
+826T.fragment.txt
+sftp> quit
+TAG212853:AltHap-master abj15$ ls
+826T.col.num.12529.txt          AltHap.m
+826T.col.num.352.txt            AltHapSimple.sh
+826T.frag.col.num.12529.txt     June19.2019.history.txt
+826T.frag.col.num.352.txt       LICENSE
+826T.fragment.col3.sort.uniq    README.md
+826T.fragment.txt               history.6.27.2019.txt
+826T.fragmentcols1_4.txt        sim0.col5.sort.uniq
+826T.raw.fragment.output.txt    sim0.txt
+AltHap-output.example.run.txt   simple_example.m
+AltHap-output.txt               trash
+###############################################
+
+TAG212853:AltHap-master abj15$ more 826T.frag.col.num.12529.txt
+4860
+12529
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00 DI
+1 ILLUMINA-BFC82F_0015_FC:7:53:11040:17247#CAGATC_MP 480 00 >H
+
+TAG212853:AltHap-master abj15$ more 826T.frag.col.num.352.txt
+4860
+352
+1 ILLUMINA-BFC82F_0015_FC:7:86:3673:2074#CAGATC 527 11 II
+1 ILLUMINA-BFC82F_0015_FC:7:113:7222:17644#CAGATC_MP 480 00 >>
+1 ILLUMINA-BFC82F_0015_FC:7:99:6889:20123#CAGATC_MP 480 00 @G
+1 ILLUMINA-BFC82F_0015_FC:7:116:5456:11153#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:19028:14168#CAGATC_MP 480 00 GH
+1 ILLUMINA-BFC82F_0015_FC:7:63:11124:6920#CAGATC_MP 480 00 II
+1 ILLUMINA-BFC82F_0015_FC:7:52:14249:17540#CAGATC_MP 480 00 DI
+1 ILLUMINA-BFC82F_0015_FC:7:53:11040:17247#CAGATC_MP 480 00 >H
+1 ILLUMINA-BFC82F_0015_FC:7:66:6049:6396#CAGATC_MP 480 00 II
+
+#########################################################
+# Next I will run AltHap on 826T.frag.col.num.352.txt & 
+# 826T.frag.col.num.12529.txt to review preformance
+#########################################################
+
+
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.frag.col.num.352.txt','826T.colnum.352.haplotype.txt');exit"
+
+                                                                         < M A T L A B (R) >
+                                                               Copyright 1984-2019 The MathWorks, Inc.
+                                                           R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                             May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+TAG212853:AltHap-master abj15$ wc -l *
+    4862 826T.col.num.12529.txt
+    4862 826T.col.num.352.txt
+   12534 826T.colnum.352.haplotype.txt
+    4862 826T.frag.col.num.12529.txt
+    4862 826T.frag.col.num.352.txt
+     352 826T.fragment.col3.sort.uniq
+    4860 826T.fragment.txt
+    4860 826T.fragmentcols1_4.txt
+   12534 826T.raw.fragment.output.txt
+    1003 AltHap-output.example.run.txt
+    1003 AltHap-output.txt
+     227 AltHap.m
+       2 AltHapSimple.sh
+     331 June19.2019.history.txt
+     674 LICENSE
+     117 README.md
+     408 history.6.27.2019.txt
+     737 sim0.col5.sort.uniq
+    6772 sim0.txt
+       1 simple_example.m
+wc: trash: read: Is a directory
+   65863 total
+TAG212853:AltHap-master abj15$ more 826T.colnum.352.haplotype.txt
+MEC: 712
+CPU Time: 216.184149
+Recovered Haplotype:
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+1 0
+0 1
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+
+#######################################
+# A successful run!
+#######################################
+# Next we run 826T.col.num.12529.txt
+# through AltHap
+#######################################
+
+
+TAG212853:AltHap-master abj15$ /Applications/MATLAB_R2019a.app/bin/matlab -nojvm -r "AltHap(2,'826T.frag.col.num.12529.txt','826T.colnum.12529.haplotype.txt');exit"
+
+                                                                         < M A T L A B (R) >
+                                                               Copyright 1984-2019 The MathWorks, Inc.
+                                                           R2019a Update 2 (9.6.0.1114505) 64-bit (maci64)
+                                                                             May 1, 2019
+
+
+For online documentation, see https://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+
+TAG212853:AltHap-master abj15$ more 826T.colnum.12529.haplotype.txt
+MEC: 712
+CPU Time: 219.124406
+Recovered Haplotype:
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+1 0
+0 1
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+5.000000e-01 5.000000e-01
+.
+.
+.
+#######################################
+# A successful run!
+###########################################
+# Next we compare the differences between 
+# 826T.colnum.12529.haplotype.txt &
+# 826T.colnum.352.haplotype.txt
+###########################################
+TAG212853:AltHap-master abj15$ diff 826T.colnum.12529.haplotype.txt 826T.colnum.352.haplotype.txt > diff.826T.col352.and.12529.txt
+TAG212853:AltHap-master abj15$ wc -l *
+    4862 826T.col.num.12529.txt
+    4862 826T.col.num.352.txt
+   12534 826T.colnum.12529.haplotype.txt
+   12534 826T.colnum.352.haplotype.txt
+    4862 826T.frag.col.num.12529.txt
+    4862 826T.frag.col.num.352.txt
+     352 826T.fragment.col3.sort.uniq
+    4860 826T.fragment.txt
+    4860 826T.fragmentcols1_4.txt
+   12534 826T.raw.fragment.output.txt
+    1003 AltHap-output.example.run.txt
+    1003 AltHap-output.txt
+     227 AltHap.m
+       2 AltHapSimple.sh
+     331 June19.2019.history.txt
+     674 LICENSE
+     117 README.md
+       4 diff.826T.col352.and.12529.txt
+     408 history.6.27.2019.txt
+     737 sim0.col5.sort.uniq
+    6772 sim0.txt
+       1 simple_example.m
+wc: trash: read: Is a directory
+   78401 total
+TAG212853:AltHap-master abj15$ more diff.826T.col352.and.12529.txt
+2c2
+< CPU Time: 219.124406
+---
+> CPU Time: 216.184149
+
+#####################################################
+# Only difference appears to be CPR time measurements
+#####################################################
+
+
+
+

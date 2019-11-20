@@ -1,0 +1,452 @@
+#############################################
+# Created by: Allison Bertie Johnson 
+# Working Directory:  /home/abj15/Research.Project/Run/HapCUT2/6.8.2019/..
+# Mannual: https://github.com/vibansal/HapCUT2
+# Running real data on HapCUT2 
+##############################################
+# Working Directory for 826T Dataset
+# :/home/abj15/Research.Project/Run/HapCUT2/6.8.2019/826T
+
+[abj15@login1 826T]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019/1mil.826T.bwa.bam.sorted .
+[abj15@login1 826T]$ cp /home/abj15/Research.Project/Datasets/826T/6.8.2019/1mil.826T.vcf .
+[abj15@login1 826T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.826T.bwa.bam.sorted --VCF 1mil.826T.vcf --out 1mil.826T.frag.file
+
+[abj15@login1 826T]$ ls
+1mil.826T.bwa.bam.sorted  1mil.826T.frag.file  1mil.826T.vcf  trash
+
+#####################################################
+# Next using pathway through build directory for HAPCUT2 command will allow for the completion of step (2)
+# this will assemble the fragment file created above into haplotye blocks.
+#####################################################
+
+[abj15@login1 826T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 1mil.826T.frag.file --vcf 1mil.826T.vcf --output 1mil.826T.haplotype.file
+
+
+[2019:06:09 16:42:48] fragment file: 1mil.826T.frag.file
+[2019:06:09 16:42:48] variantfile (VCF format):1mil.826T.vcf
+[2019:06:09 16:42:48] haplotypes will be output to file: 1mil.826T.haplotype.file
+[2019:06:09 16:42:48] solution convergence cutoff: 5
+[2019:06:09 16:42:48] QVoffset: 33
+
+[2019:06:09 16:42:48] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:06:09 16:42:48] read 12536 variants from 1mil.826T.vcf file
+[2019:06:09 16:42:48] no of non-trivial connected components 271 max-Degree 190 connected variants 635 coverage-per-variant 15.916535
+[2019:06:09 16:42:48] fragments 4860 snps 12536 component(blocks) 271
+[2019:06:09 16:42:48] processed fragment file and variant file: fragments 4860 variants 12536
+[2019:06:09 16:42:48] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 1mil.826T.haplotype.file
+
+[abj15@login1 826T]$ ls
+1mil.826T.bwa.bam.sorted  1mil.826T.frag.file  1mil.826T.haplotype.file  1mil.826T.vcf  trash
+[abj15@login1 826T]$ wc -l *
+   432171 1mil.826T.bwa.bam.sorted
+     4860 1mil.826T.frag.file
+     1176 1mil.826T.haplotype.file
+    13022 1mil.826T.vcf
+wc: trash: Is a directory
+        0 trash
+   451229 total
+
+[abj15@login1 826T]$ more 1mil.826T.haplotype.file
+BLOCK: offset: 37 len: 2 phased: 2 SPAN: 119 fragments 4
+37      1       0       chr10   5073543 C       T       0/1:143,0,24    0       .       100.00
+38      0       1       chr10   5073662 T       C       0/1:253,0,255   0       .       100.00
+********
+BLOCK: offset: 120 len: 2 phased: 2 SPAN: 5 fragments 2
+120     0       1       chr10   29602531        C       G       0/1:34,0,34     0       .       71.64
+121     0       1       chr10   29602536        T       G       0/1:34,0,34     0       .       71.64
+********
+BLOCK: offset: 170 len: 3 phased: 3 SPAN: 251 fragments 17
+170     1       0       chr10   43119934        C       T       0/1:149,0,49    0       .       100.00
+171     0       1       chr10   43120057        G       A       0/1:102,0,255   0       .       100.00
+172     1       0       chr10   43120185        C       G       0/1:255,0,164   0       .       100.00
+********
+BLOCK: offset: 213 len: 2 phased: 2 SPAN: 37 fragments 5
+213     1       0       chr10   49493413        G       A       0/1:33,0,169    0       .       100.00
+214     1       0       chr10   49493450        C       G       0/1:56,0,104    0       .       100.00
+********
+BLOCK: offset: 336 len: 2 phased: 2 SPAN: 2 fragments 5
+336     0       1       chr10   87960736        G       T       0/1:48,0,85     0       .       100.00
+337     0       1       chr10   87960738        G       T       0/1:58,0,83     0       .       100.00
+********
+
+########################################################################
+# Rerunning with the .vcf file that has no headers to compare differences
+########################################################################
+# Rerunning 826T
+
+[abj15@login2 826T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.826T.bwa.bam.sorted --VCF noheaders.1mil.826T.vcf --out noheader.1mil.826T.frag.file
+
+Extracting haplotype informative reads from bamfiles 1mil.826T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file noheaders.1mil.826T.vcf has 12536 variants
+vcffile noheaders.1mil.826T.vcf chromosomes 24 hetvariants 2902 12536
+reading sorted bamfile 1mil.826T.bwa.bam.sorted
+.
+.
+.
+processing reads mapped to chrom "chrX"
+processing reads mapped to chrom "chrY"
+cleaning buffer for prev chrom fragments 2611
+
+
+[abj15@login2 826T]$ diff 1mil.826T.frag.file noheader.1mil.826T.frag.file
+[abj15@login2 826T]$
+
+# No output for diff command, thus if .vcf file has headers it makes no difference. 
+
+#########################################################################
+#########################################################################
+# # Working Directory for 827T Dataset
+# :/home/abj15/Research.Project/Run/HapCUT2/6.8.2019/827T
+
+[abj15@login2 827T]$ cp /home/abj15/Research.Project/Datasets/827T/6.8.2019/1mil.827T.bwa.bam.sorted .
+[abj15@login2 827T]$ cp /home/abj15/Research.Project/Datasets/827T/6.8.2019/1mil.827T.vcf .
+[abj15@login2 827T]$ ls
+1mil.827T.bwa.bam.sorted  1mil.827T.vcf
+[abj15@login2 827T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.827T.bwa.bam.sorted --VCF 1mil.827T.vcf --out 1mil.827T .frag.file
+
+Extracting haplotype informative reads from bamfiles 1mil.827T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 1mil.827T.vcf has 14264 variants
+vcffile 1mil.827T.vcf chromosomes 24 hetvariants 3018 14264
+reading sorted bamfile 1mil.827T.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+.
+.
+.
+chrom "chrX_KI270913v1_alt" not in VCF file, skipping all reads for this chrom....
+cleaning buffer for prev chrom fragments 3611
+processing reads mapped to chrom "chrY"
+
+[abj15@login2 827T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 1mil.827T.frag.file --VCF 1mil.827T.vcf --output 1mil.827T. haplotype.file
+
+
+[2019:06:09 20:06:37] fragment file: 1mil.827T.frag.file
+[2019:06:09 20:06:37] variantfile (VCF format):1mil.827T.vcf
+[2019:06:09 20:06:37] haplotypes will be output to file: 1mil.827T.haplotype.file
+[2019:06:09 20:06:37] solution convergence cutoff: 5
+[2019:06:09 20:06:37] QVoffset: 33
+
+[2019:06:09 20:06:37] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:06:09 20:06:37] read 14264 variants from 1mil.827T.vcf file
+[2019:06:09 20:06:37] no of non-trivial connected components 292 max-Degree 227 connected variants 696 coverage-per-variant 15.163793
+[2019:06:09 20:06:37] fragments 4943 snps 14264 component(blocks) 292
+[2019:06:09 20:06:37] processed fragment file and variant file: fragments 4943 variants 14264
+[2019:06:09 20:06:38] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 1mil.827T.haplotype.file
+
+[abj15@login2 827T]$ wc -l *
+   433375 1mil.827T.bwa.bam.sorted
+     4943 1mil.827T.frag.file
+     1279 1mil.827T.haplotype.file
+    14750 1mil.827T.vcf
+   454347 total
+
+
+[abj15@login2 827T]$ more 1mil.827T.haplotype.file
+BLOCK: offset: 13 len: 2 phased: 2 SPAN: 57 fragments 1
+13      0       1       chr10   1233504 C       T       0/1:42,0,78     0       .       35.88
+14      0       1       chr10   1233561 T       G       0/1:52,0,170    0       .       35.88
+********
+BLOCK: offset: 92 len: 2 phased: 2 SPAN: 112 fragments 2
+92      0       1       chr10   17791550        G       T       0/1:33,0,33     0       .       68.63
+93      0       1       chr10   17791662        A       C       0/1:32,0,30     0       .       68.63
+********
+BLOCK: offset: 139 len: 2 phased: 2 SPAN: 8 fragments 3
+139     1       0       chr10   30359964        G       A       0/1:30,0,64     0       .       36.46
+140     0       1       chr10   30359972        G       A       0/1:31,0,64     0       .       36.46
+********
+BLOCK: offset: 171 len: 4 phased: 4 SPAN: 7 fragments 11
+171     0       1       chr10   37832062        T       A       0/1:35,0,251    0       .       100.00
+172     0       1       chr10   37832065        A       G       0/1:43,0,212    0       .       100.00
+173     0       1       chr10   37832068        T       A       0/1:43,0,211    0       .       100.00
+174     0       1       chr10   37832069        G       A       0/1:43,0,212    0       .       100.00
+********
+BLOCK: offset: 197 len: 2 phased: 2 SPAN: 151 fragments 9
+197     0       1       chr10   43111088        C       T       0/1:45,0,165    0       .       100.00
+198     1       0       chr10   43111239        A       G       0/1:255,0,255   0       .       100.00
+********
+#########################################################################
+#########################################################################
+# # Working Directory for 832T Dataset
+# :/home/abj15/Research.Project/Run/HapCUT2/6.8.2019/832T
+
+[abj15@login2 827T]$ cd ..
+[abj15@login2 6.8.2019]$ cd 832T/
+[abj15@login2 832T]$ cp /home/abj15/Research.Project/Datasets/832T/6.8.2019/1mil.832T.bwa.bam.sorted .
+[abj15@login2 832T]$ cp /home/abj15/Research.Project/Datasets/832T/6.8.2019/1mil.832T.vcf .
+[abj15@login2 832T]$ ls
+1mil.832T.bwa.bam.sorted  1mil.832T.vcf
+[abj15@login2 832T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.832T.bwa.bam.sorted --VCF 1mil.832T.vcf --out 1mil.832T.frag.file
+
+Extracting haplotype informative reads from bamfiles 1mil.832T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 1mil.832T.vcf has 14697 variants
+vcffile 1mil.832T.vcf chromosomes 24 hetvariants 3213 14697
+reading sorted bamfile 1mil.832T.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+.
+.
+.
+chrom "chrUn_KI270757v1" not in VCF file, skipping all reads for this chrom....
+processing reads mapped to chrom "chrX"
+processing reads mapped to chrom "chrY"
+cleaning buffer for prev chrom fragments 2387
+final cleanup of fragment list: 1 current chrom (null) 0 prev 23
+
+[abj15@login2 832T]$ ls
+1mil.832T.bwa.bam.sorted  1mil.832T.frag.file  1mil.832T.vcf
+
+[abj15@login2 832T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 1mil.832T.frag.file --VCF 1mil.832T.vcf --output 1mil.832T.haplotype.file
+
+
+[2019:06:09 20:11:32] fragment file: 1mil.832T.frag.file
+[2019:06:09 20:11:32] variantfile (VCF format):1mil.832T.vcf
+[2019:06:09 20:11:32] haplotypes will be output to file: 1mil.832T.haplotype.file
+[2019:06:09 20:11:32] solution convergence cutoff: 5
+[2019:06:09 20:11:32] QVoffset: 33
+
+[2019:06:09 20:11:32] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:06:09 20:11:32] read 14697 variants from 1mil.832T.vcf file
+[2019:06:09 20:11:32] no of non-trivial connected components 277 max-Degree 131 connected variants 653 coverage-per-variant 14.741194
+[2019:06:09 20:11:32] fragments 4574 snps 14697 component(blocks) 277
+[2019:06:09 20:11:32] processed fragment file and variant file: fragments 4574 variants 14697
+[2019:06:09 20:11:32] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 1mil.832T.haplotype.file
+
+[abj15@login2 832T]$ wc -l *
+   444096 1mil.832T.bwa.bam.sorted
+     4574 1mil.832T.frag.file
+     1206 1mil.832T.haplotype.file
+    15183 1mil.832T.vcf
+   465059 total
+
+[abj15@login2 832T]$ more 1mil.832T.haplotype.file
+BLOCK: offset: 14 len: 2 phased: 2 SPAN: 95 fragments 5
+14      0       1       chr10   1233561 T       G       0/1:147,0,172   0       .       100.00
+15      0       1       chr10   1233656 G       A       0/1:224,0,255   0       .       100.00
+********
+BLOCK: offset: 37 len: 2 phased: 2 SPAN: 74 fragments 22
+37      1       0       chr10   3011174 C       A       0/1:255,0,255   0       .       100.00
+38      0       1       chr10   3011248 C       A       0/1:171,0,186   0       .       100.00
+********
+BLOCK: offset: 71 len: 2 phased: 2 SPAN: 18 fragments 1
+71      0       1       chr10   7491154 T       C       0/1:31,3,0      0       .       27.88
+72      0       1       chr10   7491172 A       G       0/1:30,3,0      0       .       27.88
+********
+BLOCK: offset: 75 len: 4 phased: 4 SPAN: 20 fragments 3
+75      1       0       chr10   7591378 C       T       0/1:44,0,29     0       .       100.00
+76      1       0       chr10   7591393 T       C       0/1:44,0,31     0       .       100.00
+77      1       0       chr10   7591394 G       T       0/1:44,0,31     0       .       100.00
+78      1       0       chr10   7591398 C       T       0/1:44,0,26     0       .       100.00
+********
+BLOCK: offset: 124 len: 2 phased: 2 SPAN: 156 fragments 2
+124     1       0       chr10   17772367        C       T       0/1:33,0,34     0       .       71.64
+125     1       0       chr10   17772523        A       G       0/1:32,0,34     0       .       71.64
+********
+BLOCK: offset: 168 len: 6 phased: 5 SPAN: 385 fragments 74
+168     1       0       chr10   29544800        C       A       0/1:64,0,31     0       .       71.64
+169     0       1       chr10   29545069        A       G       0/1:255,0,255   0       .       100.00
+170     0       1       chr10   29545074        G       A       0/1:255,0,255   0       .       100.00
+172     0       1       chr10   29545176        C       T       0/1:85,0,178    0       .       100.00
+173     0       1       chr10   29545185        C       G       0/1:73,0,180    0       .       100.00
+********
+BLOCK: offset: 176 len: 3 phased: 3 SPAN: 160 fragments 29
+176     0       1       chr10   29602232        A       G       0/1:171,0,255   0       .       100.00
+177     0       1       chr10   29602331        C       T       0/1:195,0,255   0       .       100.00
+178     0       1       chr10   29602392        T       C       0/1:140,0,187   0       .       100.00
+********
+
+#########################################################################
+#########################################################################
+# # Working Directory for 847T Dataset
+# :/home/abj15/Research.Project/Run/HapCUT2/6.8.2019/847T
+
+[abj15@login2 832T]$ cd ../847T/
+[abj15@login2 847T]$ cp /home/abj15/Research.Project/Datasets/847T/6.8.2019/1mil.847T.bwa.bam.sorted .
+[abj15@login2 847T]$ cp /home/abj15/Research.Project/Datasets/847T/6.8.2019/1mil.847T.vcf .
+[abj15@login2 847T]$ ls
+1mil.847T.bwa.bam.sorted  1mil.847T.vcf
+
+[abj15@login2 847T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.847T.bwa.bam.sorted --VCF 1mil.847T.vcf --out 1mil.847T.frag.file
+
+Extracting haplotype informative reads from bamfiles 1mil.847T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 1mil.847T.vcf has 11097 variants
+vcffile 1mil.847T.vcf chromosomes 24 hetvariants 2737 11097
+reading sorted bamfile 1mil.847T.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+processing reads mapped to chrom "chr11"
+cleaning buffer for prev chrom fragments 2216
+.
+.
+.
+chrom "chrUn_KI270753v1" not in VCF file, skipping all reads for this chrom....
+chrom "chrUn_KI270754v1" not in VCF file, skipping all reads for this chrom....
+processing reads mapped to chrom "chrX"
+processing reads mapped to chrom "chrY"
+cleaning buffer for prev chrom fragments 3813
+final cleanup of fragment list: 1 current chrom (null) 0 prev 23
+[abj15@login2 847T]$ ls
+1mil.847T.bwa.bam.sorted  1mil.847T.frag.file  1mil.847T.vcf
+
+[abj15@login2 847T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 1mil.847T.frag.file --VCF 1mil.847T.vcf --output 1mil.847T.haplotype.file
+
+
+[2019:06:09 20:16:10] fragment file: 1mil.847T.frag.file
+[2019:06:09 20:16:10] variantfile (VCF format):1mil.847T.vcf
+[2019:06:09 20:16:10] haplotypes will be output to file: 1mil.847T.haplotype.file
+[2019:06:09 20:16:10] solution convergence cutoff: 5
+[2019:06:09 20:16:10] QVoffset: 33
+
+[2019:06:09 20:16:10] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:06:09 20:16:10] read 11097 variants from 1mil.847T.vcf file
+[2019:06:09 20:16:10] no of non-trivial connected components 259 max-Degree 274 connected variants 615 coverage-per-variant 18.773984
+[2019:06:09 20:16:10] fragments 5439 snps 11097 component(blocks) 259
+[2019:06:09 20:16:10] processed fragment file and variant file: fragments 5439 variants 11097
+[2019:06:09 20:16:10] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 1mil.847T.haplotype.file
+[abj15@login2 847T]$ wc -l *
+   428902 1mil.847T.bwa.bam.sorted
+     5439 1mil.847T.frag.file
+     1132 1mil.847T.haplotype.file
+    11583 1mil.847T.vcf
+   447056 total
+[abj15@login2 847T]$ more 1mil.847T.haplotype.file
+BLOCK: offset: 30 len: 2 phased: 2 SPAN: 176 fragments 7
+30      1       0       chr10   5073715 T       G       0/1:255,0,255   0       .       36.99
+31      0       1       chr10   5073891 G       A       0/1:41,0,159    0       .       36.99
+********
+BLOCK: offset: 129 len: 3 phased: 3 SPAN: 317 fragments 22
+129     1       0       chr10   35607772        C       T       0/1:255,0,255   0       .       34.24
+130     0       1       chr10   35608029        G       A       0/1:129,0,255   0       .       100.00
+131     0       1       chr10   35608089        A       G       0/1:255,0,255   0       .       100.00
+********
+BLOCK: offset: 142 len: 4 phased: 4 SPAN: 221 fragments 19
+142     1       0       chr10   43100299        C       T       0/1:49,0,136    0       .       100.00
+143     1       0       chr10   43100314        C       A       0/1:32,0,171    0       .       100.00
+144     1       0       chr10   43100333        G       T       0/1:143,0,171   0       .       100.00
+145     1       0       chr10   43100520        A       G       0/1:255,0,255   0       .       100.00
+********
+BLOCK: offset: 179 len: 2 phased: 2 SPAN: 226 fragments 3
+179     1       0       chr10   49472987        G       A       0/1:255,0,255   0       .       100.00
+180     0       1       chr10   49473213        G       A       0/1:50,0,162    0       .       100.00
+********
+BLOCK: offset: 190 len: 2 phased: 2 SPAN: 197 fragments 3
+190     1       0       chr10   51299449        A       G       0/1:54,0,30     0       .       100.00
+191     1       0       chr10   51299646        T       C       0/1:78,0,86     0       .       100.00
+********
+BLOCK: offset: 202 len: 2 phased: 2 SPAN: 1 fragments 23
+202     1       0       chr10   56535029        G       A       0/1:36,0,171    0       .       100.00
+203     1       0       chr10   56535030        C       A       0/1:36,0,170    0       .       100.00
+********
+BLOCK: offset: 451 len: 3 phased: 3 SPAN: 128 fragments 2
+451     1       0       chr10   128464589       C       A       0/1:30,0,60     0       .       100.00
+452     1       0       chr10   128464626       T       C       0/1:34,0,33     0       .       100.00
+453     1       0       chr10   128464717       G       T       0/1:34,0,32     0       .       100.00
+********
+
+#########################################################################
+#########################################################################
+# # Working Directory for 850T Dataset
+# :/home/abj15/Research.Project/Run/HapCUT2/6.8.2019/850T
+
+[abj15@login2 847T]$ cd ../850T/
+[abj15@login2 850T]$ cp /home/abj15/Research.Project/Datasets/850T/6.8.2019/1mil.850T.bwa.bam.sorted .
+[abj15@login2 850T]$ cp /home/abj15/Research.Project/Datasets/850T/6.8.2019/1mil.850T.vcf .
+[abj15@login2 850T]$ ls
+1mil.850T.bwa.bam.sorted  1mil.850T.vcf
+
+[abj15@login2 850T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/extractHAIRS --bam 1mil.850T.bwa.bam.sorted --VCF 1mil.850T.vcf --out 1mil.850T.frag.file
+
+Extracting haplotype informative reads from bamfiles 1mil.850T.bwa.bam.sorted minQV 13 minMQ 20 maxIS 1000
+
+VCF file 1mil.850T.vcf has 23805 variants
+vcffile 1mil.850T.vcf chromosomes 24 hetvariants 3889 23805
+reading sorted bamfile 1mil.850T.bwa.bam.sorted
+processing reads mapped to chrom "chr10"
+.
+.
+.
+chrom "chrUn_KI270756v1" not in VCF file, skipping all reads for this chrom....
+processing reads mapped to chrom "chrX"
+processing reads mapped to chrom "chrY"
+cleaning buffer for prev chrom fragments 128
+final cleanup of fragment list: 25 current chrom (null) 0 prev 23
+[abj15@login2 850T]$ ls
+1mil.850T.bwa.bam.sorted  1mil.850T.frag.file  1mil.850T.vcf
+
+[abj15@login2 850T]$ /home/abj15/Research.Project/Software/HapCUT2/HapCUT2-master/build/HAPCUT2 --fragments 1mil.850T.frag.file --VCF 1mil.850T.vcf --output 1mil.850T.haplotype.file
+
+
+[2019:06:09 20:20:17] fragment file: 1mil.850T.frag.file
+[2019:06:09 20:20:17] variantfile (VCF format):1mil.850T.vcf
+[2019:06:09 20:20:17] haplotypes will be output to file: 1mil.850T.haplotype.file
+[2019:06:09 20:20:17] solution convergence cutoff: 5
+[2019:06:09 20:20:17] QVoffset: 33
+
+[2019:06:09 20:20:17] Calling Max-Likelihood-Cut based haplotype assembly algorithm
+[2019:06:09 20:20:17] read 23805 variants from 1mil.850T.vcf file
+[2019:06:09 20:20:18] no of non-trivial connected components 274 max-Degree 129 connected variants 641 coverage-per-variant 12.527301
+[2019:06:09 20:20:18] fragments 3834 snps 23805 component(blocks) 274
+[2019:06:09 20:20:18] processed fragment file and variant file: fragments 3834 variants 23805
+[2019:06:09 20:20:18] OUTPUTTING PRUNED HAPLOTYPE ASSEMBLY TO FILE 1mil.850T.haplotype.file
+[abj15@login2 850T]$ wc -l *
+   465970 1mil.850T.bwa.bam.sorted
+     3834 1mil.850T.frag.file
+     1188 1mil.850T.haplotype.file
+    24291 1mil.850T.vcf
+   495283 total
+[abj15@login2 850T]$ more 1mil.850T.haplotype.file
+BLOCK: offset: 27 len: 2 phased: 2 SPAN: 40 fragments 8
+27      0       1       chr10   1737155 G       A       0/1:127,0,191   1       .       17.24
+28      0       1       chr10   1737195 C       A       0/1:39,0,146    0       .       17.24
+********
+BLOCK: offset: 237 len: 3 phased: 3 SPAN: 258 fragments 5
+237     1       0       chr10   25412412        C       G       0/1:255,0,255   0       .       100.00
+238     0       1       chr10   25412642        G       T       0/1:83,0,80     0       .       100.00
+239     -       -       chr10   25412670        C       A       0/1:34,0,30     1       .       5.46
+********
+BLOCK: offset: 278 len: 5 phased: 5 SPAN: 116 fragments 49
+278     0       1       chr10   29545069        A       G       0/1:123,0,255   0       .       100.00
+279     0       1       chr10   29545074        G       A       0/1:118,0,255   0       .       100.00
+280     0       1       chr10   29545166        G       A       0/1:79,0,181    0       .       100.00
+281     0       1       chr10   29545176        C       T       0/1:93,0,178    0       .       100.00
+282     0       1       chr10   29545185        C       G       0/1:114,0,176   0       .       100.00
+********
+BLOCK: offset: 283 len: 2 phased: 2 SPAN: 99 fragments 10
+283     1       0       chr10   29602232        A       G       0/1:138,0,223   0       .       100.00
+284     1       0       chr10   29602331        C       T       0/1:176,0,239   0       .       100.00
+********
+BLOCK: offset: 340 len: 2 phased: 2 SPAN: 223 fragments 1
+340     1       0       chr10   35607420        C       A       0/1:56,0,87     0       .       35.88
+341     1       0       chr10   35607643        G       A       0/1:255,0,255   0       .       35.88
+********
+BLOCK: offset: 403 len: 4 phased: 4 SPAN: 127 fragments 3
+403     1       0       chr10   42070479        T       C       0/1:44,0,20     0       .       100.00
+404     1       0       chr10   42070481        G       C       0/1:44,0,20     0       .       100.00
+405     1       0       chr10   42070582        G       C       0/1:44,0,28     0       .       100.00
+406     0       1       chr10   42070606        T       A       0/1:31,1,0      0       .       37.00
+********
+###########################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

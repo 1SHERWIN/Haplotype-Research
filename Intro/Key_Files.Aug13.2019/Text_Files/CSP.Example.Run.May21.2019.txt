@@ -1,0 +1,544 @@
+#############################################################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/CSP
+# Website to manual: https://sites.google.com/site/hmatsu1226/software/csp
+#############################################################################
+# 5.21.2019
+# Instillation
+#############################################################################
+[abj15@login2 Software]$ mkdir CSP
+[abj15@login2 Software]$ ls
+CSP  DBM  HapCHAT  hapcompass_v0.8.2  HapCUT  HapCut2  HapSeq2  Harsh  MixSIH  ParticleHap  PEATH  ProbHap  rbenv-master  samtools.1.9  TRASH  vcftools_0.1.13
+[abj15@login2 Software]$ cd CSp
+-bash: cd: CSp: No such file or directory
+[abj15@login2 Software]$ cd CSP/
+[abj15@login2 CSP]$ ls
+CSP (1).tar.gz
+[abj15@login2 CSP]$ tar xzvf CSP\ \(1\).tar.gz
+CSP/
+CSP/CSP1.rb
+CSP/CSP2.rb
+CSP/example/
+CSP/example/.DS_Store
+CSP/example/fragment.txt
+CSP/example/genotype.txt
+CSP/readme.txt
+
+#############################################################
+#readme.txt file
+#
+
+[abj15@login2 CSP]$ cd CSP
+[abj15@login2 CSP]$ ls
+CSP1.rb  CSP2.rb  example  readme.txt
+[abj15@login2 CSP]$ more readme.txt
+CSP detects chimeric fragments in dilution-based sequencing.
+Version 1.0.0 (17/09/13)
+
+----------
+Reference
+----------
+
+
+----------------
+Calculating CSP
+----------------
+
+CSP is calculated with two steps.
+
+In the first step, haplotypes probabilities for each SNP fragment region are calculated with the statistical phasing.
+We use PHASE [1,2] for the statistical phasing and PHASE have to be installed to calculate CSP.
+
+Usage:
+        ruby CSP1.rb <Genotype_file> <Fragment_file> <Output_file1> <PHASE_file1> <PHASE_file2> <N> <W>
+
+Example of running CSP1:
+        ruby CSP1.rb example/genotype.txt example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5
+
+
+Genotype_file:
+This contains population genotypes information.
+Format of the file is
+<chromosome number> <chromosome position> <refSNP> <base1> <base2> <genotype1> <genotype2> <genotype3> ...
+where <genotype(n)> is n-th individual genotype of a SNP.
+<genotype1> has to be an individual who is the target of the dilution-based sequencing.
+Example of the file is as follows.
+1 52066 rs28402963 T C 10 01 01 00 01 00 00 00 10 00 00
+1 695745 . G A 10 00 00 00 00 00 00 10 00 00 00
+1 766409 rs12124819 A G 01 01 00 00 00 10 01 11 11 00 11
+1 801628 . C T 01 00 01 00 00 00 00 00 00 00 00
+1 805678 . A T 01 -- -- -- -- -- -- -- -- -- --
+1 805716 . A G 01 -- -- -- -- -- -- -- -- -- --
+1 806222 . G A 01 00 00 10 10 00 11 01 00 00 10
+In our paper, we generated this file from CEU genotypes, which were downloaded from 1000 genomes project (ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/release/20
+10_07/trio/snps/CEU.trio.2010_03.genotypes.vcf.gz and ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/release/2010_07/low_coverage/snps/CEU.low_coverage.2010_07.gen
+otypes.vcf.gz).
+
+Fragment_file:
+This contains SNP fragments.
+Please see MixSIH page for detailed explanation.
+
+Output_file1:
+This contains the haplotypes and these probabilities of the target individual for each SNP fragment.
+Because we use sliding-window calculation, a SNP fragment appears many times.
+Format of the file is
+<SNP fragment name>
+<haplotype1_1> , <haplotype1_2> , <probability of haplotype1>
+<haplotype2_1> , <haplotype2_2> , <probability of haplotype2>
+...
+Example of the file is as follows.
+frag1
+001 , 110 , 0.100
+000 , 111 , 0.899
+frag2
+0001 , 1110 , 1.000
+frag3
+00000 , 11111 , 1.000
+frag3
+00000 , 11111 , 1.000
+frag3
+00001 , 11110 , 0.670
+00011 , 11100 , 0.330
+
+PHASE_file1:
+This is a temporal file to create input file for PHASE.
+
+PHASE_file2:
+This is a prefix of the output files of PHASE.
+
+N:
+N is the number of individual genotypes.
+
+W:
+W is the sliding-window width.
+We use W=5 for default setting.
+
+
+In the second step, CSP for each SNP fragment are calculated using the results of CSP1.rb.
+
+Usage:
+        ruby CSP2.rb <Output_file1> <Fragment_file> <Output_file2> <W>
+Example of running CSP2:
+        ruby CSP2.rb out/csp1.txt example/fragment.txt out/csp2.txt 5
+
+
+Output_file1:
+This is the output file of CSP1.rb.
+
+Output_file2:
+This contains the CSP values for each SNP fragment.
+Format of the file is
+<SNP fragment name> <CSP>
+
+
+[1] Stephens, Matthew, Nicholas J. Smith, and Peter Donnelly. "A new statistical method for haplotype reconstruction from population data." The American Journal of Huma
+n Genetics 68.4 (2001): 978-989.
+[2] Stephens, Matthew, and Peter Donnelly. "A comparison of bayesian methods for haplotype reconstruction from population genotype data." The American Journal of Human
+Genetics 73.5 (2003): 1162-1169.
+################################################
+# example directory
+# fragment text file and genotype text file
+
+[abj15@login2 CSP]$ ls
+CSP1.rb  CSP2.rb  example  readme.txt
+[abj15@login2 CSP]$ cd example/
+[abj15@login2 example]$ ls
+fragment.txt  genotype.txt
+
+################################################
+# From mannual:
+# Fragment_file:
+# This contains SNP fragments.
+# Format of Input_file (Fragment_file):
+# The first line describes the number of lines of Input_file (which corresponds to the number of SNP fragments - 1).
+# After first line, each line describes a SNP fragment as below.
+# \segment_num \fragment_name \start_site1 \sequence1 \start_site2 \sequence2.....
+# where \segment_num is the number of the segments which don't have gaps in the segments,
+# \fragment_name is the name of the fragment,
+# \start_allele'i' is the first site's position of i-th segment (1-origin),
+# \sequence'i' is the sequence of i-th segment.
+# The fragments must be sorted by the value of the third column and these can be sorted as follows:
+#    sort -n -k 3 frag.txt > frag_sorted.txt
+
+
+[abj15@login2 example]$ more fragment.txt
+62
+2 chr1_4847743_4855752 2623 0000 2628 00
+2 chr1_5609426_5617856 3229 000 3234 000
+1 chr1_7333694_7339729 4099 10
+1 chr1_9850332_9856914 5784 00
+1 chr1_11553356_11563467 6513 00
+1 chr1_15029461_15059911 8364 11111
+2 chr1_15329530_15346669 8625 00000000 8635 00000000000000000
+3 chr1_18001757_18009684 9831 11 9834 11111 9841 111111
+2 chr1_18751189_18772737 10679 01 10682 10
+4 chr1_20525438_20539086 12114 0 12120 000 12125 0 12127 00
+2 chr1_21783347_21796046 12518 001 12523 101100
+2 chr1_23304084_23311310 13345 0 13347 1
+2 chr1_23778252_23801745 13526 11 13531 0010
+1 chr1_24635387_24649750 13878 0101
+1 chr1_30993475_31009424 17102 111
+2 chr1_36527479_36539519 19477 0 19479 1
+5 chr1_37967132_37982612 20285 1 20289 000000 20296 000 20300 00 20303 000
+1 chr1_38034511_38044139 20370 00000
+2 chr1_39050405_39059584 21141 1 21143 0100
+1 chr1_41124700_41143098 21983 111
+3 chr1_42115317_42125193 22891 0 22893 000 22897 000000
+3 chr1_43503455_43520870 23282 0 23284 1000 23290 11
+.
+.
+.
+###########################################################################
+# From mannual
+# Format of the file is
+# <chromosome number> <chromosome position> <refSNP> <base1> <base2> <genotype1> <genotype2> <genotype3> ... 
+# where <genotype(n)> is n-th individual genotype of a SNP.
+#
+
+[abj15@login2 example]$ more genotype.txt
+1 52066 rs28402963 T C 10 01 01 00 01 00 00 00 10 00 00
+1 695745 . G A 10 00 00 00 00 00 00 10 00 00 00
+1 766409 rs12124819 A G 01 01 00 00 00 10 01 11 11 00 11
+1 801628 . C T 01 00 01 00 00 00 00 00 00 00 00
+1 805678 . A T 01 -- -- -- -- -- -- -- -- -- --
+1 805716 . A G 01 -- -- -- -- -- -- -- -- -- --
+1 806222 . G A 01 00 00 10 10 00 11 01 00 00 10
+1 806232 . T A 01 10 10 10 10 01 11 01 10 01 10
+1 806338 . G A 10 01 00 10 00 01 10 11 00 00 00
+1 807087 . C A 10 10 01 01 00 01 00 00 00 10 00
+1 811509 . G A 10 00 01 00 00 00 00 00 00 10 00
+1 811729 . G A 01 00 01 00 00 10 00 00 01 10 00
+1 811763 . A T 10 10 10 01 00 00 00 00 10 01 00
+1 811842 . T C 01 10 10 10 00 10 01 00 10 00 00
+1 812496 . C A 01 -- -- -- -- -- -- -- -- -- --
+1 815273 rs13303179 G A 01 -- -- -- -- -- -- -- -- -- --
+1 827077 . G C 01 -- -- -- -- -- -- -- -- -- --
+1 833268 rs11516185 A G 01 00 11 01 00 11 01 10 11 01 01
+1 841253 . G T 10 00 00 00 00 00 00 00 10 00 00
+1 866063 . G C 10 00 00 00 00 00 00 00 10 00 00
+1 873954 rs7522415 C G 01 01 01 10 00 11 11 11 10 01 10
+1 874630 . G A 10 00 00 00 00 00 00 00 10 00 00
+1 892627 rs28416780 C G 01 11 11 10 11 11 10 11 10 00 01
+1 900257 rs28477686 C T 01 00 11 00 00 10 01 00 11 10 01
+#############################################################
+# run1 on example files/script
+# Usage:
+#        ruby CSP1.rb <Genotype_file> <Fragment_file> <Output_file1> <PHASE_file1> <PHASE_file2> <N> <W>
+#
+# Example of running CSP1:
+#        ruby CSP1.rb example/genotype.txt example/fragment.txt out/csp1.txt phase/input.txt phase/output.out 11 5
+##############################################################
+
+[abj15@login2 example]$ cd ..
+[abj15@login2 CSP]$ ls
+CSP1.rb  CSP2.rb  example  readme.txt
+[abj15@login2 CSP]$ mkdir 5.21.2019
+[abj15@login2 CSP]$ cd 5.21.2019/
+[abj15@login2 5.21.2019]$ mkdir out
+[abj15@login2 5.21.2019]$ mkdir phase
+
+[abj15@login2 CSP]$ ruby CSP1.rb example/genotype.txt example/fragment.txt 5.21.2019/out/csp1.txt 5.21.2019/phase/input.txt 5.21.2019/phase/output.out 11 5
+0-th fragment
+rm: cannot remove `5.21.2019/phase/output.out_pairs': No such file or directory
+CSP1.rb:191:in `initialize': No such file or directory @ rb_sysopen - 5.21.2019/phase/output.out_pairs (Errno::ENOENT)
+        from CSP1.rb:191:in `open'
+        from CSP1.rb:191:in `block (2 levels) in <main>'
+        from CSP1.rb:144:in `each'
+        from CSP1.rb:144:in `block in <main>'
+        from CSP1.rb:53:in `each'
+        from CSP1.rb:53:in `<main>'
+
+[abj15@login2 CSP]$ cd 5.21.2019/
+[abj15@login2 5.21.2019]$ ls
+out  phase
+
+[abj15@login2 5.21.2019]$ cd out/
+[abj15@login2 out]$ ls
+csp1.txt
+[abj15@login2 out]$ more csp1.txt
+[abj15@login2 out]$ wc -l csp1.txt
+0 csp1.txt
+
+[abj15@login2 out]$ cd ..
+[abj15@login2 5.21.2019]$ cd phase/
+[abj15@login2 phase]$ wc -l *
+37 input.txt
+###############################
+#
+# updated path for PHASE in winSCP
+# Run2
+#############################
+
+[abj15@login2 ~]$ cd Research.Project/Software/CSP/CSP
+[abj15@login2 CSP]$ ruby example/genotype.txt example/fragment.txt 5.21.2019/out/csp1.txt 5.21.2019/phase/input.txt 5.21.2019/phase/output.out 11 5
+example/genotype.txt:1: syntax error, unexpected tINTEGER, expecting end-of-input
+1 52066 rs28402963 T C 10 01 01 00 01
+       ^
+[abj15@login2 CSP]$  
+
+#
+#   **Forgot CSP1.rb in above command line**
+#########################
+#
+# Run3
+#
+##################################
+
+[abj15@login2 CSP]$ ruby CSP1.rb example/genotype.txt example/fragment.txt 5.21.2019/out/csp1.txt 5.21.2019/phase/input.txt 5.21.2019/phase/output.out 11 5
+
+
+
+Resolving with method R
+Making List of all possible haplotypes
+Method = R
+Performing Final Set of Iterations... nearly there!
+Performing Burn-in iterations
+  50% done
+Estimating recom rates
+Continuing Burn-in
+Performing Main iterations
+Writing output to files
+Producing Summary, please wait
+Reading in data
+Reading Positions of loci
+Reading individual     11
+Finished reading
+Computing matrix Q, please wait
+Done computing Q
+11
+5
+SSSSS
+0 #1
+0 1 0 0 1
+1 0 1 1 0
+0 #2
+0 0 0 0 0
+0 0 0 0 0
+0 #3
+0 0 1 0 1
+1 1 0 1 0
+0 #4
+0 0 0 0 0
+0 0 0 0 0
+0 #5
+0 0 0 0 0
+0 0 0 0 0
+0 #6
+0 0 0 0 0
+0 0 0 0 0
+0 #7
+0 0 0 0 0
+0 0 0 0 0
+0 #8
+1 0 1 0 0
+0 1 0 1 1
+0 #9
+1 1 0 0 0
+0 0 1 0 0
+0 #10
+1 0 0 0 1
+0 1 1 1 0
+0 #11
+0 0 0 0 0
+0 0 0 0 0
+Resolving with method R
+Making List of all possible haplotypes
+Method = R
+Performing Final Set of Iterations... nearly there!
+Performing Burn-in iterations
+  50% done
+Estimating recom rates
+Continuing Burn-in
+Performing Main iterations
+Writing output to files
+Producing Summary, please wait
+60-th fragment
+Reading in data
+Reading Positions of loci
+Reading individual     11
+Finished reading
+Computing matrix Q, please wait
+Done computing Q
+11
+3
+SSS
+0 #1
+0 1 0
+1 0 1
+0 #2
+0 0 0
+0 0 0
+0 #3
+0 1 0
+1 0 1
+0 #4
+0 0 0
+0 0 0
+0 #5
+0 0 0
+0 0 0
+0 #6
+0 0 0
+0 0 0
+0 #7
+0 0 1
+1 1 0
+0 #8
+0 0 1
+1 1 0
+0 #9
+0 0 0
+0 0 0
+0 #10
+0 0 0
+0 0 0
+0 #11
+0 0 0
+0 0 0
+Resolving with method R
+Making List of all possible haplotypes
+Method = R
+Performing Final Set of Iterations... nearly there!
+Performing Burn-in iterations
+  50% done
+Estimating recom rates
+Continuing Burn-in
+Performing Main iterations
+Writing output to files
+Producing Summary, please wait
+[abj15@login2 CSP]$
+################################################
+#
+# run3 output
+#
+##################################################
+
+[abj15@login2 CSP]$ cd 5.21.2019/
+[abj15@login2 5.21.2019]$ ls
+out  phase
+[abj15@login2 5.21.2019]$ wc -l out/*
+1022 out/csp1.txt
+[abj15@login2 5.21.2019]$ wc -l phase/*
+  37 phase/input.txt
+ 149 phase/output.out
+   3 phase/output.out_freqs
+   0 phase/output.out_hbg
+ 100 phase/output.out_monitor
+  22 phase/output.out_pairs
+   0 phase/output.out_probs
+ 101 phase/output.out_recom
+ 412 total
+
+#
+# Output_file1 format (per mannual)
+# <SNP fragment name>
+# <haplotype1_1> , <haplotype1_2> , <probability of haplotype1>
+# <haplotype2_1> , <haplotype2_2> , <probability of haplotype2>
+#
+
+[abj15@login2 5.21.2019]$ cd out/
+[abj15@login2 out]$ more csp1.txt
+chr1_4847743_4855752
+00000 , 11111 , 0.984
+00001 , 11110 , 0.011
+chr1_4847743_4855752
+00000 , 11111 , 0.882
+01111 , 10000 , 0.107
+chr1_5609426_5617856
+00011 , 11100 , 0.586
+00000 , 11111 , 0.408
+chr1_5609426_5617856
+00111 , 11000 , 0.277
+00110 , 11001 , 0.192
+00001 , 11110 , 0.078
+00000 , 11111 , 0.432
+01111 , 10000 , 0.011
+chr1_7333694_7339729
+10 , 01 , 0.998
+chr1_9850332_9856914
+11 , 00 , 0.998
+chr1_11553356_11563467
+11 , 00 , 0.739
+10 , 01 , 0.261
+chr1_15029461_15059911
+00000 , 11111 , 0.050
+01000 , 10111 , 0.943
+chr1_15329530_15346669
+00010 , 11101 , 0.051
+00011 , 11100 , 0.046
+00000 , 11111 , 0.076
+00001 , 11110 , 0.055
+00110 , 11001 , 0.046
+00111 , 11000 , 0.047
+00100 , 11011 , 0.055
+00101 , 11010 , 0.057
+01010 , 10101 , 0.074
+01011 , 10100 , 0.062
+01000 , 10111 , 0.071
+01001 , 10110 , 0.067
+01110 , 10001 , 0.062
+01111 , 10000 , 0.068
+01100 , 10011 , 0.068
+01101 , 10010 , 0.096
+chr1_15329530_15346669
+00100 , 11011 , 0.058
+00101 , 11010 , 0.078
+00110 , 11001 , 0.046
+00111 , 11000 , 0.053
+00000 , 11111 , 0.113
+00001 , 11110 , 0.054
+00010 , 11101 , 0.073
+00011 , 11100 , 0.048
+01100 , 10011 , 0.046
+01101 , 10010 , 0.053
+01110 , 10001 , 0.046
+01111 , 10000 , 0.056
+
+#############################################
+# With success of the first step of CSP
+# we move to the second step per the mannual
+# In the second step, CSP for each SNP fragment are calculated using the results of CSP1.rb.
+#
+# Usage:
+#  ruby CSP2.rb <Output_file1> <Fragment_file> <Output_file2> <W>
+# Example of running CSP2:
+#  ruby CSP2.rb out/csp1.txt example/fragment.txt out/csp2.txt 5
+#############################################
+
+[abj15@login2 5.21.2019]$ cd ..
+[abj15@login2 CSP]$ ruby CSP2.rb 5.21.2019/out/csp1.txt example/fragment.txt 5.21.2019/out/csp2.txt 5
+[abj15@login2 CSP]$ cd 5.21.2019/out/
+[abj15@login2 out]$ ls
+csp1.txt  csp2.txt
+
+##############################################
+# Output_file2:
+# This contains the CSP values for each SNP fragment.
+# Format of the file is
+# <SNP fragment name> <CSP>
+#
+
+[abj15@login2 out]$ more csp2.txt
+chr1_4847743_4855752 -2.030610449056632
+chr1_5609426_5617856 0.36197635543605017
+chr1_7333694_7339729 -3.9020746947749574
+chr1_9850332_9856914 -3.9020746947749574
+chr1_11553356_11563467 -0.9922676858281142
+chr1_15029461_15059911 -1.8319124950785197
+chr1_15329530_15346669 -0.0
+chr1_18001757_18009684 2.4667020381416584
+chr1_18751189_18772737 -4.484354327644714
+chr1_20525438_20539086 -4.595118819630122
+chr1_21783347_21796046 0.8746829768696988
+chr1_23304084_23311310 -1.4265782017264657
+chr1_23778252_23801745 0.152933599304784
+chr1_24635387_24649750 0.19069577864120885
+chr1_30993475_31009424 -0.0
+chr1_36527479_36539519 0.3413367545110443
+chr1_37967132_37982612 3.671031856670069
+chr1_38034511_38044139 -4.595118819630122
+chr1_39050405_39059584 -4.595118819630122
+chr1_41124700_41143098 -4.436575448242711
+chr1_42115317_42125193 -3.760053102751971
+chr1_43503455_43520870 -0.14876170798152075
+chr1_44750235_44755591 -2.1573248225456076

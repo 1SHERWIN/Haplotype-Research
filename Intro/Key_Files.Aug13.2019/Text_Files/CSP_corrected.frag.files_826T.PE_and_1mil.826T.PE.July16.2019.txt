@@ -1,0 +1,123 @@
+#####################################
+# Created by: Allison Bertie Johnson
+# working Directory: /home/abj15/Research.Project/Run/CSP/7.16.2019.corrections
+# Manual: https://sites.google.com/site/hmatsu1226/software/csp
+# CSP input fragment files were reformated 
+# Rerunning CSP on fragment and genotype files
+# generated from 826T PE & 1mil reads of 826T PE datasets
+#####################################
+
+cp /home/abj15/Research.Project/Run/MixSIH/7.16.2019_corrections/1mil_826T.PE/1mil.826T_MixSIH_frag.txt .
+cp /home/abj15/Research.Project/Run/CSP/6.16.2019.1mil_826T.PE/826T.genotype.txt .
+
+wc -l *
+  4861 1mil.826T_MixSIH_frag.txt
+ 12536 826T.genotype.txt
+ 17397 total
+
+###################################
+# run 1st step of CSP
+###################################
+
+mkdir out
+mkdir phase
+ls
+1mil.826T_MixSIH_frag.txt  826T.genotype.txt  out  phase
+
+
+ruby CSP1.rb 826T.genotype.txt 1mil.826T_MixSIH_frag.txt out/1mil_826T_CSP_csp1.txt phase/1mil_826T_CSP_input.txt phase/1mil_826T_CSP_output.out 11 5
+
+ruby /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb 826T.genotype.txt 1mil.826T_MixSIH_frag.txt out/1mil_826T_CSP_csp1.txt phase/1mil_826T_CSP_input.txt phase/1mil_826T_CSP_output.out
+0-th fragment
+rm: cannot remove `phase/1mil_826T_CSP_output.out_pairs': No such file or directory
+Reading in data
+Reading Positions of loci
+/home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `initialize': No such file or directory @ rb_sysopen - phase/1mil_826T_CSP_output.out_pairs (Errno::ENOENT)
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `open'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `block (2 levels) in <main>'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:144:in `each'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:144:in `block in <main>'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:53:in `each'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:53:in `<main>'
+
+cd phase
+[abj15@login1 phase]$ wc -l *
+4 1mil_826T_CSP_input.txt
+0 1mil_826T_CSP_output.out
+0 1mil_826T_CSP_output.out_freqs
+0 1mil_826T_CSP_output.out_hbg
+0 1mil_826T_CSP_output.out_monitor
+0 1mil_826T_CSP_output.out_probs
+4 total
+
+# unsuccessful run 
+##################################
+##################################
+# Run CSP on correctly formated 
+# 826T PE dataset fragment file
+##################################
+
+cp /home/abj15/Research.Project/Run/MixSIH/7.16.2019_corrections/826T_PE/826T_PE_MixSIH_frag.txt .
+cp /home/abj15/Research.Project/Run/CSP/7.7.2019_826T.PE/826T_CSP_genotype.txt .
+
+ls
+826T_CSP_genotype.txt  826T_PE_MixSIH_frag.txt
+
+head 826T_CSP_genotype.txt
+10 320390 . A C 11
+10 368507 . G A 11
+10 390346 . G A 11
+10 587617 . C A 11
+10 635577 . G C 01
+10 1101983 . C T 11
+10 1166555 . T C 11
+10 1182970 . A G 11
+10 1183608 . C T 01
+10 1184763 . C T 01
+
+head 826T_PE_MixSIH_frag.txt
+8852
+1 ILLUMINA-BFC82F_0015_FC:7:116:16101:13756#CAGATC_MP 53 10 II
+1 ILLUMINA-BFC82F_0015_FC:7:36:18345:9079#CAGATC_MP 53 01 >>
+1 ILLUMINA-BFC82F_0015_FC:7:38:2799:18153#CAGATC_MP 53 10 IF
+1 ILLUMINA-BFC82F_0015_FC:7:78:4374:7639#CAGATC_MP 53 10 >>
+1 ILLUMINA-BFC82F_0015_FC:7:82:15989:20831#CAGATC_MP 53 10 IE
+1 ILLUMINA-BFC82F_0015_FC:7:91:7109:3542#CAGATC_MP 53 01 >>
+2 ILLUMINA-BFC82F_0015_FC:7:40:5034:3935#CAGATC_MP 84 1 86 0 BH
+1 ILLUMINA-BFC82F_0015_FC:7:16:13081:14567#CAGATC_MP 85 11 DI
+1 ILLUMINA-BFC82F_0015_FC:7:102:9883:3792#CAGATC 177 00 II
+
+######################## 
+# 1st step in CSP
+########################
+
+ruby /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb 826T_CSP_genotype.txt 826T_PE_MixSIH_frag.txt out/826T.PE_CSP.csp1 phase/826T.pe_CSP.input phase/826T.PE_CSP_output.out
+0-th fragment
+rm: cannot remove `phase/826T.PE_CSP_output.out_pairs': No such file or directory
+Reading in data
+Reading Positions of loci
+/home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `initialize': No such file or directory @ rb_sysopen - phase/826T.PE_CSP_output.out_pairs (Errno::ENOENT)
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `open'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:191:in `block (2 levels) in <main>'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:144:in `each'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:144:in `block in <main>'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:53:in `each'
+        from /home/abj15/Research.Project/Software/CSP/CSP/CSP1.rb:53:in `<main>'
+
+cd out/
+wc -l *
+0 826T.PE_CSP.csp1
+
+cd ../phase/
+wc -l *
+4 826T.pe_CSP.input
+0 826T.PE_CSP_output.out
+0 826T.PE_CSP_output.out_freqs
+0 826T.PE_CSP_output.out_hbg
+0 826T.PE_CSP_output.out_monitor
+0 826T.PE_CSP_output.out_probs
+4 total
+
+# unsuccessful run of CSP 1st step 
+##########################################
+##########################################

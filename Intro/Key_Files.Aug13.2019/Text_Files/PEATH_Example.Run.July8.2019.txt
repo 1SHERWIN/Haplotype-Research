@@ -1,0 +1,274 @@
+######################################
+# Created by: Allison Bertie Johnson
+# Working Directory: /home/abj15/Research.Project/Software/PEATH/PEATH-master/src
+# Manual: https://github.com/jcna99/PEATH
+# PEATH: Compile PEATH.cpp, run example script & run PEATH on real data
+#######################################
+# first we must complie PEATH.cpp 
+
+[abj15@login1 PEATH-master]$ ls
+DataSet  README.md  src
+[abj15@login1 PEATH-master]$ cd src/
+[abj15@login1 src]$ ls
+eval.cpp  PEATH.cpp
+
+####################
+#Error.1
+####################
+
+[abj15@login1 src]$ g++ PEATH.cpp -o PEATH -O2 -std=c++11
+cc1plus: error: unrecognized command line option "-std=c++11"
+
+#####################
+# Error.2
+#####################
+
+[abj15@login1 src]$ g++ PEATH.cpp -o PEATH
+In file included from /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/random:35,
+                 from PEATH.cpp:7:
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/c++0x_warning.h:31:2: error: #error This file requires compiler and library support for the upcoming ISO C++ standard, C++0x. This support is currently experimental, and must be enabled with the -std=c++0x or -std=gnu++0x compiler options.
+PEATH.cpp: In function 'void GA(HaploType&, BlockType&)':
+PEATH.cpp:385: error: 'chrono' has not been declared
+PEATH.cpp:386: error: 'default_random_engine' was not declared in this scope
+PEATH.cpp:386: error: expected ';' before 'generator'
+PEATH.cpp:387: error: 'uniform_real_distribution' was not declared in this scope
+PEATH.cpp:387: error: expected primary-expression before 'double'
+PEATH.cpp:387: error: expected ';' before 'double'
+PEATH.cpp:398: error: 'generator' was not declared in this scope
+PEATH.cpp:398: error: 'distribution' was not declared in this scope
+PEATH.cpp:430: error: 'generator' was not declared in this scope
+PEATH.cpp:430: error: 'distribution' was not declared in this scope
+PEATH.cpp: In function 'void load_matrixFile(char*)':
+PEATH.cpp:795: error: 'pow' was not declared in this scope
+PEATH.cpp: In function 'void build_aux_struct()':
+PEATH.cpp:846: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp:846: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp:882: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp:882: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp:891: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp:891: warning: extended initializer lists only available with -std=c++0x or -std=gnu++0x
+PEATH.cpp: In function 'void procedure(char*, char*, int)':
+PEATH.cpp:985: error: 'std::chrono' has not been declared
+PEATH.cpp:985: error: expected ';' before 'start'
+PEATH.cpp:1062: error: 'std::chrono' has not been declared
+PEATH.cpp:1062: error: expected ';' before 'end'
+PEATH.cpp:1063: error: 'std::chrono' has not been declared
+PEATH.cpp:1063: error: expected primary-expression before 'double'
+PEATH.cpp:1063: error: expected ';' before 'double'
+PEATH.cpp:1087: error: 'DefaultSec' was not declared in this scope
+
+##################
+# Error.3
+##################
+
+[abj15@login1 src]$ g++ PEATH.cpp -o PEATH  -std=c++0x
+PEATH.cpp: In function 'void GA(HaploType&, BlockType&)':
+PEATH.cpp:386: error: 'default_random_engine' was not declared in this scope
+PEATH.cpp:386: error: expected ';' before 'generator'
+PEATH.cpp:387: error: 'uniform_real_distribution' was not declared in this scope
+PEATH.cpp:387: error: expected primary-expression before 'double'
+PEATH.cpp:387: error: expected ';' before 'double'
+PEATH.cpp:398: error: 'generator' was not declared in this scope
+PEATH.cpp:398: error: 'distribution' was not declared in this scope
+PEATH.cpp:430: error: 'generator' was not declared in this scope
+PEATH.cpp:430: error: 'distribution' was not declared in this scope
+PEATH.cpp: In function 'void build_aux_struct()':
+PEATH.cpp:882: error: call of overloaded 'push_back(<brace-enclosed initializer list>)' is ambiguous
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:733: note: candidates are: void std::vector<_Tp, _Alloc>::push_back(const _Tp&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:746: note:                 void std::vector<_Tp, _Alloc>::push_back(_Tp&&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+PEATH.cpp:891: error: call of overloaded 'push_back(<brace-enclosed initializer list>)' is ambiguous
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:733: note: candidates are: void std::vector<_Tp, _Alloc>::push_back(const _Tp&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:746: note:                 void std::vector<_Tp, _Alloc>::push_back(_Tp&&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+
+[abj15@login1 src]$ g++ PEATH.cpp -o PEATH  -std=gnu++0x
+PEATH.cpp: In function 'void GA(HaploType&, BlockType&)':
+PEATH.cpp:386: error: 'default_random_engine' was not declared in this scope
+PEATH.cpp:386: error: expected ';' before 'generator'
+PEATH.cpp:387: error: 'uniform_real_distribution' was not declared in this scope
+PEATH.cpp:387: error: expected primary-expression before 'double'
+PEATH.cpp:387: error: expected ';' before 'double'
+PEATH.cpp:398: error: 'generator' was not declared in this scope
+PEATH.cpp:398: error: 'distribution' was not declared in this scope
+PEATH.cpp:430: error: 'generator' was not declared in this scope
+PEATH.cpp:430: error: 'distribution' was not declared in this scope
+PEATH.cpp: In function 'void build_aux_struct()':
+PEATH.cpp:882: error: call of overloaded 'push_back(<brace-enclosed initializer list>)' is ambiguous
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:733: note: candidates are: void std::vector<_Tp, _Alloc>::push_back(const _Tp&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:746: note:                 void std::vector<_Tp, _Alloc>::push_back(_Tp&&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+PEATH.cpp:891: error: call of overloaded 'push_back(<brace-enclosed initializer list>)' is ambiguous
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:733: note: candidates are: void std::vector<_Tp, _Alloc>::push_back(const _Tp&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../include/c++/4.4.7/bits/stl_vector.h:746: note:                 void std::vector<_Tp, _Alloc>::push_back(_Tp&&) [with _Tp = BlockType, _Alloc = std::allocator<BlockType>]
+
+################################################
+################################################
+# Run Example script
+# using PEATH Path: /home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp
+# Example from manual: 
+# 	./PEATH <input_file> <output_file> (param)
+# 	ex) ./PEATH chr1.matrix.SORTED chr1.haplo
+################################################
+
+[abj15@login1 example.run]$ /home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp /home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED matrix_05_001_haplotype.file
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 10:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 11: //#define: No such file or directory
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 12:
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 14:
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 17:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 18: using: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 18:
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 19:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 20: typedef: command not found
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 21: char: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 21:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 22: double: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 22:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 23: double: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 23:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 24: int: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 24:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 25: int: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 25:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 26: int: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 26:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 27: }SubFragType: command not found
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 27:
+: command not foundh.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 28:
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 29: syntax error near unexpected token `('
+'home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH.cpp: line 29: `typedef struct {                    // fragment(read)
+
+###################################
+# I believe PEATH.cpp was not
+# correctly compiled
+###################################
+# Input Format
+# Example Data:/home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes
+###################################
+
+[abj15@login1 PEATH-master]$ cd DataSet/
+[abj15@login1 DataSet]$ ls
+Simulated_chromosomes  Simulated_chromosomes.zip
+[abj15@login1 DataSet]$ cd Simulated_chromosomes
+
+[abj15@login1 Simulated_chromosomes]$ head new_matrix_05_001.MATRIX.SORTED
+5568 22801
+2 chr22_SPA9_8733 2 0 5 0 ==
+1 chr22_SPH2_1940 3 100 C==
+2 chr22_SPC7_9526 3 1 6 01 =:=
+1 chr22_SPA5_5497 4 11 ??
+1 chr22_SPE5_7313 6 01 F@
+1 chr22_SPG3_1746 8 001 =8*
+2 chr22_SPH6_4273 8 0 10 0 @8
+1 chr22_SPD8_10447 8 000 LIE
+1 chr22_SPF4_3154 9 00 5:
+
+##############################
+# Appears to be similar to 
+# HapCUT2 fragment file
+# There is no description in the
+# manual for each column
+##############################
+#7.9.2019
+# module gcc/7.2.0 need before compiling
+##############################
+
+[abj15@login1 7.9.2019]$ cd /home/abj15/Research.Project/Software/PEATH/PEATH-master
+[abj15@login1 PEATH-master]$ ls
+DataSet  README.md  src
+[abj15@login1 PEATH-master]$ module load gcc/7.2.0
+[abj15@login1 PEATH-master]$ cd src/
+[abj15@login1 src]$ module load gcc/7.2.0
+[abj15@login1 src]$ ls
+eval.cpp  PEATH.cpp
+[abj15@login1 src]$ g++ PEATH.cpp -o PEATH -O2 -std=c++11
+[abj15@login1 src]$ ls
+eval.cpp  PEATH  PEATH.cpp
+
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH /home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED  matrix_05_001.haplo
+
+Error message:
+Inputfile "/home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.matrix_05_001.haplo" does not exist.
+
+##############################
+# It appears that the output .haplo file is being attached to the input file name
+##############################
+# Test:Leaving off output file name 
+##############################
+
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH /home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED
+
+usage: /home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH <input_file> <output_file> <param>
+<param> is a positive integer (optional, default : 50)
+
+#####################################
+#Error message regarding parameter
+######################################
+# Test: adding parameter defualt value
+######################################
+/home/abj15/Research.Project/Software/PEATH/PEATH-master/src/./PEATH /home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED 50
+Inputfile "/home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.50" does not exist.
+
+####################
+# Error: param value added to end of input file
+####################
+# Test: cp example data to working directory
+####################
+
+[abj15@login1 example.run]$ cp /home/abj15/Research.Project/Software/PEATH/PEATH-master/DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED .
+[abj15@login1 example.run]$ /home/abj15/Research.Project/Software/PEATH/PEATH-master/src/PEATH new_matrix_05_001.MATRIX.SORTED matrix_05_001.haplo
+22412   22083   5567  4710.06   4288   33.188
+
+[abj15@login1 example.run]$ wc -l *
+ 22365 matrix_05_001.haplo
+  5568 new_matrix_05_001.MATRIX.SORTED
+ 27933 total
+
+[abj15@login1 example.run]$ more matrix_05_001.haplo
+Block Number: 1  Block Length: 6  Phased Length: 6  Number of Reads: 5  Start position: 2  Weighted MEC: 0.0160636  MEC: 0
+2        1       0
+3        0       1
+4        1       0
+5        1       0
+6        1       0
+7        0       1
+********
+Block Number: 2  Block Length: 3  Phased Length: 3  Number of Reads: 5  Start position: 8  Weighted MEC: 0.910098  MEC: 1
+8        1       0
+9        1       0
+10       1       0
+********
+
+######################
+# Success
+######################
+######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
