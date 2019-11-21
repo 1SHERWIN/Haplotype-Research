@@ -57,6 +57,7 @@ my $mixHap1 = "";
 my $mixHap2 = "";
 my $block = 0;
 my $agree = 0;
+my $agreeString = "";
 my $line;
 my $key = $ARGV[1];
 $key--;
@@ -93,19 +94,23 @@ sub getBlockAgree(){
 	$agree = 0;
 	if (peathHapcutAgree()){
 		$agree += 2;
+		$agreeString = "PeathHapcut"
 	}
 	if (peathMixAgree()){
 		$agree += 2;
+		$agreeString = "PeathMix"
 	}
 	if (hapcutMixAgree()){
 		$agree += 2;
+		$agreeString = "HapcutMix"
 	}
 	if ($agree > 2){
 		$agree = 3;
+		$agreeString = "PeathHapcutMix"
 	}
 }
 sub printAgreement(){
-	print $out "$block\t$agree\n";
+	print $out "$block\t$agree\t$agreeString\n";
 
 }
 print $out "Block\tAgreement\n";
@@ -129,6 +134,7 @@ while (!eof(IN1)) {
 		$hapcutHap2 = "";
 		$mixHap1 = "";
 		$mixHap2 = "";
+		$agreeString = "";
 	}
 	
 	
