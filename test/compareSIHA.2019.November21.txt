@@ -1,0 +1,27 @@
+#########################################################
+# Sample script
+#########################################################
+
+
+
+Path
+----
+C:\Users\Win\Documents\GitHub\Haplotype-Research
+
+gc .\sampleResult.txt | Measure-Object -Line
+
+Lines Words Characters Property
+----- ----- ---------- --------
+31355
+
+# Added last block
+
+perl getAgreement12Col.pl test/peath.hapcut2.mixSIH.12col.txt 4 test/sampleResult.txt
+
+gc test\sampleResult.txt | Measure-Object -Line
+
+Lines Words Characters Property
+----- ----- ---------- --------
+31356
+
+# Sort before run

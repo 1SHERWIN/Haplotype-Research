@@ -1,7 +1,9 @@
 # 2019 Fall
 # Name: Sherwin Massoudian. NetID: s_m774 
 # This script scores the intersection of three haplotype packages
+# perl getAgreement12Col.pl test/peath.hapcut2.mixSIH.12col.txt 4 test/sampleResult.txt
 # perl /home/s_m774/software/perl/getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 4 sampleResult.txt
+
  
 # 1st argument should have 12 columns: peath.pos       pea.h1  pea.h2  pea.blk hapcut.pos      cut.h1  cut.h2  cut.blk mixSIH.pos      mix.h1  mix.h2  mix.blk
 # 3       1       0       1       3       0       1       1       3       0       1       1
@@ -135,6 +137,11 @@ while (!eof(IN1)) {
 	$mixHap1 .= $position[$mh1];
 	$mixHap2 .= $position[$mh2];
 }
+
+# Print the last block
+getBlockAgree();
+printAgreement();
+		
 
 close $out;
 
