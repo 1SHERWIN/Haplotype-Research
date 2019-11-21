@@ -35,10 +35,10 @@ use strict; use warnings;
 my $start = time();
 
 # Sort file on key
-system("sort -n -k $ARGV[1] $ARGV[0]");
+system("sort -n -k $ARGV[1] $ARGV[0] > sortedSIHA.txt");
 
 # Open IO files
-open(IN1, "<$ARGV[0]") or die "Error reading $ARGV[0]\n";
+open(IN1, "<sortedSIHA.txt") or die "Error reading $ARGV[0]\n";
 open(my $out, ">$ARGV[2]") or die "Error creating $ARGV[2]\n";
 
 # index of each haplotype
