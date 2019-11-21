@@ -1,5 +1,5 @@
-# 2019 Fall
-# Name: Sherwin Massoudian. NetID: s_m774 
+# 2019 November
+# Author: Sherwin Massoudian
 # This script scores the intersection of three haplotype packages
 # perl getAgreement12Col.pl test/peath.hapcut2.mixSIH.12col.txt 4 test/sampleResult.txt
 # perl /home/s_m774/software/perl/getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 4 sampleResult.txt
@@ -33,6 +33,9 @@ use strict; use warnings;
 
 # Start timer
 my $start = time();
+
+# Sort file on key
+system("sort -n -k $ARGV[1] $ARGV[0]");
 
 # Open IO files
 open(IN1, "<$ARGV[0]") or die "Error reading $ARGV[0]\n";

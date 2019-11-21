@@ -1,5 +1,5 @@
 #########################################################
-# Sample script
+# Corrected comapring SIHA peath hapcut2 mixsih
 #########################################################
 
 
@@ -24,4 +24,9 @@ Lines Words Characters Property
 ----- ----- ---------- --------
 31356
 
-# Sort before run
+# LEAP server
+
+/home/s_m774/Haplotype-Research
+
+git pull
+
