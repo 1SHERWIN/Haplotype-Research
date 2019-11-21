@@ -1,3 +1,3 @@
 # Haplotype-Research
  
-Developing Perl code as part of Dr. Suns lab
+Perl applications used by Dr. Suns lab
