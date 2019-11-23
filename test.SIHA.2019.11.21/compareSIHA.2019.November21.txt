@@ -45,3 +45,53 @@ perl ../getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 12 mixsihResult.txt
  31356 peathResult.txt
  
  
+# Peath key
+
+cut -f 3 peathResult.txt | sort | uniq -c
+    356
+    182 HapcutMix
+    424 PeathHapcut
+  29919 PeathHapcutMix
+    475 PeathMix
+
+
+
+# HapCut 2 key
+
+cut -f 3 hapcut2Result.txt | sort | uniq -c
+    285
+     66 HapcutMix
+    316 PeathHapcut
+  31294 PeathHapcutMix
+    292 PeathMix
+	
+# mixSIH key
+
+cut -f 3 mixsihResult.txt | sort | uniq -c
+    285
+     66 HapcutMix
+    316 PeathHapcut
+  31294 PeathHapcutMix
+    292 PeathMix
+	
+##############################	
+# November 21 meeting
+##############################	
+
+comparing SIHA for 0 agreements => "-" in column 3
+add a 4th column with SNP count per block
+Install and run Whatshap
+
+
+
+
+
+
+
+
+
+
+
+
+
+

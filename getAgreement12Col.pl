@@ -23,7 +23,7 @@
 # results.txt
 
 # Output is a point system: 0 2 or 3 agreements on Block _
-# Block	Agreement
+# Block	Agreement	Matches		SNPs
 # 1		3
 # 2		2
 # 3		3
@@ -57,6 +57,7 @@ my $mixHap1 = "";
 my $mixHap2 = "";
 my $block = 0;
 my $agree = 0;
+my $snpCount = 0;
 my $agreeString = "";
 my $line;
 my $key = $ARGV[1];
@@ -110,7 +111,7 @@ sub getBlockAgree(){
 	}
 }
 sub printAgreement(){
-	print $out "$block\t$agree\t$agreeString\n";
+	print $out "$block\t$agree\t$agreeString\t$snpCount\n";
 
 }
 print $out "Block\tAgreement\n";
@@ -123,6 +124,9 @@ while (!eof(IN1)) {
 		$block = $position[$key];
 	}
 	
+	# Count the SNPs in each block
+	$snpCount++;
+	
 	# Print package agreement at the end of a block
 	if ($block != $position[$key]) {
 		getBlockAgree();
@@ -134,7 +138,8 @@ while (!eof(IN1)) {
 		$hapcutHap2 = "";
 		$mixHap1 = "";
 		$mixHap2 = "";
-		$agreeString = "";
+		$agreeString = "-";
+		$snpCount = 0;
 	}
 	
 	
