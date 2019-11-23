@@ -24,10 +24,11 @@
 
 # Output is a point system: 0 2 or 3 agreements on Block _
 # Block	Agreement	Matches		SNPs
-# 1		3
-# 2		2
-# 3		3
-# 4		0
+# 1       3       PeathHapcutMix  3
+# 2       3       PeathHapcutMix  2
+# 3       3       PeathHapcutMix  2
+# 4       3       PeathHapcutMix  2
+# 5       3       PeathHapcutMix  2
 
 use strict; use warnings;
 
@@ -114,7 +115,7 @@ sub printAgreement(){
 	print $out "$block\t$agree\t$agreeString\t$snpCount\n";
 
 }
-print $out "Block\tAgreement\n";
+print $out "Block\tAgreement\tMatches\tSNP count\n";
 while (!eof(IN1)) {
 	$line = <IN1>;
 	chomp $line;
