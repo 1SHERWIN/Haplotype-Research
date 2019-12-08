@@ -21,13 +21,7 @@
 
 # 3rd argument decides to use 1st or 2nd package block ID
 
-# Output will have the intersect of the inputs at the start of the file and uniques at the end
-# Block	Agreement	Matches		SNPs
-# 1       3       PeathHapcutMix  3
-# 2       3       PeathHapcutMix  2
-# 3       3       PeathHapcutMix  2
-# 4       3       PeathHapcutMix  2
-# 5       3       PeathHapcutMix  2
+# 4th argument will be the output
 
 use strict; use warnings;
 
@@ -88,7 +82,7 @@ foreach(sort { $a <=> $b } @intersect) {
 system("paste package1.txt package2.txt > 8col.txt");
 
 # Sort file on key
-my $key = $ARGV[2] * 4 - 1;
+my $key = $ARGV[2] * 4;
 system("sort -n -k $key 8col.txt > sorted8col.txt");
 
 open(IN1, "<sorted8col.txt") or die "Error opening sorted8col.txt\n";
@@ -113,6 +107,7 @@ my $snvinblock = 0;
 my $agreeString = "";
 my $blockCount = 0;
 my $snvCount = 0;
+$key--;
 
 
 sub getAgreement(){
