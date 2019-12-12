@@ -1,8 +1,8 @@
 # 2019 November
 # Author: Sherwin Massoudian
-# This script sorts SIHA results of 2 packages to match their positions
+# This script compares theSIHA results of 2 packages 
 
-# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt
+# perl ./compare2HA.pl peath.4col.txt hapcut.4col.txt 1 results.txt
 
  
 # 1st argument should have 4 columns: position hap1 hap2 BlockID
@@ -20,13 +20,14 @@
 # 77582   0       1       3
 
 # 3rd argument decides to use 1st or 2nd package block ID
+# 1 or 2
 
 # 4th argument will be the output
 
 use strict; use warnings;
 
 # Start timer
-my $start = time();
+# my $start = time();
 
 # first HA results
 open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
@@ -68,15 +69,8 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-# # output the unique positions of file A
-# foreach(sort { $a <=> $b } keys %snpsA) {
-	# print $outA "$snpsA{$_}\n";
-# }
 
-# # output the unique positions of file B
-# foreach(sort { $a <=> $b } keys %snpsB) {
-	# print $outB "$snpsB{$_}\n";
-# }
+
 
 # Paste sorted files side by side
 system("paste package1.txt package2.txt > 8col.txt");
@@ -171,9 +165,9 @@ printAgreement();
 close $out;
 
 # Display runtime
-my $endTime = time();
-my $runTime = $endTime - $start;
-print "Job took $runTime seconds \n";
+# my $endTime = time();
+# my $runTime = $endTime - $start;
+# print "Job took $runTime seconds \n";
 
 # Print agreement
 print "$ARGV[0] and $ARGV[1] agreement: $blockCount blocks and $snvCount SNVs\n";
