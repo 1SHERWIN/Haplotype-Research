@@ -69,34 +69,6 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-# output unique variants 
-# my $diff = abs((keys %snpsB) - (keys %snpsA));
-# my $biggerHA = keys %snpsA >= keys %snpsB ? 1 : 2;
-
-foreach(sort { $a <=> $b } keys %snpsA) {
-	print $outA "$snpsA{$_}\n";
-	print $outB "-\t-\t-\t10000\n";
-	delete $snpsA{$_};
-}
-foreach(sort { $a <=> $b } keys %snpsB) {
-	print $outB "$snpsB{$_}\n";
-	print $outA "-\t-\t-\t10000\n";
-	delete $snpsB{$_};
-}
-
-# while ($diff) {
-	# if ($biggerHA == 1) {
-		# print $outB "-\t-\t-\t0\n";
-		# $diff--;
-	# }
-	# else {
-		# print $outA "-\t-\t-\t0\n";
-		# $diff--;
-	# }
-# }
-
-
-
 
 
 
