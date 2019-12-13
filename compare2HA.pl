@@ -69,7 +69,6 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-# output unique variants 
 foreach(sort { $a <=> $b } keys %snpsA) {
 	print $outA "$snpsA{$_}\n";
 	print $outB "-\t-\t-\t10000\n";
@@ -80,6 +79,7 @@ foreach(sort { $a <=> $b } keys %snpsB) {
 	print $outA "-\t-\t-\t10000\n";
 	delete $snpsB{$_};
 }
+
 
 
 # Paste sorted files side by side
@@ -105,35 +105,40 @@ my $aHap1 = "";
 my $aHap2 = "";
 my $bHap1 = "";
 my $bHap2 = "";
+my $snvinblock;
+my $snvCountA;
+my $snvCountB;
+my $posMatch = "";
+my $hapMatch = "";
 my $block = 0;
-my $agree = 0;
-my $snvinblock = 0;
-my $agreeString = "";
-my $blockCount = 0;
-my $snvCount = 0;
+my $totalMatchedBlock = 0;
+my $totalMatchedSNV = 0;
 $key--;
 
 
 sub getAgreement(){
+	$snvCountA = length($aHap1);
+	$snvCountB = length($bHap1);
+	$posMatch = $snvCountA == $snvCountB ? "match" : "-";
 	if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
-		$agreeString = "match";
-		$snvCount += $snvinblock;
-		$blockCount++;
+		$hapMatch = "match";
+		$totalMatchedSNV += $snvinblock;
+		$totalMatchedBlock++;
 	}
 	elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
-		$agreeString = "match";
-		$snvCount += $snvinblock;
-		$blockCount++;
+		$hapMatch = "match";
+		$totalMatchedSNV += $snvinblock;
+		$totalMatchedBlock++;
 	}
 	else {
-		$agreeString = "-";
+		$hapMatch = "-";
 	}
 }
+print $out "Block\tCountA\tCountB\tSNVs\tHaplotype\n";
 sub printAgreement(){
-	print $out "$block\t$agreeString\t$snvinblock\n";
+	print $out "$block\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
 
 }
-print $out "Block\tAgreement\tSNP count\n";
 while (!eof(IN1)) {
 	my $line = <IN1>;
 	chomp $line;
@@ -155,17 +160,18 @@ while (!eof(IN1)) {
 		$aHap2 = "";
 		$bHap1 = "";
 		$bHap2 = "";
-		$agreeString = "-";
+		$hapMatch = "-";
 		$snvinblock = 0;
-		# print "$blockCount\t$snvCount\n";
 	}
 	
 	
 	# Add genotype in current line
 	$aHap1 .= $position[$A1];
 	$aHap2 .= $position[$A2];
-	$bHap1 .= $position[$B1];
-	$bHap2 .= $position[$B2];
+	if ($bHap1 ne '-'){
+		$bHap1 .= $position[$B1];
+		$bHap2 .= $position[$B2];
+	}
 }
 
 # Print the last block
@@ -180,4 +186,4 @@ close $out;
 # print "Job took $runTime seconds \n";
 
 # Print agreement
-print "$ARGV[0] and $ARGV[1] agreement: $blockCount blocks and $snvCount SNVs\n";
+print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
