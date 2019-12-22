@@ -153,96 +153,96 @@ system("paste 8col.txt package3.txt > 12col.txt");
 my $key = $ARGV[2] * 4;
 system("sort -n -k $key 12col.txt > sorted12col.txt");
 
-open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
-open my $out, '>', $ARGV[3] or die $!;
+# open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
+# open my $out, '>', $ARGV[4] or die $!;
 
 
-# index of each haplotype
-my $A1 = 1;
-my $A2 = 2;
-my $B1 = 5;
-my $B2 = 6;
+# # index of each haplotype
+# my $A1 = 1;
+# my $A2 = 2;
+# my $B1 = 5;
+# my $B2 = 6;
 
 
-# String to record Haplotype blocks
-my $aHap1 = "";
-my $aHap2 = "";
-my $bHap1 = "";
-my $bHap2 = "";
-my $snvinblock;
-my $snvCountA;
-my $snvCountB;
-my $posMatch = "";
-my $hapMatch = "";
-my $block = 0;
-my $totalMatchedBlock = 0;
-my $totalMatchedSNV = 0;
-$key--;
+# # String to record Haplotype blocks
+# my $aHap1 = "";
+# my $aHap2 = "";
+# my $bHap1 = "";
+# my $bHap2 = "";
+# my $snvinblock;
+# my $snvCountA;
+# my $snvCountB;
+# my $posMatch = "";
+# my $hapMatch = "";
+# my $block = 0;
+# my $totalMatchedBlock = 0;
+# my $totalMatchedSNV = 0;
+# $key--;
 
 
-sub getAgreement(){
-	$snvCountA = length($aHap1);
-	$snvCountB = length($bHap1);
-	$posMatch = $snvCountA == $snvCountB ? "match" : "-";
-	if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
-		$hapMatch = "match";
-		$totalMatchedSNV += $snvinblock;
-		$totalMatchedBlock++;
-	}
-	elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
-		$hapMatch = "match";
-		$totalMatchedSNV += $snvinblock;
-		$totalMatchedBlock++;
-	}
-	else {
-		$hapMatch = "-";
-	}
-}
-print $out "Block\tCountA\tCountB\tSNVs\tHaplotype\n";
-sub printAgreement(){
-	print $out "$block\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
+# sub getAgreement(){
+	# $snvCountA = length($aHap1);
+	# $snvCountB = length($bHap1);
+	# $posMatch = $snvCountA == $snvCountB ? "match" : "-";
+	# if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
+		# $hapMatch = "match";
+		# $totalMatchedSNV += $snvinblock;
+		# $totalMatchedBlock++;
+	# }
+	# elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
+		# $hapMatch = "match";
+		# $totalMatchedSNV += $snvinblock;
+		# $totalMatchedBlock++;
+	# }
+	# else {
+		# $hapMatch = "-";
+	# }
+# }
+# print $out "Block\tCountA\tCountB\tSNVs\tHaplotype\n";
+# sub printAgreement(){
+	# print $out "$block\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
 
-}
-while (!eof(IN1)) {
-	my $line = <IN1>;
-	chomp $line;
+# }
+# while (!eof(IN1)) {
+	# my $line = <IN1>;
+	# chomp $line;
 	
-	my @position = split(/	/, $line);
-	if ($block == 0) {
-		$block = $position[$key];
-	}
+	# my @position = split(/	/, $line);
+	# if ($block == 0) {
+		# $block = $position[$key];
+	# }
 	
-	# Count the SNPs in each block
-	$snvinblock++;
+	# # Count the SNPs in each block
+	# $snvinblock++;
 	
-	# Print package agreement at the end of a block
-	if ($block != $position[$key]) {
-		getAgreement();
-		printAgreement();
-		$block = $position[$key];
-		$aHap1 = "";
-		$aHap2 = "";
-		$bHap1 = "";
-		$bHap2 = "";
-		$hapMatch = "-";
-		$snvinblock = 0;
-	}
+	# # Print package agreement at the end of a block
+	# if ($block != $position[$key]) {
+		# getAgreement();
+		# printAgreement();
+		# $block = $position[$key];
+		# $aHap1 = "";
+		# $aHap2 = "";
+		# $bHap1 = "";
+		# $bHap2 = "";
+		# $hapMatch = "-";
+		# $snvinblock = 0;
+	# }
 	
 	
-	# Add genotype in current line
-	$aHap1 .= $position[$A1];
-	$aHap2 .= $position[$A2];
-	if ($bHap1 ne '-'){
-		$bHap1 .= $position[$B1];
-		$bHap2 .= $position[$B2];
-	}
-}
+	# # Add genotype in current line
+	# $aHap1 .= $position[$A1];
+	# $aHap2 .= $position[$A2];
+	# if ($bHap1 ne '-'){
+		# $bHap1 .= $position[$B1];
+		# $bHap2 .= $position[$B2];
+	# }
+# }
 
-# Print the last block
-getAgreement();
-printAgreement();
+# # Print the last block
+# getAgreement();
+# printAgreement();
 
-close $out;
+# close $out;
 
 # Display runtime
 my $runTime = $endTime - $start;
@@ -250,4 +250,4 @@ my $endTime = time();
 print "Job took $runTime seconds \n";
 
 # Print agreement
-print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
+# print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
