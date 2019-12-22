@@ -153,6 +153,7 @@ system("paste 8col.txt package3.txt > 12col.txt");
 my $key = $ARGV[2] * 4;
 system("sort -n -k $key 12col.txt > sorted12col.txt");
 
+# TODO: calculate agreement
 # open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
 # open my $out, '>', $ARGV[4] or die $!;
 
@@ -250,4 +251,4 @@ my $endTime = time();
 print "Job took $runTime seconds \n";
 
 # Print agreement
-# print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
+# print "$ARGV[0] $ARGV[1] and $ARGV[2] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
