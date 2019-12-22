@@ -42,12 +42,16 @@ open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
 # second HA results
 open my $fileB, '<', $ARGV[1] or die "Error reading $ARGV[1]\n";
 
+# third HA results
+open my $fileC, '<', $ARGV[2] or die "Error reading $ARGV[2]\n";
+
 # output sorted file
 open my $outA, '>', 'package1.txt' or die $!;
 open my $outB, '>', 'package2.txt' or die $!;
+open my $outC, '>', 'package3.txt' or die $!;
 
 # hash maps
-my (%snpsA, %snpsB);
+my (%snpsA, %snpsB, %snpsC);
 	
 # Transfer file A into a map
 while (!eof($fileA)) {
@@ -67,15 +71,62 @@ while (!eof($fileB)) {
 	$snpsB{$snp[0]} = $line;
 }
 
-# output the intersect of both results
-my @intersect = grep { exists $snpsB{$_} } keys %snpsA;
+# Transfer file C into a map
+while (!eof($fileC)) {
+    my $line = <$fileC>;
+	chomp($line);
+	
+	my @snp = split(/	/, $line);
+	$snpsC{$snp[0]} = $line;
+}
+
+# output the intersect of three results
+my @intersect = grep { exists $snpsB{$_} and exists $snpsC{$_} } keys %snpsA;
 foreach(sort { $a <=> $b } @intersect) {
 	print $outA "$snpsA{$_}\n";
 	delete $snpsA{$_};
 	print $outB "$snpsB{$_}\n";
 	delete $snpsB{$_};
+	print $outC "$snpsC{$_}\n";
+	delete $snpsC{$_};
 }
+@intersect  = ();
 
+
+
+# output the intersects of two results
+@intersect = grep { exists $snpsB{$_} } keys %snpsA;
+foreach(sort { $a <=> $b } @intersect) {
+	print $outA "$snpsA{$_}\n";
+	delete $snpsA{$_};
+	print $outB "$snpsB{$_}\n";
+	delete $snpsB{$_};
+	print $outC "-\t-\t-\t10000\n";
+}
+@intersect  = ();
+@intersect = grep { exists $snpsC{$_} } keys %snpsA;
+foreach(sort { $a <=> $b } @intersect) {
+	print $outA "$snpsA{$_}\n";
+	delete $snpsA{$_};
+	print $outC "$snpsC{$_}\n";
+	delete $snpsC{$_};
+	print $outB "-\t-\t-\t10000\n";
+}
+@intersect  = ();
+@intersect = grep { exists $snpsC{$_} } keys %snpsB;
+foreach(sort { $a <=> $b } @intersect) {
+	print $outB "$snpsB{$_}\n";
+	delete $snpsB{$_};
+	print $outC "$snpsC{$_}\n";
+	delete $snpsC{$_};
+	print $outA "-\t-\t-\t10000\n";
+}
+@intersect  = ();
+
+
+
+
+# output the unique results
 foreach(sort { $a <=> $b } keys %snpsA) {
 	print $outA "$snpsA{$_}\n";
 	print $outB "-\t-\t-\t10000\n";
@@ -86,17 +137,23 @@ foreach(sort { $a <=> $b } keys %snpsB) {
 	print $outA "-\t-\t-\t10000\n";
 	delete $snpsB{$_};
 }
+foreach(sort { $a <=> $b } keys %snpsC) {
+	print $outB "$snpsC{$_}\n";
+	print $outA "-\t-\t-\t10000\n";
+	delete $snpsB{$_};
+}
 
 
 
 # Paste sorted files side by side
 system("paste package1.txt package2.txt > 8col.txt");
+system("paste 8col.txt package3.txt > 12col.txt");
 
 # Sort file on key
 my $key = $ARGV[2] * 4;
-system("sort -n -k $key 8col.txt > sorted8col.txt");
+system("sort -n -k $key 12col.txt > sorted12col.txt");
 
-open(IN1, "<sorted8col.txt") or die "Error opening sorted8col.txt\n";
+open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
 open my $out, '>', $ARGV[3] or die $!;
 
 
