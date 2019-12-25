@@ -2,7 +2,7 @@
 # Author: Sherwin Massoudian
 # This script compares theSIHA results of 2 packages 
 
-# perl ./compare2HA.pl peath.4col.txt hapcut.4col.txt 1 results.txt
+# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt 1 results.txt
 
  
 # 1st argument should have 4 columns: position hap1 hap2 BlockID
@@ -159,7 +159,7 @@ while (!eof(IN1)) {
 	# Print agreement at the end of a block
 	if ($block != $position[$key]) {
 		getPosAgreement();
-		getHapAgreement()
+		getHapAgreement();
 		printAgreement();
 		$block = $position[$key];
 		$aHap1 = "";
@@ -184,7 +184,7 @@ while (!eof(IN1)) {
 
 # Print the last block
 getPosAgreement();
-getHapAgreement()
+getHapAgreement();
 printAgreement();
 
 # Print agreement

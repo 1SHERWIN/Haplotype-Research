@@ -2,7 +2,7 @@
 # Author: Sherwin Massoudian
 # This script compares the SIHA results of 3 packages 
 
-# perl ./compare3HA.pl peath.4col.txt hapcut.4col.txt whatshap.4col.txt 1 results.txt
+# perl ../compare3HA.pl peath.4col.txt hapcut.4col.txt whatshap.4col.txt 1 results.txt
 
  
 # 1st argument should have 4 columns: position hap1 hap2 BlockID
