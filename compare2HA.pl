@@ -172,7 +172,7 @@ while (!eof(IN1)) {
 	
 	
 	# Save the genotype of each package
-	if ($position[$B1] ne '-'){
+	if ($position[$A1] ne '-'){
 		$aHap1 .= $position[$A1];
 		$aHap2 .= $position[$A2];
 	}
