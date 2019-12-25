@@ -34,7 +34,7 @@
 use strict; use warnings;
 
 # Start timer
-my $start = time();
+# my $start = time();
 
 # first HA results
 open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
@@ -80,7 +80,7 @@ while (!eof($fileC)) {
 	$snpsC{$snp[0]} = $line;
 }
 
-# output the intersect of three results
+# get the intersect of three results
 my @intersect = grep { exists $snpsB{$_} and exists $snpsC{$_} } keys %snpsA;
 foreach(sort { $a <=> $b } @intersect) {
 	print $outA "$snpsA{$_}\n";
@@ -92,60 +92,32 @@ foreach(sort { $a <=> $b } @intersect) {
 }
 @intersect  = ();
 
-
-
-# # output the intersects of two results
-# @intersect = grep { exists $snpsB{$_} } keys %snpsA;
-# foreach(sort { $a <=> $b } @intersect) {
-	# print $outA "$snpsA{$_}\n";
-	# delete $snpsA{$_};
-	# print $outB "$snpsB{$_}\n";
-	# delete $snpsB{$_};
-	# print $outC "-\t-\t-\t10000\n";
-# }
-# @intersect  = ();
-# @intersect = grep { exists $snpsC{$_} } keys %snpsA;
-# foreach(sort { $a <=> $b } @intersect) {
-	# print $outA "$snpsA{$_}\n";
-	# delete $snpsA{$_};
-	# print $outC "$snpsC{$_}\n";
-	# delete $snpsC{$_};
-	# print $outB "-\t-\t-\t10000\n";
-# }
-# @intersect  = ();
-# @intersect = grep { exists $snpsC{$_} } keys %snpsB;
-# foreach(sort { $a <=> $b } @intersect) {
-	# print $outB "$snpsB{$_}\n";
-	# delete $snpsB{$_};
-	# print $outC "$snpsC{$_}\n";
-	# delete $snpsC{$_};
-	# print $outA "-\t-\t-\t10000\n";
-# }
-# @intersect  = ();
-
-
-
-
-# output the unique results
-foreach(sort { $a <=> $b } keys %snpsA) {
-	print $outA "$snpsA{$_}\n";
-	print $outB "-\t-\t-\t10000\n";
-	print $outC "-\t-\t-\t10000\n";
-	delete $snpsA{$_};
+# get the results unique to key file
+my $key = $ARGV[2];
+if ($key == 1) {
+	foreach(sort { $a <=> $b } keys %snpsA) {
+		print $outA "$snpsA{$_}\n";
+		print $outB "-\t-\t-\t-\n";
+		print $outC "-\t-\t-\t-\n";
+		delete $snpsA{$_};
+	}
 }
-foreach(sort { $a <=> $b } keys %snpsB) {
-	print $outB "$snpsB{$_}\n";
-	print $outA "-\t-\t-\t10000\n";
-	print $outC "-\t-\t-\t10000\n";
-	delete $snpsB{$_};
+if ($key == 2) {
+	foreach(sort { $a <=> $b } keys %snpsB) {
+		print $outB "$snpsB{$_}\n";
+		print $outA "-\t-\t-\t-\n";
+		print $outC "-\t-\t-\t-\n";
+		delete $snpsB{$_};
+	}
 }
-foreach(sort { $a <=> $b } keys %snpsC) {
-	print $outC "$snpsC{$_}\n";
-	print $outA "-\t-\t-\t10000\n";
-	print $outB "-\t-\t-\t10000\n";
-	delete $snpsC{$_};
+if ($key == 3) {
+	foreach(sort { $a <=> $b } keys %snpsC) {
+		print $outC "$snpsC{$_}\n";
+		print $outA "-\t-\t-\t-\n";
+		print $outB "-\t-\t-\t-\n";
+		delete $snpsB{$_};
+	}
 }
-
 
 
 # Paste sorted files side by side
@@ -153,10 +125,9 @@ system("paste package1.txt package2.txt > 8col.txt");
 system("paste 8col.txt package3.txt > 12col.txt");
 
 # Sort file on key
-my $key = $ARGV[3] * 4;
+my $key *= 4;
 system("sort -n -k $key 12col.txt > sorted12col.txt");
 
-# TODO: calculate agreement
 open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
 open my $out, '>', $ARGV[4] or die $!;
 
@@ -179,11 +150,11 @@ my $cHap1 = "";
 my $cHap2 = "";
 my $posMatch = "-";
 my $hapMatch = "-";
-my $snvinblock = 0;
 my $snvCountA = 0;
 my $snvCountB = 0;
 my $snvCountC = 0;
 my $block = 0;
+my $totalSNV = 0;
 my $totalMatchedBlock = 0;
 my $totalMatchedSNV = 0;
 $key--;
@@ -225,51 +196,60 @@ sub resetCounts(){
 	$cHap2 = "";
 	$posMatch = "-";
 	$hapMatch = "-";
-	$snvinblock = 0;	
 }
 while (!eof(IN1)) {
 	my $line = <IN1>;
 	chomp $line;
-	
 	my @position = split(/	/, $line);
+	$totalSNV++;
+	
+	# Get first block
 	if ($block == 0) {
 		$block = $position[$key];
 	}
 	
-	# Count the SNPs in each block
-	$snvinblock++;
-	
-	# Print package agreement at the end of a block
+	# Print agreement at the end of a block
 	if ($block != $position[$key]) {
 		getPosAgreement();
-		getHapAgreement()
+		getHapAgreement();
 		printAgreement();
 		resetCounts();
 		$block = $position[$key];
 	}
 	
 	
-	# Add genotype in current line
-	$aHap1 .= $position[$A1];
-	$aHap2 .= $position[$A2];
-	$bHap1 .= $position[$B1];
-	$bHap2 .= $position[$B2];
-	$cHap1 .= $position[$C1];
-	$cHap2 .= $position[$C2];
-	
+	# Save the genotype of each package
+	if ($position[$A1] ne '-'){
+		$aHap1 .= $position[$A1];
+		$aHap2 .= $position[$A2];
+	}
+	if ($position[$B1] ne '-'){
+		$bHap1 .= $position[$B1];
+		$bHap2 .= $position[$B2];
+	}
+	if ($position[$C1] ne '-'){
+		$cHap1 .= $position[$C1];
+		$cHap2 .= $position[$C2];
+	}
 }
+
 
 # Print the last block
 getPosAgreement();
-getHapAgreement()
+getHapAgreement();
 printAgreement();
+
+# Print agreement
+my $disBlock = $block - $totalMatchedBlock;
+my $disSNV = $totalSNV - $totalMatchedSNV;
+print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
+print "Block disagreement: $disBlock/$block\n";
+print "SNV disagreement: $disSNV/$totalSNV\n";
 
 close $out;
 
 # Display runtime
-my $endTime = time();
-my $runTime = $endTime - $start;
-print "Job took $runTime seconds \n";
+# my $endTime = time();
+# my $runTime = $endTime - $start;
+# print "Job took $runTime seconds \n";
 
-# Print agreement
-# print "$ARGV[0] $ARGV[1] and $ARGV[2] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";

@@ -1,6 +1,6 @@
 # 2019 November
 # Author: Sherwin Massoudian
-# This script compares theSIHA results of 2 packages 
+# This script compares the SIHA results of 2 packages 
 
 # perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt 1 results.txt
 
@@ -57,7 +57,7 @@ while (!eof($fileB)) {
 	$snpsB{$snp[0]} = $line;
 }
 
-# output the intersect of both results
+# get the intersect of both results
 my @intersect = grep { exists $snpsB{$_} } keys %snpsA;
 foreach(sort { $a <=> $b } @intersect) {
 	print $outA "$snpsA{$_}\n";
@@ -66,7 +66,7 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-# unique to key file
+# get the results unique to key file
 my $key = $ARGV[2];
 if ($key == 1) {
 	foreach(sort { $a <=> $b } keys %snpsA) {
@@ -145,6 +145,14 @@ sub printAgreement(){
 	print $out "$block\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
 
 }
+sub resetCounts(){
+	$aHap1 = "";
+	$aHap2 = "";
+	$bHap1 = "";
+	$bHap2 = "";
+	$posMatch = "-";
+	$hapMatch = "-";
+}
 while (!eof(IN1)) {
 	my $line = <IN1>;
 	chomp $line;
@@ -161,13 +169,8 @@ while (!eof(IN1)) {
 		getPosAgreement();
 		getHapAgreement();
 		printAgreement();
+		resetCounts();
 		$block = $position[$key];
-		$aHap1 = "";
-		$aHap2 = "";
-		$bHap1 = "";
-		$bHap2 = "";
-		$hapMatch = "-";
-		$posMatch = "-";
 	}
 	
 	
