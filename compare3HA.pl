@@ -125,7 +125,7 @@ system("paste package1.txt package2.txt > 8col.txt");
 system("paste 8col.txt package3.txt > 12col.txt");
 
 # Sort file on key
-my $key *= 4;
+$key *= 4;
 system("sort -n -k $key 12col.txt > sorted12col.txt");
 
 open(IN1, "<sorted12col.txt") or die "Error opening sorted12col.txt\n";
