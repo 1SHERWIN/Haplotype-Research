@@ -26,9 +26,6 @@
 
 use strict; use warnings;
 
-# Start timer
-# my $start = time();
-
 # first HA results
 open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
 
@@ -69,24 +66,29 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-foreach(sort { $a <=> $b } keys %snpsA) {
-	print $outA "$snpsA{$_}\n";
-	print $outB "-\t-\t-\t1000000\n";
-	delete $snpsA{$_};
+# unique to key file
+my $key = $ARGV[2];
+if ($key == 1) {
+	foreach(sort { $a <=> $b } keys %snpsA) {
+		print $outA "$snpsA{$_}\n";
+		print $outB "-\t-\t-\t-\n";
+		delete $snpsA{$_};
+	}
 }
-foreach(sort { $a <=> $b } keys %snpsB) {
-	print $outB "$snpsB{$_}\n";
-	print $outA "-\t-\t-\t1000000\n";
-	delete $snpsB{$_};
+if ($key == 2) {
+	foreach(sort { $a <=> $b } keys %snpsB) {
+		print $outB "$snpsB{$_}\n";
+		print $outA "-\t-\t-\t-\n";
+		delete $snpsB{$_};
+	}
 }
-
 
 
 # Paste sorted files side by side
 system("paste package1.txt package2.txt > 8col.txt");
 
 # Sort file on key
-my $key = $ARGV[2] * 4;
+$key *= 4;
 system("sort -n -k $key 8col.txt > sorted8col.txt");
 
 open(IN1, "<sorted8col.txt") or die "Error opening sorted8col.txt\n";
@@ -105,29 +107,33 @@ my $aHap1 = "";
 my $aHap2 = "";
 my $bHap1 = "";
 my $bHap2 = "";
-my $snvinblock;
-my $snvCountA;
-my $snvCountB;
 my $posMatch = "";
 my $hapMatch = "";
+my $snvCountA = 0;
+my $snvCountB = 0;
 my $block = 0;
+my $totalSNV = 0;
 my $totalMatchedBlock = 0;
 my $totalMatchedSNV = 0;
 $key--;
 
 
-sub getAgreement(){
+sub getPosAgreement(){
 	$snvCountA = length($aHap1);
 	$snvCountB = length($bHap1);
-	$posMatch = $snvCountA == $snvCountB ? "match" : "-";
+	if ($snvCountA == $snvCountB) {
+		$posMatch = "match";
+	}
+}
+sub getHapAgreement() {
 	if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
 		$hapMatch = "match";
-		$totalMatchedSNV += $snvinblock;
+		$totalMatchedSNV += $snvCountA;
 		$totalMatchedBlock++;
 	}
 	elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
 		$hapMatch = "match";
-		$totalMatchedSNV += $snvinblock;
+		$totalMatchedSNV += $snvCountA;
 		$totalMatchedBlock++;
 	}
 	else {
@@ -142,18 +148,18 @@ sub printAgreement(){
 while (!eof(IN1)) {
 	my $line = <IN1>;
 	chomp $line;
-	
 	my @position = split(/	/, $line);
+	$totalSNV++;
+	
+	# Get first block
 	if ($block == 0) {
 		$block = $position[$key];
 	}
 	
-	# Count the SNPs in each block
-	$snvinblock++;
-	
-	# Print package agreement at the end of a block
+	# Print agreement at the end of a block
 	if ($block != $position[$key]) {
-		getAgreement();
+		getPosAgreement();
+		getHapAgreement()
 		printAgreement();
 		$block = $position[$key];
 		$aHap1 = "";
@@ -161,13 +167,15 @@ while (!eof(IN1)) {
 		$bHap1 = "";
 		$bHap2 = "";
 		$hapMatch = "-";
-		$snvinblock = 0;
+		$posMatch = "-";
 	}
 	
 	
-	# Add genotype in current line
-	$aHap1 .= $position[$A1];
-	$aHap2 .= $position[$A2];
+	# Save the genotype of each package
+	if ($position[$B1] ne '-'){
+		$aHap1 .= $position[$A1];
+		$aHap2 .= $position[$A2];
+	}
 	if ($position[$B1] ne '-'){
 		$bHap1 .= $position[$B1];
 		$bHap2 .= $position[$B2];
@@ -175,15 +183,15 @@ while (!eof(IN1)) {
 }
 
 # Print the last block
-getAgreement();
+getPosAgreement();
+getHapAgreement()
 printAgreement();
 
-close $out;
-
-# Display runtime
-# my $endTime = time();
-# my $runTime = $endTime - $start;
-# print "Job took $runTime seconds \n";
-
 # Print agreement
+my $disBlock = $block - $totalMatchedBlock;
+my $disSNV = $totalSNV - $totalMatchedSNV;
 print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
+print "Block disagreement: $disBlock / $totalMatchedBlock\n";
+print "SNV disagreement: $disSNV / $totalSNV\n";
+
+close $out;
