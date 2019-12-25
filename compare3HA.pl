@@ -203,6 +203,7 @@ sub resetCounts(){
 	$cHap2 = "";
 	$posMatch = "-";
 	$hapMatch = "-";
+	$singleMatch = 0;
 }
 while (!eof(IN1)) {
 	my $line = <IN1>;
