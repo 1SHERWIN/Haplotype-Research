@@ -191,7 +191,7 @@ printAgreement();
 my $disBlock = $block - $totalMatchedBlock;
 my $disSNV = $totalSNV - $totalMatchedSNV;
 print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
-print "Block disagreement: $disBlock / $totalMatchedBlock\n";
-print "SNV disagreement: $disSNV / $totalSNV\n";
+print "Block disagreement: $disBlock/$block\n";
+print "SNV disagreement: $disSNV/$totalSNV\n";
 
 close $out;
