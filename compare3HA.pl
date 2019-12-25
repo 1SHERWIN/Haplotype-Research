@@ -157,6 +157,7 @@ my $block = 0;
 my $totalSNV = 0;
 my $totalMatchedBlock = 0;
 my $totalMatchedSNV = 0;
+my $singleMatch = 0;
 $key--;
 
 
@@ -168,20 +169,26 @@ sub getPosAgreement(){
 		$posMatch = "match";
 	}
 }
-sub getHapAgreement(){
-	# if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
-		# $hapMatch = "match";
-		# $totalMatchedSNV += $snvinblock;
-		# $totalMatchedBlock++;
-	# }
-	# elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
-		# $hapMatch = "match";
-		# $totalMatchedSNV += $snvinblock;
-		# $totalMatchedBlock++;
-	# }
-	# else {
-		# $hapMatch = "-";
-	# }
+sub getHapAgreement() {
+	if ($aHap1 eq $bHap1 and $aHap2 eq $bHap2) {
+		$singleMatch = 1;
+	}
+	elsif ($aHap1 eq $bHap2 and $aHap2 eq $bHap1) {
+		$singleMatch = 1;
+	}
+	if ($singleMatch and $bHap1 eq $cHap1 and $bHap2 eq $cHap2) {
+		$hapMatch = "match";
+		$totalMatchedSNV += $snvCountA;
+		$totalMatchedBlock++;
+	}
+	elsif ($singleMatch and $bHap1 eq $cHap2 and $bHap2 eq $cHap1) {
+		$hapMatch = "match";
+		$totalMatchedSNV += $snvCountA;
+		$totalMatchedBlock++;
+	}
+	else {
+		$hapMatch = "-";
+	}
 }
 print $out "Block\tCountA\tCountB\tCountC\tSNVs\tHaplotype\n";
 sub printAgreement(){
