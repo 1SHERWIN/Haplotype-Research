@@ -71,12 +71,12 @@ foreach(sort { $a <=> $b } @intersect) {
 
 foreach(sort { $a <=> $b } keys %snpsA) {
 	print $outA "$snpsA{$_}\n";
-	print $outB "-\t-\t-\t10000\n";
+	print $outB "-\t-\t-\t1000000\n";
 	delete $snpsA{$_};
 }
 foreach(sort { $a <=> $b } keys %snpsB) {
 	print $outB "$snpsB{$_}\n";
-	print $outA "-\t-\t-\t10000\n";
+	print $outA "-\t-\t-\t1000000\n";
 	delete $snpsB{$_};
 }
 
@@ -168,7 +168,7 @@ while (!eof(IN1)) {
 	# Add genotype in current line
 	$aHap1 .= $position[$A1];
 	$aHap2 .= $position[$A2];
-	if ($bHap1 ne '-'){
+	if ($position[$B1] ne '-'){
 		$bHap1 .= $position[$B1];
 		$bHap2 .= $position[$B2];
 	}
