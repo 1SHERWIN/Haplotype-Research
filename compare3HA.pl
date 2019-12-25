@@ -93,7 +93,7 @@ foreach(sort { $a <=> $b } @intersect) {
 @intersect  = ();
 
 # get the results unique to key file
-my $key = $ARGV[2];
+my $key = $ARGV[3];
 if ($key == 1) {
 	foreach(sort { $a <=> $b } keys %snpsA) {
 		print $outA "$snpsA{$_}\n";
