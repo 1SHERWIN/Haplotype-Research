@@ -2,8 +2,7 @@
 # Author: Sherwin Massoudian
 # This script compares the SIHA results of 2 packages 
 
-# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt 1 results.txt
-
+# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt 1 result
  
 # 1st argument should have 4 columns: position hap1 hap2 BlockID
 # 69071   0       1       1
@@ -22,9 +21,22 @@
 # 3rd argument decides to use 1st or 2nd package block ID
 # 1 or 2
 
-# 4th argument will be the output
+# 4th argument will be the output files prefix
 
 use strict; use warnings;
+
+if (@ARGV != 4) {
+	print "Usage: perl ./compare2HA.pl PhasedResultsA PhasedResultsB key results\n";
+	print "1st argument should have 4 columns: position hap1 hap2 BlockID\n";
+	print "2nd argument should have 4 columns: position hap1 hap2 BlockID\n";
+	print "3rd argument 1 or 2 decides to use 1st or 2nd package block ID\n";
+	print"4th argument will be the output files prefix\n";
+	die;
+}
+print "Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement\n";
+print "The order of the input files will affect the output results\n";
+print "Using input $ARGV[2] block ID as key\n";
+
 
 # first HA results
 open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
@@ -90,9 +102,13 @@ system("paste package1.txt package2.txt > 8col.txt");
 # Sort file on key
 $key *= 4;
 system("sort -n -k $key 8col.txt > sorted8col.txt");
-
 open(IN1, "<sorted8col.txt") or die "Error opening sorted8col.txt\n";
-open my $out, '>', $ARGV[3] or die $!;
+
+# Results
+my $outFile1 = $ARGV[3].".blocks.txt";
+my $outFile2 = $ARGV[3].".agreementSummary.txt";
+open my $out, '>', "$outFile1" or die $!;
+open my $out2, '>', "$outFile2" or die $!;
 
 
 # index of each haplotype
@@ -191,10 +207,26 @@ getHapAgreement();
 printAgreement();
 
 # Print agreement
-my $disBlock = $block - $totalMatchedBlock;
-my $disSNV = $totalSNV - $totalMatchedSNV;
-print "$ARGV[0] and $ARGV[1] agreement: $totalMatchedBlock blocks and $totalMatchedSNV SNVs\n";
-print "Block disagreement: $disBlock/$block\n";
-print "SNV disagreement: $disSNV/$totalSNV\n";
+sub getAgreement() {
+	my $disBlock = $block - $totalMatchedBlock;
+	my $disSNV = $totalSNV - $totalMatchedSNV;
+	my $matchBlockRatio = $totalMatchedBlock / $block;
+	my $disBlockRatio = $disBlock  / $block;
+	my $matchSNVRatio = $totalMatchedSNV / $totalSNV;
+	my $disSNVRatio = $disSNV  / $totalSNV;
+	
+	print "The 2nd output is printed below and saved in file\n";
+	print "Key\tagree\tdisag\ttotal\tagree%\tdisagree%\n";
+	print "Block\t$totalMatchedBlock\t$disBlock\t$block\t$matchBlockRatio\t$disBlockRatio\n";
+	print "SNV\t$totalMatchedSNV\t$disSNV\t$totalSNV\t$matchSNVRatio\t$disSNVRatio\n";
+	
+	print $out2 "Key\tagree\tdisag\ttotal\tagree%\tdisagree%\n";
+	print $out2 "Block\t$totalMatchedBlock\t$disBlock\t$block\t$matchBlockRatio\t$disBlockRatio\n";
+	print $out2 "SNV\t$totalMatchedSNV\t$disSNV\t$totalSNV\t$matchSNVRatio\t$disSNVRatio\n";
+}
+getAgreement;
 
 close $out;
+close $out2;
+my $unlinked = unlink 'package1.txt', 'package2.txt', '8col.txt';
+
