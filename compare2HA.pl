@@ -2,7 +2,7 @@
 # Author: Sherwin Massoudian
 # This script compares the SIHA results of 2 packages 
 
-# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt 1 result
+# perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt result
  
 # 1st argument should have 4 columns: position hap1 hap2 BlockID
 # 69071   0       1       1
@@ -18,24 +18,24 @@
 # 76294   0       1       2
 # 77582   0       1       3
 
-# 3rd argument decides to use 1st or 2nd package block ID
-# 1 or 2
+# 3rd argument will be the output files prefix
 
-# 4th argument will be the output files prefix
+# 4th argument decides to use 1st or 2nd package block ID
+# 1 or 2
 
 use strict; use warnings;
 
-if (@ARGV != 4) {
-	print "Usage: perl ./compare2HA.pl PhasedResultsA PhasedResultsB key results\n";
+if (@ARGV != 3) {
+	print "\nUsage: perl ./compare2HA.pl PhasedResultsA PhasedResultsB results\n\n";
 	print "1st argument should have 4 columns: position hap1 hap2 BlockID\n";
 	print "2nd argument should have 4 columns: position hap1 hap2 BlockID\n";
-	print "3rd argument 1 or 2 decides to use 1st or 2nd package block ID\n";
-	print"4th argument will be the output files prefix\n";
+	# print "3rd argument 1 or 2 decides to use 1st or 2nd package block ID\n";
+	print "3rd argument will be the output files prefix\n";
 	die;
 }
-print "Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement\n";
-print "The order of the input files will affect the output results\n";
-print "Using input $ARGV[2] block ID as key\n";
+# print "Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement\n";
+# print "The order of the input files will affect the output results\n";
+# print "Using input $ARGV[2] block ID as key\n";
 
 
 # first HA results
@@ -78,35 +78,41 @@ foreach(sort { $a <=> $b } @intersect) {
 	delete $snpsB{$_};
 }
 
-# get the results unique to key file
-my $key = $ARGV[2];
-if ($key == 1) {
-	foreach(sort { $a <=> $b } keys %snpsA) {
-		print $outA "$snpsA{$_}\n";
-		print $outB "-\t-\t-\t-\n";
-		delete $snpsA{$_};
-	}
+# get the positions unique to key file
+foreach(sort { $a <=> $b } keys %snpsA) {
+	print $outA "$snpsA{$_}\n";
+	print $outB "-\t-\t-\t-\n";
+	delete $snpsA{$_};
 }
-if ($key == 2) {
-	foreach(sort { $a <=> $b } keys %snpsB) {
-		print $outB "$snpsB{$_}\n";
-		print $outA "-\t-\t-\t-\n";
-		delete $snpsB{$_};
-	}
-}
+# my $key = $ARGV[2];
+# if ($key == 1) {
+# 	foreach(sort { $a <=> $b } keys %snpsA) {
+# 		print $outA "$snpsA{$_}\n";
+# 		print $outB "-\t-\t-\t-\n";
+# 		delete $snpsA{$_};
+# 	}
+# }
+# if ($key == 2) {
+# 	foreach(sort { $a <=> $b } keys %snpsB) {
+# 		print $outB "$snpsB{$_}\n";
+# 		print $outA "-\t-\t-\t-\n";
+# 		delete $snpsB{$_};
+# 	}
+# }
 
 
 # Paste sorted files side by side
 system("paste package1.txt package2.txt > 8col.txt");
 
 # Sort file on key
-$key *= 4;
-system("sort -n -k $key 8col.txt > sorted8col.txt");
+system("sort -n -k 4 8col.txt > sorted8col.txt");
+# $key *= 4;
+# system("sort -n -k $key 8col.txt > sorted8col.txt");
 open(IN1, "<sorted8col.txt") or die "Error opening sorted8col.txt\n";
 
 # Results
-my $outFile1 = $ARGV[3].".blocks.txt";
-my $outFile2 = $ARGV[3].".agreementSummary.txt";
+my $outFile1 = $ARGV[2].".blocks.txt";
+my $outFile2 = $ARGV[2].".agreementSummary.txt";
 open my $out, '>', "$outFile1" or die $!;
 open my $out2, '>', "$outFile2" or die $!;
 
@@ -128,10 +134,11 @@ my $hapMatch = "-";
 my $snvCountA = 0;
 my $snvCountB = 0;
 my $block = 0;
+my $totalBlock = 0;
 my $totalSNV = 0;
 my $totalMatchedBlock = 0;
 my $totalMatchedSNV = 0;
-$key--;
+my $key = 3;
 
 
 sub getPosAgreement(){
@@ -178,6 +185,7 @@ while (!eof(IN1)) {
 	# Get first block
 	if ($block == 0) {
 		$block = $position[$key];
+		$totalBlock++;
 	}
 	
 	# Print agreement at the end of a block
@@ -187,6 +195,7 @@ while (!eof(IN1)) {
 		printAgreement();
 		resetCounts();
 		$block = $position[$key];
+		$totalBlock++;
 	}
 	
 	
@@ -208,20 +217,20 @@ printAgreement();
 
 # Print agreement
 sub getAgreement() {
-	my $disBlock = $block - $totalMatchedBlock;
+	my $disBlock = $totalBlock - $totalMatchedBlock;
 	my $disSNV = $totalSNV - $totalMatchedSNV;
-	my $matchBlockRatio = $totalMatchedBlock / $block;
-	my $disBlockRatio = $disBlock  / $block;
+	my $matchBlockRatio = $totalMatchedBlock / $totalBlock;
+	my $disBlockRatio = $disBlock  / $totalBlock;
 	my $matchSNVRatio = $totalMatchedSNV / $totalSNV;
 	my $disSNVRatio = $disSNV  / $totalSNV;
 	
-	print "The 2nd output is printed below and saved in file\n";
+	print "Haplotype agreement is printed below and saved to file\n";
 	print "Key\tagree\tdisag\ttotal\tagree%\tdisagree%\n";
-	print "Block\t$totalMatchedBlock\t$disBlock\t$block\t$matchBlockRatio\t$disBlockRatio\n";
+	print "Block\t$totalMatchedBlock\t$disBlock\t$totalBlock\t$matchBlockRatio\t$disBlockRatio\n";
 	print "SNV\t$totalMatchedSNV\t$disSNV\t$totalSNV\t$matchSNVRatio\t$disSNVRatio\n";
 	
 	print $out2 "Key\tagree\tdisag\ttotal\tagree%\tdisagree%\n";
-	print $out2 "Block\t$totalMatchedBlock\t$disBlock\t$block\t$matchBlockRatio\t$disBlockRatio\n";
+	print $out2 "Block\t$totalMatchedBlock\t$disBlock\t$totalBlock\t$matchBlockRatio\t$disBlockRatio\n";
 	print $out2 "SNV\t$totalMatchedSNV\t$disSNV\t$totalSNV\t$matchSNVRatio\t$disSNVRatio\n";
 }
 getAgreement;
