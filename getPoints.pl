@@ -1,6 +1,6 @@
-# 2019 Fall
-# Name: Sherwin Massoudian. NetID: s_m774 
 # This program points the intersection of two haplotype packages
+# Sherwin Massoudian
+# 2019 Fall
 # perl /home/s_m774/software/perl/getPoints.pl 826dbmGenotype.txt 826hapseq2Genotype.txt
  
 # Both input files will have the genotype data in 2 columns
@@ -15,23 +15,14 @@
 # Output is a point system: perfect match or swap is 1 point
 # Strict compare match count: 65/120
 # Non-Strict compare match count: 82.5/120
-# Job took 0 seconds
-
-
-
-
-
 
 use strict; use warnings;
-
-# Start timer
-my $start = time();
-my ($match, $halfmatch, $snps) = (0,0,0);
-
 
 # Open IO files
 open(IN1, "<$ARGV[0]") or die "Error reading $ARGV[0]\n";
 open(IN2, "<$ARGV[1]") or die "Error reading $ARGV[1]\n";
+
+my ($match, $halfmatch, $snps) = (0,0,0);
 
 while (!eof(IN1) and !eof(IN2)) {
 	my $line1 = <IN1>;
@@ -83,9 +74,3 @@ $halfmatch += $match;
 print "Strict genotype agreement: $match/$snps \n";
 print "Non-Strict genotype agreement: $halfmatch/$snps \n";
 
-
-
-# Display runtime
-my $endTime = time();
-my $runTime = $endTime - $start;
-print "Job took $runTime seconds \n";

@@ -20,7 +20,7 @@
 
 # 3rd argument will be the output files prefix
 
-# 4th argument decides to use 1st or 2nd package block ID
+# Deprecated: 4th argument decides to use 1st or 2nd package block ID
 # 1 or 2
 
 use strict; use warnings;
@@ -29,14 +29,9 @@ if (@ARGV != 3) {
 	print "\nUsage: perl ./compare2HA.pl PhasedResultsA PhasedResultsB results\n\n";
 	print "1st argument should have 4 columns: position hap1 hap2 BlockID\n";
 	print "2nd argument should have 4 columns: position hap1 hap2 BlockID\n";
-	# print "3rd argument 1 or 2 decides to use 1st or 2nd package block ID\n";
 	print "3rd argument will be the output files prefix\n";
 	die;
 }
-# print "Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement\n";
-# print "The order of the input files will affect the output results\n";
-# print "Using input $ARGV[2] block ID as key\n";
-
 
 # first HA results
 open my $fileA, '<', $ARGV[0] or die "Error reading $ARGV[0]\n";
@@ -165,7 +160,7 @@ sub getHapAgreement() {
 }
 print $out "Block\tCountA\tCountB\tSNVs\tHaplotype\n";
 sub printAgreement(){
-	print $out "$block\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
+	print $out "$totalBlock\t$snvCountA\t$snvCountB\t$posMatch\t$hapMatch\n";
 
 }
 sub resetCounts(){
