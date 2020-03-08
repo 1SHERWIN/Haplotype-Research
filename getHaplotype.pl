@@ -34,10 +34,10 @@ sub printAllele() {
 	elsif ($haplotype eq "1|1" || $haplotype eq "1/1") {
 		print $out "$alt $alt\n";
 	}
-	elsif ($haplotype eq "0|1" || $haplotype eq "0/1") {
+	elsif ($haplotype eq "0|1") {
 		print $out "$ref $alt\n";
 	}
-	elsif ($haplotype eq "1|0" || $haplotype eq "1/0") {
+	elsif ($haplotype eq "1|0") {
 		print $out "$alt $ref\n";
 	}
 	else {

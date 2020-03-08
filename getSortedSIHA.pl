@@ -71,6 +71,7 @@ while (!eof($fileB)) {
 	$snpsB{$snp[0]} = $line;
 }
 
+
 # output the intersect to both files
 my @intersect = grep { exists $snpsB{$_} } keys %snpsA;
 foreach(sort { $a <=> $b } @intersect) {

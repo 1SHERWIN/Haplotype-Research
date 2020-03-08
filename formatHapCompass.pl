@@ -1,6 +1,6 @@
 # 2019 Fall
 # Name: Sherwin Massoudian. NetID: s_m774 
-# This program formats the PEATH output
+# This program formats the HapCompass output
 # perl /home/s_m774/software/perl/formatHapCompass.pl input.txt output.txt
 
 # input file input.txt
