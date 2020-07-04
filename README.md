@@ -1,4 +1,3 @@
 # Haplotype-Research
  
-Sun Lab
-Perl applications used to compare Haplotype Assembly algorithms
+Sun Lab - Perl applications used to compare Haplotype Assembly algorithms
