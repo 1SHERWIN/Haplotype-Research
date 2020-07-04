@@ -1,0 +1,787 @@
+Haplotype assembly algorithm run times recorded here:
+runtimes.2020.June.xlsx
+
+Perl used:
+/home/s_m774/Haplotype-Research/getAlleles.pl
+/home/s_m774/Haplotype-Research/getHaplotype.pl 
+/home/s_m774/Haplotype-Research/getPoints.pl
+
+###############################################
+# Bertie provided BAMs for 5 samples
+###############################################
+/home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/826T_chr10_PE/
+
+
+[s_m774@login2 bcftools]$ pwd
+/home/s_m774/data/new.MIHA.June2020/bcftools
+
+# copied Bertie's BAMs
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/826T_chr10_PE/826T_chr10_PE_.bwa.bam.sorted ./826.chr10.sorted.bam
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/827T_chr10_PE/827T_chr10_PE_.bwa.bam.sorted ./827.chr10.sorted.bam
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/832T_chr10_PE/832T_chr10_PE_.bwa.bam.sorted ./832.chr10.sorted.bam
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/847T_chr10_PE/847T_chr10_PE_.bwa.bam.sorted ./847.chr10.sorted.bam
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/850T_chr10_PE/850T_chr10_PE_.bwa.bam.sorted ./850.chr10.sorted.bam
+
+
+###############################################
+# SNPs called using bcftools mpileup
+###############################################
+
+[s_m774@login2 bcftools]$ pwd
+/home/s_m774/data/new.MIHA/bcftools
+
+# Added read group and indexed each BAM
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:826' -r 'SM:826' -o 826RG.chr10.bam 826.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:827' -r 'SM:827' -o 827RG.chr10.bam 827.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:832' -r 'SM:832' -o 832RG.chr10.bam 832.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:847' -r 'SM:847' -o 847RG.chr10.bam 847.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:850' -r 'SM:850' -o 850RG.chr10.bam 850.chr10.sorted.bam
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 826RG.chr10.bam 826RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 827RG.chr10.bam 827RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 832RG.chr10.bam 832RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 847RG.chr10.bam 847RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 850RG.chr10.bam 850RG.chr10.bai
+
+# Created bamList.txt 
+826RG.chr10.bam
+827RG.chr10.bam
+832RG.chr10.bam
+847RG.chr10.bam
+850RG.chr10.bam
+
+# Dr. Sun provided chromosome 10 Reference
+cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa ./
+cp /group/hon/hon3398o/0.course.files/software/bcftools-1.9/bcftools ./
+
+# call SNPs using bcftools mpileup, filter SNPs using bcftools call, filter high quality using query
+
+mpileup
+# -g Genotype to BCF output
+# -f FASTA format index
+# -a AD annotate Allele Depth (needed for DBM input)
+# -a DP annotate Depth
+# -I Indels are skipped
+
+view
+# -i 'DP>=20' include
+
+call
+# -c consensus caller
+# -v variant sites only output
+# --skip-variants indels
+# --ploidy GRCh38 to specify diploid
+# -o output file
+
+./bcftools mpileup -a AD -b bamList.txt -f chr10.fa | ./bcftools view -i 'DP>=20' | ./bcftools call -cv --skip-variants indels --ploidy GRCh38 -o results/5sample.chr10.vcf
+
+chr10   132858318       .       T       G       999     .       DP=30;VDB=0.0739287;SGB=0.71291;RPB=0.985523;MQB=0.830264;MQSB=0.865847;BQB=0.976181;MQ0F=0;AF1=0.441219;AC1=4;DP4=9,6,6,6;MQ=56;FQ=999;PV4=0.706825,1,1,1       GT:PL   1/1:206,12,0    0/0:0,12,212    0/1:255,0,28    0/0:0,3,15      0/1:58,0,255
+chr10   132858336       .       T       C       89.7954 .       DP=26;VDB=0.631962;SGB=-1.67811;RPB=0.738577;MQB=0.101098;MQSB=0.669812;BQB=0.482859;MQ0F=0;AF1=0.263907;AC1=2;DP4=4,11,2,4;MQ=52;FQ=91.1005;PV4=1,1,0.0261898,1 GT:PL   0/1:116,0,40    0/0:0,6,120     0/1:14,0,122    0/0:0,0,0       0/0:5,23,255
+chr10   132858350       .       A       G       4.34068 .       DP=27;VDB=0.0532881;SGB=-2.18383;RPB=1;MQB=0.333023;MQSB=0.455971;BQB=0.333023;MQ0F=0;AF1=0.135607;AC1=1;DP4=5,14,1,2;MQ=51;FQ=4.75436;PV4=1,0.0993837,0.00710683,1      GT:PL   0/0:0,21,255    0/0:0,6,120     0/1:38,0,93     0/0:0,0,0       0/0:0,15,248
+chr10   132858359       .       G       A       9.78378 .       DP=28;SGB=-0.587685;RPB=1;MQB=1;MQSB=0.467407;BQB=1;MQ0F=0;AF1=0.13425;AC1=1;DP4=6,17,0,1;MQ=48;FQ=10.351;PV4=1,1,1,0.194734    GT:PL    0/0:0,24,220    0/0:0,6,114     0/1:45,0,94     0/0:0,0,0       0/0:0,27,255
+chr10   132858366       .       G       A       4.45139 .       DP=32;SGB=-0.587685;RPB=1;MQB=1;MQSB=0.506479;BQB=1;MQ0F=0;AF1=0.112133;AC1=1;DP4=6,20,0,1;MQ=47;FQ=4.79208;PV4=1,0.45143,1,1   GT:PL    0/0:0,21,186    0/0:0,6,120     0/1:39,0,161    0/0:0,6,69      0/0:0,27,255
+chr10   132858370       .       C       T       120.569 .       DP=32;VDB=0.3423;SGB=-7.90536;RPB=0.98481;MQB=0.489334;MQSB=0.822995;BQB=0.782784;MQ0F=0;AF1=0.305737;AC1=3;DP4=3,18,2,4;MQ=47;FQ=122.132;PV4=0.303122,0.188471,0.284204,1       GT:PL   0/1:106,0,46    0/0:0,6,120     0/1:8,0,168     0/1:51,0,9     0/0:0,27,255
+chr10   132858380       .       T       A       86.5537 .       DP=30;VDB=0.244943;SGB=-1.60167;RPB=0.977529;MQB=0.850768;MQSB=0.660463;BQB=0.997478;MQ0F=0;AF1=0.224582;AC1=2;DP4=4,18,1,3;MQ=46;FQ=87.6599;PV4=1,0.322941,0.493299,1   GT:PL   0/1:81,0,89     0/0:0,3,60      0/0:0,15,171    0/1:48,0,18     0/0:0,30,255
+chr10   132858391       .       T       C       62.4097 .       DP=31;VDB=0.497461;SGB=-7.11183;RPB=0.800493;MQB=0.997257;MQSB=0.68264;BQB=0.192235;MQ0F=0;AF1=0.392364;AC1=4;DP4=5,16,3,1;MQ=47;FQ=64.5894;PV4=0.0807905,0.0490457,1,1  GT:PL   0/1:37,0,165    0/1:0,0,0       0/1:31,0,101    0/0:0,9,81      0/1:37,0,228
+chr10   132858392       .       G       T       94.6566 .       DP=33;VDB=0.281254;SGB=-1.60167;RPB=0.984341;MQB=0.756987;MQSB=0.737484;BQB=0.98995;MQ0F=0;AF1=0.252994;AC1=2;DP4=5,17,2,2;MQ=47;FQ=95.9262;PV4=0.287023,1,1,1   GT:PL   0/1:88,0,113    0/0:0,0,0       0/0:0,15,145    0/1:48,0,18     0/0:0,33,255
+chr10   132858405       .       A       G       11.6519 .       DP=28;SGB=-0.587685;RPB=1;MQB=1;MQSB=0.399018;BQB=1;MQ0F=0;AF1=0.107688;AC1=1;DP4=8,14,0,1;MQ=49;FQ=12.117;PV4=1,1,1,1          GT:PL    0/0:0,21,246    0/0:0,6,120     0/0:0,12,176    0/1:48,0,18     0/0:0,21,255
+
+grep -v '#' 5sample.chr10.vcf | wc -l
+628
+
+#############################
+# Whatshap input prepared
+#############################
+
+[s_m774@login2 whatshap]$ pwd
+/home/s_m774/data/new.MIHA/whatshap
+
+# BAMs provided by bertie, indexed using bcftools, SNPs called using bcftools
+[s_m774@login2 new.MIHA]$ cp bcftools/*RG* whatshap/
+[s_m774@login2 new.MIHA]$ time cp bcftools/results/5sample.chr10.vcf whatshap/
+
+real    0m0.054s
+user    0m0.002s
+sys     0m0.002s
+
+###################################
+# Haplotype phased with Whatshap
+###################################
+
+[s_m774@login2 whatshap]$ pwd
+/home/s_m774/data/new.MIHA/whatshap
+
+[s_m774@login1 whatshap.data]$ time whatshap phase -o results/Whatshap.phased.5sample.vcf 5sample.chr10.vcf 826RG.chr10.bam 827RG.chr10.bam 832RG.chr10.bam 847RG.chr10.bam 850RG.chr10.bam
+
+chr10   132858318       .       T       G       999     .       DP=30;VDB=0.0739287;RPB=0.985523;MQB=0.830264;BQB=0.976181;MQSB=0.865847;SGB=0.71291;MQ0F=0.0;AF1=0.441219;AC1=4.0;MQ=56;FQ=999.0;PV4=0.706825,1.0,1.0,1.0;DP4=9,6,6,6   GT:PL:PS        1/1:206,12,0:.  0/0:0,12,212:.  1|0:255,0,28:132858318  0/0:0,3,15:.                                                                    0|1:58,0,255:132858318
+chr10   132858336       .       T       C       89.7954 .       DP=26;VDB=0.631962;RPB=0.738577;MQB=0.101098;BQB=0.482859;MQSB=0.669812;SGB=-1.67811;MQ0F=0.0;AF1=0.263907;AC1=2.0;MQ=52;FQ=91.1005;PV4=1.0,1.0,0.0261898,1.0;DP4=4,11,2,4       GT:PL:PS        1|0:116,0,40:132858336  0/0:0,6,120:.   0|1:14,0,122:132858318                                                                  0/0:0,0,0:.      0/0:5,23,255:.
+chr10   132858350       .       A       G       4.34068 .       DP=27;VDB=0.0532881;RPB=1.0;MQB=0.333023;BQB=0.333023;MQSB=0.455971;SGB=-2.18383;MQ0F=0.0;AF1=0.135607;AC1=1.0;MQ=51;FQ=4.75436;PV4=1.0,0.0993837,0.00710683,1.0;DP4=5,14,1,2    GT:PL:PS        0/0:0,21,255:.  0/0:0,6,120:.   0|1:38,0,93:132858318  0/0:0,0,0:.                                                              0/0:0,15,248:.
+chr10   132858359       .       G       A       9.78378 .       DP=28;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=0.467407;SGB=-0.587685;MQ0F=0.0;AF1=0.13425;AC1=1.0;MQ=48;FQ=10.351;PV4=1.0,1.0,1.0,0.194734;DP4=6,17,0,1     GT:PL:PS        0/0:0,24,220:.  0/0:0,6,114:.   0|1:45,0,94:132858318   0/0:0,0,0:.     0/0:0,27,255:.
+chr10   132858366       .       G       A       4.45139 .       DP=32;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=0.506479;SGB=-0.587685;MQ0F=0.0;AF1=0.112133;AC1=1.0;MQ=47;FQ=4.79208;PV4=1.0,0.45143,1.0,1.0;DP4=6,20,0,1    GT:PL:PS        0/0:0,21,186:.  0/0:0,6,120:.   0|1:39,0,161:132858318  0/0:0,6,69:.    0/0:0,27,255:.
+chr10   132858370       .       C       T       120.569 .       DP=32;VDB=0.3423;RPB=0.98481;MQB=0.489334;BQB=0.782784;MQSB=0.822995;SGB=-7.90536;MQ0F=0.0;AF1=0.305737;AC1=3.0;MQ=47;FQ=122.132;PV4=0.303122,0.188471,0.284204,1.0;DP4=3,18,2,4 GT:PL:PS        1|0:106,0,46:132858336  0/0:0,6,120:.   0|1:8,0,168:132858318                                                                   1|0:51,0,9:132858370     0/0:0,27,255:.
+chr10   132858380       .       T       A       86.5537 .       DP=30;VDB=0.244943;RPB=0.977529;MQB=0.850768;BQB=0.997478;MQSB=0.660463;SGB=-1.60167;MQ0F=0.0;AF1=0.224582;AC1=2.0;MQ=46;FQ=87.6599;PV4=1.0,0.322941,0.493299,1.0;DP4=4,18,1,3   GT:PL:PS        1|0:81,0,89:132858336   0/0:0,3,60:.    0/0:0,15,171:. 1|0:48,0,18:132858370                                                    0/0:0,30,255:.
+chr10   132858391       .       T       C       62.4097 .       DP=31;VDB=0.497461;RPB=0.800493;MQB=0.997257;BQB=0.192235;MQSB=0.68264;SGB=-7.11183;MQ0F=0.0;AF1=0.392364;AC1=4.0;MQ=47;FQ=64.5894;PV4=0.0807905,0.0490457,1.0,1.0;DP4=5,16,3,1  GT:PL:PS        0|1:37,0,165:132858336  0/1:0,0,0:.     0|1:31,0,101:132858318                                                                  0/0:0,9,81:.     0|1:37,0,228:132858318
+chr10   132858392       .       G       T       94.6566 .       DP=33;VDB=0.281254;RPB=0.984341;MQB=0.756987;BQB=0.98995;MQSB=0.737484;SGB=-1.60167;MQ0F=0.0;AF1=0.252994;AC1=2.0;MQ=47;FQ=95.9262;PV4=0.287023,1.0,1.0,1.0;DP4=5,17,2,2 GT:PL:PS        1|0:88,0,113:132858336  0/0:0,0,0:.     0/0:0,15,145:.  1|0:48,0,18:132858370                                                           0/0:0,33,255:.
+chr10   132858405       .       A       G       11.6519 .       DP=28;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=0.399018;SGB=-0.587685;MQ0F=0.0;AF1=0.107688;AC1=1.0;MQ=49;FQ=12.117;PV4=1.0,1.0,1.0,1.0;DP4=8,14,0,1 GT:PL:PS        0/0:0,21,246:.  0/0:0,6,120:.   0/0:0,12,176:.  1|0:48,0,18:132858370   0/0:0,21,255:.
+
+real    0m20.955s
+user    0m11.982s
+sys     0m2.517s
+
+0m20.955s
+0m11.982s
+0m2.517s
+
+This is WhatsHap 0.18 running under Python 3.7.4
+Working on 5 samples from 5 families
+======== Working on chromosome 'chr10'
+---- Processing individual 826
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8779
+Reading alignments for sample '826'and detecting alleles ...
+Found 5736 reads covering 815 variants
+Kept 788 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 478 reads covering 398 variants
+Best-case phasing would result in 149 non-singleton phased blocks (149 in total)
+... after read selection: 149 non-singleton phased blocks (149 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 398
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 5340
+No. of phased blocks: 149
+Largest component contains 11 variants (2.8% of accessible variants) between position 43119791 and 43119827
+---- Processing individual 827
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8883
+Reading alignments for sample '827'and detecting alleles ...
+Found 6605 reads covering 995 variants
+Kept 1161 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 723 reads covering 518 variants
+Best-case phasing would result in 194 non-singleton phased blocks (194 in total)
+... after read selection: 194 non-singleton phased blocks (194 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 518
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 6605
+No. of phased blocks: 194
+Largest component contains 8 variants (1.5% of accessible variants) between position 43119801 and 43119827
+---- Processing individual 832
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8095
+Reading alignments for sample '832'and detecting alleles ...
+Found 13128 reads covering 1749 variants
+Kept 1770 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 937 reads covering 938 variants
+Best-case phasing would result in 326 non-singleton phased blocks (326 in total)
+... after read selection: 326 non-singleton phased blocks (326 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 938
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 6526
+No. of phased blocks: 326
+Largest component contains 14 variants (1.5% of accessible variants) between position 43119407 and 43119916
+---- Processing individual 847
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 9170
+Reading alignments for sample '847'and detecting alleles ...
+Found 7236 reads covering 872 variants
+Kept 1116 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 622 reads covering 452 variants
+Best-case phasing would result in 153 non-singleton phased blocks (153 in total)
+... after read selection: 153 non-singleton phased blocks (153 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 452
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 8249
+No. of phased blocks: 153
+Largest component contains 12 variants (2.7% of accessible variants) between position 43119646 and 43119827
+---- Processing individual 850
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 7412
+Reading alignments for sample '850'and detecting alleles ...
+Found 9812 reads covering 2486 variants
+Kept 1931 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 1264 reads covering 1293 variants
+Best-case phasing would result in 460 non-singleton phased blocks (460 in total)
+... after read selection: 460 non-singleton phased blocks (460 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 1293
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 8588
+No. of phased blocks: 460
+Largest component contains 15 variants (1.2% of accessible variants) between position 41877847 and 41878157
+======== Writing VCF
+Done writing VCF
+
+== SUMMARY ==
+Maximum memory usage: 0.199 GB
+Time spent reading BAM/CRAM:                    8.0 s
+Time spent parsing VCF:                         1.9 s
+Time spent selecting reads:                     0.6 s
+Time spent phasing:                             1.1 s
+Time spent writing VCF:                         1.9 s
+Time spent finding components:                  0.0 s
+Time spent on rest:                             2.1 s
+Total elapsed time:                            15.6 s
+
+
+grep -v '#' Whatshap.phased.5sample.vcf | wc -l
+628
+
+# Split each sample to columns POS REF ALT HAP
+grep -ie '|' -e '0/0' -e '1/1' Whatshap.phased.5sample.vcf | cut -f 2,4,5,10| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.826.chr10.whatshap.txt
+grep -ie '|' -e '0/0' -e '1/1' Whatshap.phased.5sample.vcf | cut -f 2,4,5,11| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.827.chr10.whatshap.txt
+grep -ie '|' -e '0/0' -e '1/1' Whatshap.phased.5sample.vcf | cut -f 2,4,5,12| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.832.chr10.whatshap.txt
+grep -ie '|' -e '0/0' -e '1/1' Whatshap.phased.5sample.vcf | cut -f 2,4,5,13| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.847.chr10.whatshap.txt
+grep -ie '|' -e '0/0' -e '1/1' Whatshap.phased.5sample.vcf | cut -f 2,4,5,14| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.850.chr10.whatshap.txt
+47754   T       C       0/0
+47771   C       T       0/0
+47774   A       C       0/0
+1183069 G       A       0|1
+1183111 G       T       0|1
+1183505 C       A       0/0
+1184763 C       T       0/1
+1185028 C       T       0|1
+1185195 C       T       0|1
+1185203 G       T       0/0
+1199953 A       T       1/1
+1216778 G       A       0/0
+
+# Several positions had 2 alternate alleles 
+# I handled this using the last 2 pipes to select the first alt
+
+cp Haplotype-Research/getAlleles.pl data/new.MIHA.June2020/whatshap/results/
+perl getAlleles.pl binary.826.chr10.whatshap.txt individuals/whatshap.genotype.826.chr10.txt
+perl getAlleles.pl binary.827.chr10.whatshap.txt individuals/whatshap.genotype.827.chr10.txt
+perl getAlleles.pl binary.832.chr10.whatshap.txt individuals/whatshap.genotype.832.chr10.txt
+perl getAlleles.pl binary.847.chr10.whatshap.txt individuals/whatshap.genotype.847.chr10.txt
+perl getAlleles.pl binary.850.chr10.whatshap.txt individuals/whatshap.genotype.850.chr10.txt
+C A
+C A
+T T
+T T
+C C
+A A
+G A
+T T
+
+wc -l *
+  628 whatshap.genotype.826.chr10.txt
+  628 whatshap.genotype.827.chr10.txt
+  628 whatshap.genotype.832.chr10.txt
+  628 whatshap.genotype.847.chr10.txt
+  628 whatshap.genotype.850.chr10.txt
+
+cp Haplotype-Research/getHaplotype.pl data/new.MIHA.June2020/whatshap/results/
+perl getHaplotype.pl binary.826.chr10.whatshap.txt haplotypes/whatshap.haplotype.826.chr10.txt
+perl getHaplotype.pl binary.827.chr10.whatshap.txt haplotypes/whatshap.haplotype.827.chr10.txt
+perl getHaplotype.pl binary.832.chr10.whatshap.txt haplotypes/whatshap.haplotype.832.chr10.txt
+perl getHaplotype.pl binary.847.chr10.whatshap.txt haplotypes/whatshap.haplotype.847.chr10.txt
+perl getHaplotype.pl binary.850.chr10.whatshap.txt haplotypes/whatshap.haplotype.850.chr10.txt
+T T
+C C
+A A
+G A
+G T
+C C
+- -
+C T
+C T
+G G
+
+
+#############################
+# Hapseq2 input prepared
+#############################
+
+[s_m774@login2 whatshap]$ pwd
+/home/s_m774/data/new.MIHA/
+
+# Hapseq2 needs 2 input files sites.txt and counts.txt
+cp bcftools/results/5sample.chr10.vcf hapseq2/
+
+grep -v "#" 5sample.chr10.vcf | awk '{print $1"\t"$2"\t.\t" $4"\t"$5 "\t100\tPASS\t."}' > chr10.hapseq.vcf
+chr10   46025   .       C       A       100     PASS    .
+chr10   46026   .       C       A       100     PASS    .
+chr10   47663   .       C       T       100     PASS    .
+chr10   47754   .       T       C       100     PASS    .
+chr10   47771   .       C       T       100     PASS    .
+chr10   47774   .       A       C       100     PASS    .
+
+# I only keep the primary alternate allele as multiple alleles is unsupported by Hapseq2
+awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$6"\t"$7"\t"$8"\t"$5}' chr10.hapseq.vcf | sed s/,/\\t/g | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$8"\t"$5"\t"$6"\t"$7}' > singleAllele.chr10.hapseq.vcf
+
+# Prepared sites file
+cut -f 2,4,5 singleAllele.chr10.hapseq.vcf > sites.chr10.txt
+47754   T       C
+47771   C       T
+47774   A       C
+1183069 G       A
+1183111 G       T
+1183505 C       A
+
+
+# each bam needs to be indexed with filename __.bam.bai
+cp bcftools/*RG* hapseq2/bams
+cp /home/s_m774/software/HapSeq2/bam_parser ./
+[s_m774@login1 bams]$ mv 826RG.chr10.bai 826RG.chr10.bam.bai
+[s_m774@login1 bams]$ mv 827RG.chr10.bai 827RG.chr10.bam.bai
+[s_m774@login1 bams]$ mv 832RG.chr10.bai 832RG.chr10.bam.bai
+[s_m774@login1 bams]$ mv 847RG.chr10.bai 847RG.chr10.bam.bai
+[s_m774@login1 bams]$ mv 850RG.chr10.bai 850RG.chr10.bam.bai
+
+
+# Ran Bam parsers
+mkdir parsed
+time ./bam_parser bams/826RG.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.826 1
+time ./bam_parser bams/827RG.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.827 2
+time ./bam_parser bams/832RG.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.832 3
+time ./bam_parser bams/847RG.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.847 4
+time ./bam_parser bams/850RG.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.850 5
+
+real    0m1.368s
+user    0m1.332s
+sys     0m0.035s
+
+# Prepared counts file
+cat parsed/*.count.txt > counts.chr10.txt
+1 1 0 0 1 1 1 39 19 0 24 0 42 14 15 0 23 0 138 0 111 0 121 22 49 0 0 1 4 88 40 0 30 0 22 3 5 0 54 0 20 5 0 170 0 18 31 158 78 4 14 5 2 80 63 0 2 73 0 51 0 61 0 16 16 1 1 1 1 0 56 0 6 0 3 17 30 0 1 0 0 0 0 0 0 39 0 0 186 0 8 0 17 148 50 3 67 8 2 0 78 10 29 13 3 0 180 0 15 177 23 0 6 0 0 0 12 0 12 1 230 0 52 2 153 0 192 0 0 0 228 0 3 0 3 0 13 0 6 0 0 1 150 0 123 1 0 1 0 0 4 0 6 0 4 0 0 0 0 0 2 0 4 0 2 0 2 31 14 0 7 0 10 0 11 0 18 2 0 0 1 0 2 0 19 54 211 0 2 0 12 131 36 0 139 0 2 5 0 15 1 0 0 0 13 0 17 20 55 0 159 0 94 0 6 0 3 0 0 4 1 3 0 71 19 87 19 0 119 77 26 137 46 10 1 20 9 0 0 0 2 0 2 0 0
+1 1 0 0 1 0 0 59 3 26 4 31 6 24 0 0 21 0 118 0 90 0 102 6 33 0 0 0 0 0 79 0 12 0 9 0 4 0 72 0 22 17 0 0 152 36 0 144 27 10 0 2 0 83 30 0 4 70 0 41 0 52 0 35 0 0 6 0 6 0 55 0 4 0 3 29 7 3 8 1 0 1 17 1 17 20 9 0 152 0 5 0 15 29 87 3 53 9 0 0 57 20 21 7 3 1 122 0 16 0 196 0 11 0 0 3 9 0 2 116 74 38 33 1 171 124 75 0 1 0 263 9 0 9 0 1 4 9 4 0 0 0 141 0 98 0 2 0 2 0 0 0 11 1 0 0 4 0 4 1 9 0 18 0 4 0 1 44 0 2 21 14 8 0 4 0 2 0 2 0 2 0 2 0 9 260 1 0 0 20 0 86 37 0 120 0 8 0 9 8 16 0 0 5 14 1 8 19 34 0 145 0 120 0 6 0 3 0 2 0 16 0 4 0 75 0 98 0 127 0 115 0 182 0 9 0 53 0 3 0 0 0 2 2 0
+1 1 0 0 1 0 2 1 143 20 0 47 25 45 0 0 84 163 201 0 191 0 214 85 67 0 2 0 3 0 200 0 44 0 37 8 7 0 160 1 74 7 7 183 160 48 39 0 410 15 2 4 5 150 167 0 4 0 116 50 35 52 41 43 19 3 4 3 4 0 113 0 12 0 3 42 32 0 2 2 3 2 9 1 9 36 33 169 147 1 4 16 12 0 263 95 0 34 0 155 0 43 36 21 1 144 133 30 0 132 142 6 6 0 2 17 8 0 20 179 162 75 49 0 243 0 325 0 9 226 181 1 5 1 3 0 32 12 11 0 8 0 276 0 195 2 4 2 4 0 7 0 16 0 9 0 4 0 5 17 0 19 0 0 4 3 6 0 74 0 5 0 15 0 3 0 38 0 3 5 5 7 0 0 20 469 0 0 3 37 0 2 283 0 236 0 6 0 14 0 39 0 7 0 39 0 27 0 169 0 280 0 239 0 16 1 4 0 6 7 5 5 7 83 92 78 106 125 121 217 0 168 203 22 0 29 51 2 1 0 4 0 5 1 1
+
+
+###################################
+# Haplotype phased with Hapseq2
+###################################
+
+[s_m774@login2 whatshap]$ pwd
+/home/s_m774/data/new.MIHA/
+
+# --readCounts is the counts file
+# --polymorphicSites is a list of SNP sites
+# -o output file
+# --phase
+time /home/s_m774/software/HapSeq2/hapseq2  --readCounts counts.chr10.txt --polymorphicSites sites.chr10.txt -o phased.chr10.hapseq.txt --phase
+
+1->1 HAPLO1 tcaggctttgtgcatcggtttcgcgattcgccctcgcatcaccacccccctgtcctcgtcgaggtgccgcctgtgcggccagcgtcctcggccgctaggccacccctgggtccgacggcaagacaagtcagctcggccccatctccaggataggctgctggagtctccggaaactgttgctccgaatatcgcgtagggggcaatccgtccaacgccccggccgccccctgcatgcccgcgttacctacttacgctagttcccattccgtcaggcgccgtcagtccgcgtatagcataccctcgaggcccactacgggggtccacttaaaaccgagccaaaactgcccgtgttttccggcacatgagtccataatggccaatcgcgccgtaggccaggaggcgtcaaagtagttggggatacgacgaccgggcgtattacccctcacagccgcataagctcggggacaaaagagcccattggtgtcgcggccacgcgccctgcctgtcttcctctgcgaagggcccccggggggacgtcagacaccagcaccttactaatttgtggccccccttcatgagggccgtggggtacgagtcctacggccggctccaaaacgttcaggtatta
+1->1 HAPLO2 tcaagccccgtgcatcggattgtgtggccgccctcacgcactcacccctttgcattggtcggggtgccgccggtgcggccggggtacctagtcgctaggccactgttgggtacgactgcccgacaagatcgctcgggcctgggatcgggatgcggcgctcgtctctccggaaactggggccccgaatatcacggggggcgcgattcgttaccacgaaatcctacgccccacacacctgcgttacctacttacgctagttccagttctgacagcggccgccagtcagtgtccggcataccctcgagcctcactacgggggtccatccccagccgaggcaaaaccgcccgtgttgtccggcgcatgaggccatcccggtcaatcgttccttgagccgggaggcttctaagtcgcggttgctacgagaaccgggcgtattacccatcgcagtcgcctaccctcggggcagccagcgcctactggctccgcgaccacgcgccgtgtttttcttcctctgcgacaggcacttgggggtccgtcagaaaccaacactctcctgcgttgtggccccctcccaggaaggccgtggtgtacgagtcgtacggccggcttcaaaccgcgtaggcttgg
+2->2 HAPLO1 tcaggcctctagcatcggtttctgtgtccgacctcacgtcaccacccccttgccttggtcggggtgccaccggtgcggctggcgtccccggccacgaggccactcctggatctgacggcccgacaagaccgctcgggcccatgtccgcgatacgctgttcgagtgtcctggaactgttgccccgaatattgcgggcggcgcgattcatcaaaacgacctcctgccccccacacgcctgcgttacctactttcgctggttccagttccgtcggccgccgccagtacatgtatagcatacactcgaagccagcgacggggatccacccccagccgagccaaaactgtccgagttgtcccggacatgaatccatcatggtcgatcgttccgtaagccgggaggtgtcaaagtcgcgggggctacgagggccggacgtattacccctcatagcctccaaagctcaaggccgccggagcctattggcgccgcgaccacatgccgtgccgttcttcttctgcaacgggtcctcgggggtccgtcagtcctcagcattttacggagttgtggccccttcccatgaggactgtggggtacgagtcgtacggccggcttcaaaacgcttaggcttga
+2->2 HAPLO2 tcaggccccgtgcccctgattggcgagcctccctcacgtactcacccccctgtcctggtcggggtgccagcggtgcggctggggtcctcagccgctaggccactcctgagtccgacggcaagacaaaatagctcgggtccagcaccaggataggccgtagttctctccggaaactgttgccccgaatatcacgtagggcgcaagttgtcccccgccaaggccgcgccccgcacgcctgcattaactgcttacgctagttccagtcccgtcagccgccgccagtacatgtatggcttaccctcgcggcccactacggaggatctcccccaaccgagccaaacctgcccatttctctcggcaagccagtccatcataatcgttcgtgtcgcaagccgggaggcgtcaaagtcgcgggggatactcgggccgggcgtattaccgctcattttcgcaaaacttcgggtaaaaaagagtccattggcgccgcggtcacgcttcgtgcctttcttcctctgcggagggccctcgggggtcagtcagacaccagcgctttcctgagttgtggctccctcccatgagagccgtggggtacgagtccaacggccggcttcgacccgttcaggcttga
+
+real    0m0.047s
+user    0m0.013s
+sys     0m0.009s
+
+# Coverted alleles to uppercase using awk
+# -d delimiter
+# -f field 
+
+cut -d " " -f 3 phased.chr10.hapseq.txt | awk '{ print toupper($1) }' | sed 's/./& /g' > results/transposeHapSeq2.txt
+T C A G G C T T T G T G C A T C G G T T T C G C G A T T C G C C C T C G C A T C A C C A C C C C C C T G T C C T C G T C G A G G T G C C G C C T G T G C G G C C A G C G T C C T C G G C C G C T A G G C C A C C C C T G G G T C C G A C G G C A A G A C A A G T C A G C T C G G C C C C A T C T C C A G G A T A G G C T G C T G G A G T C T C C G G A A A C T G T T G C T C C G A A T A T C G C G T A G G G G G C A A T C C G T C C A A C G C C C C G G C C G C C C C C T G C A T G C C C G C G T T A C C T A C T T A C G C T A G T T C C C A T T C C G T C A G G C G C C G T C A G T C C G C G T A T A G C A T A C C C T C G A G G C C C A C T A C G G G G G T C C A C T T A A A A C C G A G C C A A A A C T G C C C G T G T T T T C C G G C A C A T G A G T C C A T A A T G G C C A A T C G C G C C G T A G G C C A G G A G G C G T C A A A G T A G T T G G G G A T A C G A C G A C C G G G C G T A T T A C C C C T C A C A G C C G C A T A A G C T C G G G G A C A A A A G A G C C C A T T G G T G T C G C G G C C A C G C G C C C T G C C T G T C T T C C T C T G C G A A G G G C C C C C G G G G G G A C G T C A G A C A C C A G C A C C T T A C T A A T T T G T G G C C C C C C T T C A T G A G G G C C G T G G G G T A C G A G T C C T A C G G C C G G C T C C A A A A C G T T C A G G T A T T A
+T C A A G C C C C G T G C A T C G G A T T G T G T G G C C G C C C T C A C G C A C T C A C C C C T T T G C A T T G G T C G G G G T G C C G C C G G T G C G G C C G G G G T A C C T A G T C G C T A G G C C A C T G T T G G G T A C G A C T G C C C G A C A A G A T C G C T C G G G C C T G G G A T C G G G A T G C G G C G C T C G T C T C T C C G G A A A C T G G G G C C C C G A A T A T C A C G G G G G G C G C G A T T C G T T A C C A C G A A A T C C T A C G C C C C A C A C A C C T G C G T T A C C T A C T T A C G C T A G T T C C A G T T C T G A C A G C G G C C G C C A G T C A G T G T C C G G C A T A C C C T C G A G C C T C A C T A C G G G G G T C C A T C C C C A G C C G A G G C A A A A C C G C C C G T G T T G T C C G G C G C A T G A G G C C A T C C C G G T C A A T C G T T C C T T G A G C C G G G A G G C T T C T A A G T C G C G G T T G C T A C G A G A A C C G G G C G T A T T A C C C A T C G C A G T C G C C T A C C C T C G G G G C A G C C A G C G C C T A C T G G C T C C G C G A C C A C G C G C C G T G T T T T T C T T C C T C T G C G A C A G G C A C T T G G G G G T C C G T C A G A A A C C A A C A C T C T C C T G C G T T G T G G C C C C C T C C C A G G A A G G C C G T G G T G T A C G A G T C G T A C G G C C G G C T T C A A A C C G C G T A G G C T T G G
+T C A G G C C T C T A G C A T C G G T T T C T G T G T C C G A C C T C A C G T C A C C A C C C C C T T G C C T T G G T C G G G G T G C C A C C G G T G C G G C T G G C G T C C C C G G C C A C G A G G C C A C T C C T G G A T C T G A C G G C C C G A C A A G A C C G C T C G G G C C C A T G T C C G C G A T A C G C T G T T C G A G T G T C C T G G A A C T G T T G C C C C G A A T A T T G C G G G C G G C G C G A T T C A T C A A A A C G A C C T C C T G C C C C C C A C A C G C C T G C G T T A C C T A C T T T C G C T G G T T C C A G T T C C G T C G G C C G C C G C C A G T A C A T G T A T A G C A T A C A C T C G A A G C C A G C G A C G G G G A T C C A C C C C C A G C C G A G C C A A A A C T G T C C G A G T T G T C C C G G A C A T G A A T C C A T C A T G G T C G A T C G T T C C G T A A G C C G G G A G G T G T C A A A G T C G C G G G G G C T A C G A G G G C C G G A C G T A T T A C C C C T C A T A G C C T C C A A A G C T C A A G G C C G C C G G A G C C T A T T G G C G C C G C G A C C A C A T G C C G T G C C G T T C T T C T T C T G C A A C G G G T C C T C G G G G G T C C G T C A G T C C T C A G C A T T T T A C G G A G T T G T G G C C C C T T C C C A T G A G G A C T G T G G G G T A C G A G T C G T A C G G C C G G C T T C A A A A C G C T T A G G C T T G A
+
+awk -F' ' '{print NF; exit}' transposeHapSeq2.txt
+628
+
+# Transpose using awk: https://stackoverflow.com/a/1729980
+awk '
+{
+    for (i=1; i<=NF; i++)  {
+        a[NR,i] = $i
+    }
+}
+NF>p { p = NF }
+END {
+    for(j=1; j<=p; j++) {
+        str=a[1,j]
+        for(i=2; i<=NR; i++){
+            str=str" "a[i,j];
+        }
+        print str
+    }
+}' transposeHapSeq2.txt > table.hapseq2.chr10.5sample.txt    
+T T T T T T T C C T
+C C C C C C T C C T
+A A A A A A C A A C
+G A G G A A G G G A
+G G G G G G G G G G
+C C C C C C C C C C
+T C C C C C C C C C
+T C T C T T C C C T
+T C C C T T C C T C
+G G T G G G G G G G
+T T A T A A A A T T
+G G G G G G A G G G
+
+wc -l table.hapseq2.chr10.5sample.txt
+628 table.hapseq2.chr10.5sample.txt
+
+# split each sample
+cut -f 1,2 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.826.chr10.txt
+cut -f 3,4 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.827.chr10.txt
+cut -f 5,6 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.832.chr10.txt
+cut -f 7,8 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.847.chr10.txt
+cut -f 9,10 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.850.chr10.txt
+T T
+C C
+A A
+G A
+G G
+C C
+T C
+T C
+T C
+
+wc -l *
+  628 hapseq2.genotype.826.chr10.txt
+  628 hapseq2.genotype.827.chr10.txt
+  628 hapseq2.genotype.832.chr10.txt
+  628 hapseq2.genotype.847.chr10.txt
+  628 hapseq2.genotype.850.chr10.txt
+
+#############################
+# DBM input prepared
+#############################
+
+/home/s_m774/data/new.MIHA.June2020/dbm
+
+# DBM needs 2 inputs: chr10.snps and chr10.counts
+
+# I only keep the primary alternate allele as multiple alleles is unsupported by Hapseq2
+grep -v "#" 5sample.chr10.vcf | awk '{print NR"\t"$1"\t"$2"\t"$6"\t"$4"\t"$5}' > chr10.5sample.snps
+1       chr10   47754   57.5615 T       C
+2       chr10   47771   49.6775 C       T
+3       chr10   47774   46.8073 A       C
+4       chr10   1183069 999     G       A
+5       chr10   1183111 17.1126 G       T
+6       chr10   1183505 3.02212 C       A
+
+# Extract allele count in each sample
+time grep -v "#" 5sample.chr10.vcf | cut -f 10 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.826.count
+time grep -v "#" 5sample.chr10.vcf | cut -f 11 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.827.count
+time grep -v "#" 5sample.chr10.vcf | cut -f 12 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.832.count
+time grep -v "#" 5sample.chr10.vcf | cut -f 13 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.847.count
+time grep -v "#" 5sample.chr10.vcf | cut -f 14 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.850.count
+0       0
+0       0
+0       0
+7       0
+5       0
+5       0
+0       0
+
+real    0m0.018s
+user    0m0.018s
+sys     0m0.009s
+
+# paste each sample side by side
+awk '{print "M\t"NR}' chr10.826.count | paste - chr10.826.count chr10.827.count chr10.832.count chr10.847.count chr10.850.count > chr10.5sample.counts
+
+# Inserted DBM header 
+# -i is insert
+# 1s to insert at the top of file
+I       SID     I1      I1      I2      I2      I3      I3      I4      I4      I5      I5
+M       1       7       0       1       0       7       0       1       4       5       2
+M       2       5       0       1       0       10      0       3       4       2       2
+M       3       5       0       1       0       10      0       3       4       3       2
+M       4       7       1       5       0       0       19      8       0       14      6
+M       5       17      2       12      0       29      0       8       0       27      0
+M       6       18      0       11      0       25      0       23      2       23      0
+M       7       9       2       10      0       39      0       6       0       21      0
+M       8       37      18      59      3       1       116     40      0       50      62
+M       9       7       1       13      0       0       18      2       0       8       5
+M       10      8       0       6       2       15      0       2       0       13      0
+M       11      0       22      26      4       20      0       21      0       0       24
+M       12      5       0       11      0       11      0       5       3       13      0
+M       13      37      0       39      0       44      29      41      0       83      0
+M       14      4       0       4       1       3       0       0       0       12      0
+M       20      0       0       0       1       1       5       22      1       0       0
+M       21      0       0       0       1       1       5       22      1       0       0
+M       22      63      8       33      3       126     19      58      18      118     14
+M       23      49      23      29      5       103     38      46      31      101     30
+M       24      68      9       34      2       122     25      58      23      126     14
+M       25      61      15      33      5       120     28      55      26      112     28
+
+
+###################################
+# Haplotype phased with DBM
+###################################
+
+/home/s_m774/data/new.MIHA.June2020/dbm
+
+time /home/s_m774/software/DBM/dbm chr10.5sample
+
+real    0m1.839s
+user    0m1.808s
+sys     0m0.005s
+
+wc -l chr10.5sample.g
+629 chr10.5sample.g
+
+# chr10.5sample.g
+ID CHR POS I1 I1 I2 I2 I3 I3 I4 I4 I5 I5
+1 chr10 47754 T T T T T T C T T C
+2 chr10 47771 C C C C C C T C C T
+3 chr10 47774 A A A A A A C A A C
+4 chr10 1183069 A G G G A A G G G A
+5 chr10 1183111 G G G G G G G G G G
+6 chr10 1183505 C C C C C C C C C C
+7 chr10 1184763 C C C C C C C C C C
+8 chr10 1185028 T C C C T T C C C T
+9 chr10 1185195 T C C C T T C C C T
+10 chr10 1185203 G G G G G G G G G G
+11 chr10 1199953 T T A T A A A A T T
+12 chr10 1216778 G G G G G G A G G G
+13 chr10 1217136 C C C C T C C C C C
+14 chr10 1233439 A A A A A A A A A A
+15 chr10 1233504 T T C T C C C C T T
+16 chr10 1233547 C C C C C C C C C C
+17 chr10 1233561 G G T G G T T T G G
+18 chr10 1233656 G G G G A G G G G G
+19 chr10 1233957 T T T T T T T T T T
+20 chr10 1233977 C C T C T C C C C C
+21 chr10 1233978 C T T C T C C C T C
+22 chr10 1270994 G G G G G G G G G G
+23 chr10 1270996 G T T T T G G T T G
+24 chr10 1271004 C C C C C G G C C C
+25 chr10 1271006 G T T T T G G T T G
+26 chr10 1271008 G G G G G G G G G G
+27 chr10 1271011 G T T T T G G T T G
+28 chr10 1271134 T C C C C C C C C C
+29 chr10 1362915 C C C C C C C C C C
+30 chr10 1363085 G G G G G G G G G G
+
+# Split each sample
+sed '1d' chr10.5sample.g > noHeader.chr10.5sample.g
+cut -f 4,5 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.826.chr10.txt
+cut -f 6,7 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.827.chr10.txt
+cut -f 8,9 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.832.chr10.txt
+cut -f 10,11 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.847.chr10.txt
+cut -f 12,13 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.850.chr10.txt
+T T
+C C
+A A
+A G
+G G
+C C
+C C
+T C
+T C
+
+wc -l *
+  628 dbm.genotype.826.chr10.txt
+  628 dbm.genotype.827.chr10.txt
+  628 dbm.genotype.832.chr10.txt
+  628 dbm.genotype.847.chr10.txt
+  628 dbm.genotype.850.chr10.txt
+
+#################################################
+# Compared the haplotype agreement of 3 packages
+#################################################
+
+pwd
+/home/s_m774/data/new.MIHA.June2020/compare
+
+cp whatshap/results/individuals/* compare/
+cp whatshap/results/haplotypes/* compare/
+cp hapseq2/results/individuals/* compare/
+cp dbm/individuals/* compare/
+
+# Genotypes
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.826.chr10.txt hapseq2.genotype.826.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.827.chr10.txt hapseq2.genotype.827.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.832.chr10.txt hapseq2.genotype.832.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.847.chr10.txt hapseq2.genotype.847.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.850.chr10.txt hapseq2.genotype.850.chr10.txt
+
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.826.chr10.txt whatshap.genotype.826.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.827.chr10.txt whatshap.genotype.827.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.832.chr10.txt whatshap.genotype.832.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.847.chr10.txt whatshap.genotype.847.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl dbm.genotype.850.chr10.txt whatshap.genotype.850.chr10.txt
+
+perl /home/s_m774/Haplotype-Research/getPoints.pl hapseq2.genotype.826.chr10.txt whatshap.genotype.826.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl hapseq2.genotype.827.chr10.txt whatshap.genotype.827.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl hapseq2.genotype.832.chr10.txt whatshap.genotype.832.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl hapseq2.genotype.847.chr10.txt whatshap.genotype.847.chr10.txt
+perl /home/s_m774/Haplotype-Research/getPoints.pl hapseq2.genotype.850.chr10.txt whatshap.genotype.850.chr10.txt
+
+# Hapseq2 vs DBM
+Strict genotype agreement: 383/628
+Non-Strict genotype agreement: 471/628
+
+Strict genotype agreement: 381/628
+Non-Strict genotype agreement: 467.5/628
+
+Strict genotype agreement: 410/628
+Non-Strict genotype agreement: 486.5/628
+
+Strict genotype agreement: 391/628
+Non-Strict genotype agreement: 479/628
+
+Strict genotype agreement: 407/628
+Non-Strict genotype agreement: 482.5/628
+
+
+# Whatshap vs DBM
+Strict genotype agreement: 379/628
+Non-Strict genotype agreement: 465.5/628
+
+Strict genotype agreement: 374/628
+Non-Strict genotype agreement: 463.5/628
+
+Strict genotype agreement: 414/628
+Non-Strict genotype agreement: 486.5/628
+
+Strict genotype agreement: 385/628
+Non-Strict genotype agreement: 477/628
+
+Strict genotype agreement: 413/628
+Non-Strict genotype agreement: 484.5/628
+
+
+# Whatshap vs Hapseq2
+Strict genotype agreement: 557/628
+Non-Strict genotype agreement: 591.5/628
+
+Strict genotype agreement: 574/628
+Non-Strict genotype agreement: 601/628
+
+Strict genotype agreement: 578/628
+Non-Strict genotype agreement: 603/628
+
+Strict genotype agreement: 582/628
+Non-Strict genotype agreement: 604/628
+
+Strict genotype agreement: 574/628
+Non-Strict genotype agreement: 601/628
+
+# Haplotypes
+
+Pasted 3 packages into a single file to eyeball agreements
+paste dbm.genotype.826.chr10.txt hapseq2.genotype.826.chr10.txt whatshap.haplotype.826.chr10.txt > R/826.dbm.hapseq2.whatshap.6col.txt
+paste dbm.genotype.827.chr10.txt hapseq2.genotype.827.chr10.txt whatshap.haplotype.827.chr10.txt > R/827.dbm.hapseq2.whatshap.6col.txt
+paste dbm.genotype.832.chr10.txt hapseq2.genotype.832.chr10.txt whatshap.haplotype.832.chr10.txt > R/832.dbm.hapseq2.whatshap.6col.txt
+paste dbm.genotype.847.chr10.txt hapseq2.genotype.847.chr10.txt whatshap.haplotype.847.chr10.txt > R/847.dbm.hapseq2.whatshap.6col.txt
+paste dbm.genotype.850.chr10.txt hapseq2.genotype.850.chr10.txt whatshap.haplotype.850.chr10.txt > R/850.dbm.hapseq2.whatshap.6col.txt
+T T     T T     T T
+C C     C C     C C
+A A     A A     A A
+A G     G A     G A
+G G     G G     G T
+C C     C C     C C
+C C     T C     - -
+T C     T C     C T
+T C     T C     C T
+G G     G G     G G
+T T     T T     T T
+G G     G G     G G
+C C     C C     C C
+A A     A A     A A
+T T     T T     T T
+C C     C C     C C
+G G     G G     G G
+G G     G G     G G
+T T     T A     A A
+C C     T T     T C
+C T     T T     T C
+
+# Columns Key
+DBM DBM2 HAP HAP2 WHP WHP2
+
+R
+sample826<-read.table("826.dbm.hapseq2.whatshap.6col.txt")
+sample827<-read.table("827.dbm.hapseq2.whatshap.6col.txt")
+sample832<-read.table("832.dbm.hapseq2.whatshap.6col.txt")
+sample847<-read.table("847.dbm.hapseq2.whatshap.6col.txt")
+sample850<-read.table("850.dbm.hapseq2.whatshap.6col.txt")
+
+# DBM vs. HapSeq2
+(sum(sample826[,1]==sample826[,3])+ sum(sample826[,2]==sample826[,4]))/2
+(sum(sample826[,1]==sample826[,4])+ sum(sample826[,2]==sample826[,3]))/2
+444
+435
+
+(sum(sample827[,1]==sample827[,3])+ sum(sample827[,2]==sample827[,4]))/2
+(sum(sample827[,1]==sample827[,4])+ sum(sample827[,2]==sample827[,3]))/2
+438.5
+451.5
+
+(sum(sample832[,1]==sample832[,3])+ sum(sample832[,2]==sample832[,4]))/2
+(sum(sample832[,1]==sample832[,4])+ sum(sample832[,2]==sample832[,3]))/2
+450.5
+462.5
+
+(sum(sample847[,1]==sample847[,3])+ sum(sample847[,2]==sample847[,4]))/2
+(sum(sample847[,1]==sample847[,4])+ sum(sample847[,2]==sample847[,3]))/2
+451
+449
+
+(sum(sample850[,1]==sample850[,3])+ sum(sample850[,2]==sample850[,4]))/2
+(sum(sample850[,1]==sample850[,4])+ sum(sample850[,2]==sample850[,3]))/2
+450.5
+454.5
+
+
+
+# DBM vs. Whatshap
+(sum(as.character(sample826[,1])==as.character(sample826[,5]))+ sum(as.character(sample826[,2])== as.character(sample826[,6])))/2
+(sum(as.character(sample826[,1])==as.character(sample826[,6]))+ sum(as.character(sample826[,2])== as.character(sample826[,5] )))/2
+375.5
+391.5
+
+(sum(as.character(sample827[,1])==as.character(sample827[,5]))+ sum(as.character(sample827[,2])== as.character(sample827[,6])))/2
+(sum(as.character(sample827[,1])==as.character(sample827[,6]))+ sum(as.character(sample827[,2])== as.character(sample827[,5] )))/2
+409
+399
+
+(sum(as.character(sample832[,1])==as.character(sample832[,5]))+ sum(as.character(sample832[,2])== as.character(sample832[,6])))/2
+(sum(as.character(sample832[,1])==as.character(sample832[,6]))+ sum(as.character(sample832[,2])== as.character(sample832[,5] )))/2
+420
+412
+
+(sum(as.character(sample847[,1])==as.character(sample847[,5]))+ sum(as.character(sample847[,2])== as.character(sample847[,6])))/2
+(sum(as.character(sample847[,1])==as.character(sample847[,6]))+ sum(as.character(sample847[,2])== as.character(sample847[,5] )))/2
+387.5
+407.5
+
+(sum(as.character(sample850[,1])==as.character(sample850[,5]))+ sum(as.character(sample850[,2])== as.character(sample850[,6])))/2
+(sum(as.character(sample850[,1])==as.character(sample850[,6]))+ sum(as.character(sample850[,2])== as.character(sample850[,5] )))/2
+417.5
+416.5
+
+
+
+
+# HapSeq2 vs. Whatshap
+(sum(as.character(sample826[,3])==as.character(sample826[,5]))+ sum(as.character(sample826[,4])== as.character(sample826[,6])))/2
+(sum(as.character(sample826[,3])==as.character(sample826[,6]))+ sum(as.character(sample826[,4])== as.character(sample826[,5] )))/2
+465
+468
+
+(sum(as.character(sample827[,3])==as.character(sample827[,5]))+ sum(as.character(sample827[,4])== as.character(sample827[,6])))/2
+(sum(as.character(sample827[,3])==as.character(sample827[,6]))+ sum(as.character(sample827[,4])== as.character(sample827[,5] )))/2
+489
+490
+
+(sum(as.character(sample832[,3])==as.character(sample832[,5]))+ sum(as.character(sample832[,4])== as.character(sample832[,6])))/2
+(sum(as.character(sample832[,3])==as.character(sample832[,6]))+ sum(as.character(sample832[,4])== as.character(sample832[,5] )))/2
+491
+492
+
+(sum(as.character(sample847[,3])==as.character(sample847[,5]))+ sum(as.character(sample847[,4])== as.character(sample847[,6])))/2
+(sum(as.character(sample847[,3])==as.character(sample847[,6]))+ sum(as.character(sample847[,4])== as.character(sample847[,5] )))/2
+469.5
+468.5
+
+(sum(as.character(sample850[,3])==as.character(sample850[,5]))+ sum(as.character(sample850[,4])== as.character(sample850[,6])))/2
+(sum(as.character(sample850[,3])==as.character(sample850[,6]))+ sum(as.character(sample850[,4])== as.character(sample850[,5] )))/2
+484.5
+501.5
+

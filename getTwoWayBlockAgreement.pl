@@ -1,3 +1,5 @@
+# July 2020 renamed: getBlockAgreement.pl
+
 # 2019 November
 # Author: Sherwin Massoudian
 # This script compares the SIHA results of 2 packages 

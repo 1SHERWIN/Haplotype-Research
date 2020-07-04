@@ -1,4 +1,4 @@
-# 2019 December
+# 2019 December *work in progress*
 # Author: Sherwin Massoudian
 # This script compares the SIHA results of 3 packages 
 

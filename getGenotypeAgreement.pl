@@ -1,6 +1,3 @@
-# July 2020 Deprecated
-# Renamed: getGenotypeAgreement.pl
-
 # This program points the intersection of two haplotype packages
 # Sherwin Massoudian
 # 2019 Fall

@@ -1,5 +1,4 @@
-# 7/14/2019
-# Name: Sherwin Massoudian. NetID: s_m774 
+# July 2019
 # This program produces DBM input files
 # perl getCounts.pl sample.snps 826.pos test.counts
 
