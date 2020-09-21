@@ -1,0 +1,51 @@
+##############################################################
+# Get a list of positions phased by Whatshap
+##############################################################
+[s_m774@login1 whatshap.2020.Mar27]$ pwd
+/home/s_m774/data/miha/whatshap.2020.Mar27
+
+[s_m774@login1 data]$ cp whatshap.data/results.february1/phased.5sample.vcf miha/whatshap.2020.Mar27/
+
+grep -ie '|' -e '0/0' -e '1/1' phased.5sample.vcf | cut -f 1,2 > positions.whatshap.txt
+chr10   46025
+chr10   46026
+chr10   47663
+chr10   47754
+chr10   47771
+chr10   47774
+chr10   48086
+chr10   48486
+chr10   49099
+chr10   49104
+
+grep -ie '|' -e '0/0' -e '1/1' phased.5sample.vcf | cut -f 1,2,10,11,12,13,14 > haplotype.positions.whatshap.txt
+
+grep '|' phased.5sample.vcf | cut -f 1,2,10,11,12,13,14 > onlyPhased.positions.whatshap.txt
+
+grep -i -e '0/0' -e '1/1' phased.5sample.vcf | cut -f 1,2,10,11,12,13,14 > onlyHomozygous.positions.whatshap.txt
+
+
+#########################################################
+# Get the depth of each of the Whatshap 13557 positions
+#########################################################
+
+grep -v '#' phased.5sample.vcf | sed 's/;/\t/g' | sed 's/=/\t/g' | cut -f 1,2,4,5,9 > read.depth.5sample.txt
+chr10   46025   C       A       2
+chr10   46026   C       A       2
+chr10   47663   C       T       4
+chr10   47754   T       C       27
+chr10   47771   C       T       27
+chr10   47774   A       C       28
+chr10   48086   G       A       5
+chr10   48486   C       T       4
+chr10   49099   T       G       1
+chr10   49104   A       C       1
+chr10   49107   G       C       1
+
+Median - 2 
+>5 - 12%
+>10 - 7%
+>15 - 5%
+>=20 - 4.63% - 628
+
+TODO no filter -> >20

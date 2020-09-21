@@ -1,0 +1,36 @@
+# Copied new Hapcut 4 column file (renumber) and compared with Peath,Mix,whatshap
+[s_m774@login1 ~]$ cd Haplotype-Research/2WaySIHA2020.1.1/
+[s_m774@login1 2WaySIHA2020.1.1]$ pwd
+/home/s_m774/Haplotype-Research/2WaySIHA2020.1.1
+
+
+[s_m774@login1 2WaySIHA2020.1.1]$ cp /home/abj15/Research.Project/Run/Comparisons/pair-wise/2.Jan14.2020/hapcut2.nodashes.renum.output.txt ./removeHeader.hapcut.4col.txt
+[s_m774@login1 2WaySIHA2020.1.1]$ tail -n +2 removeHeader.hapcut.4col.txt > hapcut.4col.txt
+
+
+[s_m774@login1 2WaySIHA2020.1.1]$ perl ../compare2HA.pl hapcut.4col.txt peath.4col.txt 1 results/hapcutPeath
+Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement
+The order of the input files will affect the output results
+Using input 1 block ID as key
+The 2nd output is printed below and saved in file
+Key     agree   disag   total   agree%  disagree%
+Block   31964   188     32152   0.994152774321971       0.00584722567802936
+SNV     109063  6150    115213  0.946620607049552       0.0533793929504483
+
+[s_m774@login1 2WaySIHA2020.1.1]$ perl ../compare2HA.pl hapcut.4col.txt whatshap.4col.txt 1 results/hapcutWhatshap
+Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement
+The order of the input files will affect the output results
+Using input 1 block ID as key
+The 2nd output is printed below and saved in file
+Key     agree   disag   total   agree%  disagree%
+Block   30466   1686    32152   0.947561582483205       0.0524384175167952
+SNV     99278   15935   115213  0.861690955013757       0.138309044986243
+
+[s_m774@login1 2WaySIHA2020.1.1]$ perl ../compare2HA.pl hapcut.4col.txt mixSIH.4col.txt 1 results/hapcutMix
+Output colums: Block ID, HA1 count, HA2 count, Variant agreement, Haplotype agreement
+The order of the input files will affect the output results
+Using input 1 block ID as key
+The 2nd output is printed below and saved in file
+Key     agree   disag   total   agree%  disagree%
+Block   31685   467     32152   0.985475242597661       0.0145247574023389
+SNV     106060  9153    115213  0.920555840052772       0.0794441599472282

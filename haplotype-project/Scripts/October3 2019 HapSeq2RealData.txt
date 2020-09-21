@@ -1,0 +1,247 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Preparing Real Data
+# Download: https://github.com/ZhiGroup/HapSeq2
+# Manual: https://github.com/ZhiGroup/HapSeq2/blob/master/HapSeq-Manual.pdf
+#################################################################################
+
+
+# Searched for chr10 in BAMs
+
+/home/s_m774/data/samtools/chr10
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools view -b 826.bam chr10 > 826chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools view -b 827.bam chr10 > 827chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools view -b 832.bam chr10 > 832chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools view -b 847.bam chr10 > 847chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools view -b 850.bam chr10 > 850chr10.bam
+
+# Indexed the sorted BAMs
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 826chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 827chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 832chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 847chr10.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 850chr10.bam
+
+# Created directory to run HapSeq2
+
+/home/s_m774/data/hapseq2/testrun
+
+cp software/HapSeq2/* data/HapSeq2/testrun
+
+mkdir data/HapSeq2/testrun/BAMs
+
+cp samtools/chr10/* hapseq2/testrun/BAMs/
+
+
+# Prepared Bam Parser VCF file by using an existing DBM input 
+/home/s_m774/data/HapSeq2/samples
+
+cp dbm/pair.2depth.5sample/qualityDBM.8.21/min3Sample/sample.snps HapSeq2/samples/
+
+awk '{print "10\t" $3 "\t.\t" $5 "\t" $6 "\t" $4 "\tPASS\t."}' sample.snps > chr10.vcf
+
+sed 's/^/chr/' chr10.vcf > chr10wchr.vcf
+
+
+# sites.vcf for reference
+20      6975891 rs186347986     A       G       100     PASS    .
+20      6975897 rs190220390     C       T       100     PASS    .
+20      6975940 rs181875260     G       A       100     PASS    .
+20      6975946 rs186387184     A       C       100     PASS    .
+20      6976002 rs191143402     A       C       100     PASS    .
+20      6976018 rs142533517     G       A       100     PASS    .
+20      6976100 rs183466423     G       A       100     PASS    .
+20      6976115 rs2326858       C       T       100     PASS    .
+20      6976344 rs151008471     G       A       100     PASS    .
+20      6976682 rs185176249     G       A       100     PASS    .
+20      6976690 rs117337440     G       A       100     PASS    .
+20      6976715 rs12625040      G       A       100     PASS    .
+20      6976735 rs115519689     C       G       100     PASS    .
+20      6976850 rs74854074      T       C       100     PASS    .
+20      6977183 rs116795929     T       A       100     PASS    .
+20      6977223 rs2876056       C       T       100     PASS    .
+20      6977334 rs190795014     C       T       100     PASS    .
+20      6977361 rs183266434     G       A       100     PASS    .
+
+# chr10wchr.vcf
+chr10   1183608 .       C       T       25.5149766666667        PASS    .
+chr10   1185028 .       C       T       216.339 PASS    .
+chr10   1199953 .       A       T       130.0072        PASS    .
+chr10   1233561 .       T       G       137.0041        PASS    .
+chr10   1737155 .       G       A       167.008666666667        PASS    .
+chr10   3010999 .       A       C       186.5998        PASS    .
+chr10   3011174 .       C       A       222.601 PASS    .
+chr10   5073699 .       G       T       222.601 PASS    .
+chr10   5073715 .       T       G       222.601 PASS    .
+chr10   8644132 .       C       T       223.805 PASS    .
+chr10   8644363 .       T       C       100.299033333333        PASS    .
+chr10   11169710        .       A       G       54.3389666666667        PASS    .
+chr10   12702337        .       C       G       222.601 PASS    .
+chr10   12702503        .       A       G       179.7994        PASS    .
+chr10   12702514        .       A       T       169.503 PASS    .
+chr10   14436463        .       A       G       70.747285       PASS    .
+chr10   19612084        .       C       G       221.999 PASS    .
+chr10   19612198        .       A       T       181.7988        PASS    .
+
+
+# Ran Bam parser
+
+./bam_parser BAMs/826chr10.bam chr10wchr.vcf parsed/826chr10 1
+./bam_parser BAMs/827chr10.bam chr10wchr.vcf parsed/827chr10 2
+./bam_parser BAMs/832chr10.bam chr10wchr.vcf parsed/832chr10 3
+./bam_parser BAMs/847chr10.bam chr10wchr.vcf parsed/847chr10 4
+./bam_parser BAMs/850chr10.bam chr10wchr.vcf parsed/850chr10 5
+
+
+# Parsed directory reference
+NA06984.count.txt
+NA06984.jump1.txt
+NA06984.jump2.txt
+NA06984.read.txt
+NA06985.count.txt
+NA06985.jump1.txt
+NA06985.jump2.txt
+NA06985.read.txt
+NA06986.count.txt
+NA06986.jump1.txt
+NA06986.jump2.txt
+NA06986.read.txt
+NA06989.count.txt
+NA06989.jump1.txt
+NA06989.jump2.txt
+NA06989.read.txt
+NA06994.count.txt
+NA06994.jump1.txt
+
+# Parsed directory
+826chr10.count.txt  826chr10.read.txt   827chr10.jump2.txt  832chr10.jump1.txt  847chr10.count.txt  847chr10.read.txt   850chr10.jump2.txt
+826chr10.jump1.txt  827chr10.count.txt  827chr10.read.txt   832chr10.jump2.txt  847chr10.jump1.txt  850chr10.count.txt  850chr10.read.txt
+826chr10.jump2.txt  827chr10.jump1.txt  832chr10.count.txt  832chr10.read.txt   847chr10.jump2.txt  850chr10.jump1.txt
+
+
+
+
+# Prepared count file
+
+mv *.txt trash/
+
+cat parsed/*.count.txt > count.txt
+
+# Reference from sample data
+1 1 0 0 1 8 0 8 0 8 0 8 0 11 0 13 0 4 0 0 3 4 0 8 1 8 0 6 0 3 0 10 0 10 0 0 8 6 0 7 0 8 0 11 0 7 0 11 0 9 0 11 0 7 0 11 0 11 0 13 0 12 0 9 0 8 0 10 0 9 0 9 0 7 0 4 0 0 10 3 0 0 8 8 0 7 0 11 0 6 0 9 0 0 8 8 0 6 0 6 0 11 0 9 0 10 0 3 0 7 0 15 0 5 0 5 0 8 0 10 0 10 0 13 0 10 0 11 0 8 0 9 0 5 0 5 0 7 0 7 0 8 1 9 0 5 0 15 0 10 0 11 0 3 0 8 0 8 0 6 0 4 0 0 8 8 0 9 0 9 0 2 0 2 0 10 0 10 0 7 0 8 0 10 0 7 0 8 0 6 0 6 0 7 0 13 0 9 0 9 0 8 0 7 0
+2 2 0 0 1 5 0 4 0 4 0 5 0 2 0 2 0 1 0 0 1 3 0 2 0 2 0 2 0 3 0 3 0 1 0 1 1 1 0 2 0 3 0 4 0 4 0 4 0 4 0 5 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 2 4 0 4 0 5 0 0 0 1 1 0 0 0 4 4 0 4 0 0 0 0 0 2 0 1 1 2 0 3 0 3 0 1 0 1 0 1 0 1 0 1 0 1 0 2 0 2 0 2 0 2 0 2 0 1 0 2 0 1 0 3 0 2 0 2 0 2 0 2 0 3 0 4 0 3 0 2 0 2 0 5 0 8 0 3 0 1 0 1 0 1 0 2 0 0 2 1 0 1 0 4 0 3 4 7 0 2 0 2 0 2 0 2 0 4 0 3 0 3 0 3 0 0 0 0 0 2 0 2 0 2 0 3 0 3 0
+3 3 0 0 1 3 0 3 0 2 0 3 0 3 0 3 0 5 0 0 4 3 0 8 0 8 2 7 0 6 0 10 0 10 0 0 6 7 0 8 0 5 0 9 0 4 0 9 0 10 0 9 0 6 0 6 0 7 0 6 0 6 0 4 0 6 0 7 0 6 0 6 0 7 0 10 0 0 9 3 0 0 11 10 0 11 0 7 0 2 0 9 0 0 4 3 0 4 0 4 0 5 0 4 1 9 0 5 0 5 0 2 0 3 0 4 0 6 0 4 0 4 0 6 0 3 0 6 0 13 0 12 0 11 0 11 0 8 0 2 0 4 0 4 0 3 0 6 0 4 0 10 0 5 0 9 0 10 0 8 0 0 0 0 1 5 0 7 0 3 0 4 0 4 0 5 0 4 0 4 0 5 0 3 0 4 0 2 0 5 0 1 0 2 0 6 0 4 0 3 0 4 0 4 0
+
+# count.txt
+1 1 0 0 1 1 1 39 19 0 24 0 42 14 15 0 23 0 138 0 111 0 121 22 49 0 0 1 4 88 40 0 30 0 22 3 5 0 54 0 20 5 0 170 0 18 31 158 78 4 14 5 2 80 63 0 2 73 0 51 0 61 0 16 16 1 1 1 1 0 56 0 6 0 3 17 30 0 1 0 0 0 0 0 0 39 0 0 186 0 8 0 17 148 50 3 67 8 2 0 78 10 29 13 3 0 180 0 15 177 23 0 6 0 0 0 12 0 12 1 230 0 52 2 153 0 192 0 0 0 228 0 3 0 3 0 13 0 6 0 0 1 150 0 123 1 0 1 0 0 4 0 6 0 4 0 0 0 0 0 2 0 4 0 2 0 2 31 14 0 7 0 10 0 11 0 18 2 0 0 1 0 2 0 19 54 211 0 2 0 12 131 36 0 139 0 2 5 0 15 1 0 0 0 13 0 17 20 55 0 159 0 94 0 6 0 3 0 0 4 1 3 0 71 19 87 19 0 119 77 26 137 46 10 1 20 9 0 0 0 2 0 2 0 0
+1 1 0 0 1 0 0 59 3 26 4 31 6 24 0 0 21 0 118 0 90 0 102 6 33 0 0 0 0 0 79 0 12 0 9 0 4 0 72 0 22 17 0 0 152 36 0 144 27 10 0 2 0 83 30 0 4 70 0 41 0 52 0 35 0 0 6 0 6 0 55 0 4 0 3 29 7 3 8 1 0 1 17 1 17 20 9 0 152 0 5 0 15 29 87 3 53 9 0 0 57 20 21 7 3 1 122 0 16 0 196 0 11 0 0 3 9 0 2 116 74 38 33 1 171 124 75 0 1 0 263 9 0 9 0 1 4 9 4 0 0 0 141 0 98 0 2 0 2 0 0 0 11 1 0 0 4 0 4 1 9 0 18 0 4 0 1 44 0 2 21 14 8 0 4 0 2 0 2 0 2 0 2 0 9 260 1 0 0 20 0 86 37 0 120 0 8 0 9 8 16 0 0 5 14 1 8 19 34 0 145 0 120 0 6 0 3 0 2 0 16 0 4 0 75 0 98 0 127 0 115 0 182 0 9 0 53 0 3 0 0 0 2 2 0
+1 1 0 0 1 0 2 1 143 20 0 47 25 45 0 0 84 163 201 0 191 0 214 85 67 0 2 0 3 0 200 0 44 0 37 8 7 0 160 1 74 7 7 183 160 48 39 0 410 15 2 4 5 150 167 0 4 0 116 50 35 52 41 43 19 3 4 3 4 0 113 0 12 0 3 42 32 0 2 2 3 2 9 1 9 36 33 169 147 1 4 16 12 0 263 95 0 34 0 155 0 43 36 21 1 144 133 30 0 132 142 6 6 0 2 17 8 0 20 179 162 75 49 0 243 0 325 0 9 226 181 1 5 1 3 0 32 12 11 0 8 0 276 0 195 2 4 2 4 0 7 0 16 0 9 0 4 0 5 17 0 19 0 0 4 3 6 0 74 0 5 0 15 0 3 0 38 0 3 5 5 7 0 0 20 469 0 0 3 37 0 2 283 0 236 0 6 0 14 0 39 0 7 0 39 0 27 0 169 0 280 0 239 0 16 1 4 0 6 7 5 5 7 83 92 78 106 125 121 217 0 168 203 22 0 29 51 2 1 0 4 0 5 1 1
+
+
+# Prepared sites file
+cut -f 2,4,5 chr10wchr.vcf > sites.txt
+
+
+# Reference from sample data
+6975891 A       G
+6975897 C       T
+6975940 G       A
+6975946 A       C
+6976002 A       C
+6976018 G       A
+6976100 G       A
+6976115 C       T
+6976344 G       A
+6976682 G       A
+6976690 G       A
+6976715 G       A
+6976735 C       G
+6976850 T       C
+6977183 T       A
+6977223 C       T
+6977334 C       T
+6977361 G       A
+6977384 T       G
+
+# sites.txt
+1185028 C       T
+1199953 A       T
+1233561 T       G
+1737155 G       A
+3010999 A       C
+3011174 C       A
+5073699 G       T
+5073715 T       G
+8644132 C       T
+8644363 T       C
+11169710        A       G
+12702337        C       G
+12702503        A       G
+12702514        A       T
+14436463        A       G
+19612084        C       G
+19612198        A       T
+24524525        G       A
+
+
+
+# Optional input files
+cat parsed/*.jump1.txt > jump1.txt
+cat parsed/*.jump2.txt > jump2.txt
+cat parsed/*.read.txt > read.txt
+
+
+
+#################################################################################
+# Running Real Data 
+#################################################################################
+
+# Ran HapSeq2
+# --readCounts is the counts file
+# --polymorphicSites is a list of SNP sites
+# -o output file
+#   --phase optional
+
+/home/s_m774/data/HapSeq2/testrun
+
+ls
+bam_parser  BAMs  chr10wchr.vcf  count.txt  hapseq2  jump1.txt  jump2.txt  parsed  sites.txt  trash
+
+/home/s_m774/software/HapSeq2/hapseq2  --readCounts count.txt --polymorphicSites sites.txt -o sample.haplotype.txt --phase
+
+# Console Log
+
+Loaded information on 120 polymorphic sites
+
+
+Processing input files and allocating memory for haplotyping
+               Haplotyping engine (max) ... 50.2 kb
+          Memory for Jumping Reads (KZ) ... 57.0 kb
+           Memory for MCMC Phasing (KZ) ... 51.9 kb
+            Haplotyping engine (actual) ... 50.2 kb
+                      Consensus builder ... 2.2 kb
+Memory allocated successfully
+
+Found initial haplotype set
+
+Wrote out file [sample] with phased chromosomes ...
+Wrote out file [sample.rec] with mosaic crossover rates ...
+Wrote out file [sample.erate] with per marker error rates ...
+
+Estimated mismatch rate in Markov model is: 0.01000
+Analysis took 0 seconds
+
+# sample.haplotype.txt
+
+1->1 HAPLO1 tttggcatgtcaggtagtgcgcacgagactttgagttctgggctggttcacaccaacatcagcgcgtctcggcgccgcctacctgccggcgtctagcggggcgacgcgcacttttgcagc
+1->1 HAPLO2 cctgacatgccgcgtggtgcagctaagacccggagctctgggctaactagcatcaacattagcgtgactcgacgccgcctatctgccggcatccagcggggagacgcatgatccttcagc
+2->2 HAPLO1 ttttgcatgccgggtggtgtggccgagactctgagttctgtgctagttagcatcagcatcggcatatctcaacgccgcctatctgctgacattcagaggggagacgcgtgattcctcagt
+2->2 HAPLO2 tcaggcatgtcgggtggtgtgcctaagactctgagccctgggctgattcacatcaacgccagcatgactcaacggcggctgtccgctggcatttagacgatcgacgcgtgattcctcagt
+3->3 HAPLO1 ttaggcatgccgggtggtacggctaaagttttgagctgaggactggtgcgttctaacgccagcacgactcggcgccgggtacctgctgacattcagacgggagacgcgcgagccttcagc
+3->3 HAPLO2 ttatgcctgtcgggtagtgtagacgaaacccggagttctgtgtaggtgagcttcagcatcagggtgtctcaacgccgggtgcctgctcacattcagacgggagacgcatactcttgaagt
+4->4 HAPLO1 tcatacatgtcaggtagtatggatgaggtcctgagctgagggctggcgcgtttcagcaccgagatgactcaacgccgggtatctgccgacattcagaggatcgacgcgtgattcctcagc
+4->4 HAPLO2 ccatgcatttcgggtagtacagccgaagtcttgagttctgtattggtgagctccagcgttagcatgactcaacgccggctacctgctgacgtccagcggatcgacgcgtgattcctcagc
+5->5 HAPLO1 tctgacatgtcaggtagtgcgcacaaaaccctgagctgtcggctgacgagcaccagcgccagcgcgactcaacgccgcctacctgctggcatccagagggtagatacgtgattcttaagc
+5->5 HAPLO2 cttggcaggtcgggtggtacggatgaggtccggagcccagtataggttcattccagcgccagcgcgactcaacgccgggtacctgctggcgttcagccgagcgacgcgtgatccctcagc

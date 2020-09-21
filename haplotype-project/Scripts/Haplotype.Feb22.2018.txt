@@ -1,0 +1,350 @@
+
+####################################################################
+#    0
+###################################################################
+
+https://www.ncbi.nlm.nih.gov/pubmed/26055432
+J Appl Genet. 2016 Feb;57(1):71-9. doi: 10.1007/s13353-015-0292-7. Epub 2015 Jun 9.
+Review of alignment and SNP calling algorithms for next-generation sequencing data.
+Mielczarek M1, Szyda J2.
+Author information
+Abstract
+Application of the massive parallel sequencing technology has become one of the most important issues in life sciences. Therefore, it was crucial to develop bioinformatics tools for next-generation sequencing (NGS) data processing. Currently, two of the most significant tasks include alignment to a reference genome and detection of single nucleotide polymorphisms (SNPs). In many types of genomic analyses, great numbers of reads need to be mapped to the reference genome; therefore, selection of the aligner is an essential step in NGS pipelines. Two main algorithms-suffix tries and hash tables-have been introduced for this purpose. Suffix array-based aligners are memory-efficient and work faster than hash-based aligners, but they are less accurate. In contrast, hash table algorithms tend to be slower, but more sensitive. SNP and genotype callers may also be divided into two main different approaches: heuristic and probabilistic methods. A variety of software has been subsequently developed over the past several years. In this paper, we briefly review the current development of NGS data processing algorithms and present the available software.
+
+KEYWORDS:
+Alignment; Genotype calling; NGS; Review; SNP calling; Software
+
+####################################################################
+#    1 
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/23825370
+
+Bioinformatics. 2013 Sep 15;29(18):2245-52. doi: 10.1093/bioinformatics/btt386. Epub 2013 Jul 3.
+Leveraging reads that span multiple single nucleotide polymorphisms for haplotype inference from sequencing data.
+Yang WY1, Hormozdiari F, Wang Z, He D, Pasaniuc B, Eskin E.
+Author information
+Abstract
+MOTIVATION:
+Haplotypes, defined as the sequence of alleles on one chromosome, are crucial for many genetic analyses. As experimental determination of haplotypes is extremely expensive, haplotypes are traditionally inferred using computational approaches from genotype data, i.e. the mixture of the genetic information from both haplotypes. Best performing approaches for haplotype inference rely on Hidden Markov Models, with the underlying assumption that the haplotypes of a given individual can be represented as a mosaic of segments from other haplotypes in the same population. Such algorithms use this model to predict the most likely haplotypes that explain the observed genotype data conditional on reference panel of haplotypes. With rapid advances in short read sequencing technologies, sequencing is quickly establishing as a powerful approach for collecting genetic variation information. As opposed to traditional genotyping-array technologies that independently call genotypes at polymorphic sites, short read sequencing often collects haplotypic information; a read spanning more than one polymorphic locus (multi-single nucleotide polymorphic read) contains information on the haplotype from which the read originates. However, this information is generally ignored in existing approaches for haplotype phasing and genotype-calling from short read data.
+
+RESULTS:
+In this article, we propose a novel framework for haplotype inference from short read sequencing that leverages multi-single nucleotide polymorphic reads together with a reference panel of haplotypes. The basis of our approach is a new probabilistic model that finds the most likely haplotype segments from the reference panel to explain the short read sequencing data for a given individual. We devised an efficient sampling method within a probabilistic model to achieve superior performance than existing methods. Using simulated sequencing reads from real individual genotypes in the HapMap data and the 1000 Genomes projects, we show that our method is highly accurate and computationally efficient. Our haplotype predictions improve accuracy over the basic haplotype copying model by ∼20% with comparable computational time, and over another recently proposed approach Hap-SeqX by ∼10% with significantly reduced computational time and memory usage.
+
+AVAILABILITY:
+Publicly available software is available at http://genetics.cs.ucla.edu/harsh
+
+CONTACT:
+bpasaniuc@mednet.ucla.edu or eeskin@cs.ucla.edu.
+
+
+####################################################################
+#    2
+###################################################################
+
+https://www.ncbi.nlm.nih.gov/pubmed/25167975
+BMC Genomics. 2014 Aug 28;15:733. doi: 10.1186/1471-2164-15-733.
+Integrating dilution-based sequencing and population genotypes for single individual haplotyping.
+Matsumoto H1, Kiryu H.
+Author information
+Abstract
+BACKGROUND:
+Haplotype information is useful for many genetic analyses and haplotypes are usually inferred using computational approaches. Among such approaches, the importance of single individual haplotyping (SIH), which infers individual haplotypes from sequence fragments, has been increasing with the advent of novel sequencing techniques, such as dilution-based sequencing. These techniques could produce virtual long read fragments by separating DNA fragments into multiple low-concentration aliquots, sequencing and mapping each aliquot, and merging clustered short reads. Although these experimental techniques are sophisticated, they have the problem of producing chimeric fragments whose left and right parts match different chromosomes. In our previous research, we found that chimeric fragments significantly decrease the accuracy of SIH. Although chimeric fragments can be removed by using haplotypes which are determined from pedigree genotypes, pedigree genotypes are generally not available. The length of reads cluster and heterozygous calls were also used to detect chimeric fragments. Although some chimeric fragments will be removed with these features, considerable number of chimeric fragments will be undetected because of the dispersion of the length and the absence of SNPs in the overlapped regions. For these reasons, a general method to detect and remove chimeric fragments is needed.
+
+RESULTS:
+In this paper, we propose a general method to detect chimeric fragments. The basis of our method is that a chimeric fragment would correspond to an artificial recombinant haplotype and would differ from biological haplotypes. To detect differences from biological haplotypes, we integrated statistical phasing, which is a haplotype inference approach from population genotypes, into our method. We applied our method to two datasets and detected chimeric fragments with high AUC. AUC values of our method are higher than those of just using cluster length and heterozygous calls. We then used multiple SIH algorithm to compare the accuracy of SIH before and after removing the chimeric fragment candidates. The accuracy of assembled haplotypes increased significantly after removing chimeric fragment candidates.
+
+CONCLUSIONS:
+Our method is useful for detecting chimeric fragments and improving SIH accuracy. The Ruby script is available at https://sites.google.com/site/hmatsu1226/software/csp.
+
+
+####################################################################
+#    3
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/23943637
+
+Bioinformatics. 2013 Oct 1;29(19):2427-34. doi: 10.1093/bioinformatics/btt418. Epub 2013 Aug 13.
+Joint haplotype phasing and genotype calling of multiple individuals using haplotype informative reads.
+Zhang K1, Zhi D.
+Author information
+Abstract
+MOTIVATION:
+Hidden Markov model, based on Li and Stephens model that takes into account chromosome sharing of multiple individuals, results in mainstream haplotype phasing algorithms for genotyping arrays and next-generation sequencing (NGS) data. However, existing methods based on this model assume that the allele count data are independently observed at individual sites and do not consider haplotype informative reads, i.e. reads that cover multiple heterozygous sites, which carry useful haplotype information. In our previous work, we developed a new hidden Markov model to incorporate a two-site joint emission term that captures the haplotype information across two adjacent sites. Although our model improves the accuracy of genotype calling and haplotype phasing, haplotype information in reads covering non-adjacent sites and/or more than two adjacent sites is not used because of the severe computational burden.
+
+RESULTS:
+We develop a new probabilistic model for genotype calling and haplotype phasing from NGS data that incorporates haplotype information of multiple adjacent and/or non-adjacent sites covered by a read over an arbitrary distance. We develop a new hybrid Markov Chain Monte Carlo algorithm that combines the Gibbs sampling algorithm of HapSeq and Metropolis-Hastings algorithm and is computationally feasible. We show by simulation and real data from the 1000 Genomes Project that our model offers superior performance for haplotype phasing and genotype calling for population NGS data over existing methods.
+
+AVAILABILITY:
+HapSeq2 is available at www.ssg.uab.edu/hapseq/.
+
+
+
+
+####################################################################
+#    4
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/23383995
+
+Send to
+J Comput Biol. 2013 Feb;20(2):80-92. doi: 10.1089/cmb.2012.0091.
+Hap-seq: an optimal algorithm for haplotype phasing with imputation using sequencing data.
+He D1, Han B, Eskin E.
+Author information
+Abstract
+Inference of haplotypes, or the sequence of alleles along each chromosome, is a fundamental problem in genetics and is important for many analyses, including admixture mapping, identifying regions of identity by descent, and imputation. Traditionally, haplotypes are inferred from genotype data obtained from microarrays using information on population haplotype frequencies inferred from either a large sample of genotyped individuals or a reference dataset such as the HapMap. Since the availability of large reference datasets, modern approaches for haplotype phasing along these lines are closely related to imputation methods. When applied to data obtained from sequencing studies, a straightforward way to obtain haplotypes is to first infer genotypes from the sequence data and then apply an imputation method. However, this approach does not take into account that alleles on the same sequence read originate from the same chromosome. Haplotype assembly approaches take advantage of this insight and predict haplotypes by assigning the reads to chromosomes in such a way that minimizes the number of conflicts between the reads and the predicted haplotypes. Unfortunately, assembly approaches require very high sequencing coverage and are usually not able to fully reconstruct the haplotypes. In this work, we present a novel approach, Hap-seq, which is simultaneously an imputation and assembly method that combines information from a reference dataset with the information from the reads using a likelihood framework. Our method applies a dynamic programming algorithm to identify the predicted haplotype, which maximizes the joint likelihood of the haplotype with respect to the reference dataset and the haplotype with respect to the observed reads. We show that our method requires only low sequencing coverage and can reconstruct haplotypes containing both common and rare alleles with higher accuracy compared to the state-of-the-art imputation methods.
+
+PMID: 23383995 PMCID: PMC3576919 DOI: 10.1089/cmb.2012.0091
+
+
+####################################################################
+#    5
+###################################################################
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3656686/
+Bioinformatics. 2013 Apr 1;29(7):878-85. doi: 10.1093/bioinformatics/btt065. Epub 2013 Feb 13.
+A dynamic Bayesian Markov model for phasing and characterizing haplotypes in next-generation sequencing.
+Zhang Y1.
+Author information
+Abstract
+MOTIVATION:
+Next-generation sequencing (NGS) technologies have enabled whole-genome discovery and analysis of genetic variants in many species of interest. Individuals are often sequenced at low coverage for detecting novel variants, phasing haplotypes and inferring population structures. Although several tools have been developed for SNP and genotype calling in NGS data, haplotype phasing is often done separately on the called genotypes.
+
+RESULTS:
+We propose a dynamic Bayesian Markov model (DBM) for simultaneous genotype calling and haplotype phasing in low-coverage NGS data of unrelated individuals. Our method is fully probabilistic that produces consistent inference of genotypes, haplotypes and recombination probabilities. Using data from the 1000 Genomes Project, we demonstrate that DBM not only yields more accurate results than some popular methods, but also provides novel characterization of haplotype structures at the individual level for visualization, interpretation and comparison in downstream analysis. DBM is a powerful and flexible tool that can be applied to many sequencing studies. Its statistical framework can also be extended to accommodate broader scopes of data.
+
+AVAILABILITY AND IMPLEMENTATION:
+http://stat.psu.edu/∼yuzhang/software/dbm.tar.
+
+SUPPLEMENTARY INFORMATION:
+Supplementary data are available at Bioinformatics online.
+
+####################################################################
+#    6
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/21121056
+
+Pac Symp Biocomput. 2011:288-99.
+Haplotype inference from short sequence reads using a population genealogical history model.
+Zhang J1, Wu Y.
+Author information
+Abstract
+High-throughput sequencing is currently a major transforming technology in biology. In this paper, we study a population genomics problem motivated by the newly available short reads data from high-throughput sequencing. In this problem, we are given short reads collected from individuals in a population. The objective is to infer haplotypes with the given reads. We first formulate the computational problem of haplotype inference with short reads. Based on a simple probabilistic model on short reads, we present a new approach of inferring haplotypes directly from given reads (i.e. without first calling genotypes). Our method is finding the most likely haplotypes whose local genealogical history can be approximately modeled as a perfect phylogeny. We show that the optimal haplotypes under this objective can be found for many data using integer linear programming for modest sized data when there is no recombination. We then develop a related heuristic method which can work with larger data, and also allows recombination. Simulation shows that the performance of our method is competitive against alternative approaches.
+
+####################################################################
+#    7
+###################################################################
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3266043/
+Genome Res. 2012 Feb; 22(2): 362–374.
+doi:  10.1101/gr.122564.111
+PMCID: PMC3266043
+Calling amplified haplotypes in next generation tumor sequence data
+Ninad Dewal,1 Yang Hu,2 Matthew L. Freedman,3,4 Thomas LaFramboise,5 and Itsik Pe'er2,6
+Author information ► Article notes ► Copyright and License information ►
+
+Abstract
+During tumor initiation and progression, cancer cells acquire a selective advantage, allowing them to outcompete their normal counterparts. Identification of the genetic changes that underlie these tumor acquired traits can provide deeper insights into the biology of tumorigenesis. Regions of copy number alterations and germline DNA variants are some of the elements subject to selection during tumor evolution. Integrated examination of inherited variation and somatic alterations holds the potential to reveal specific nucleotide alleles that a tumor “prefers” to have amplified. Next-generation sequencing of tumor and matched normal tissues provides a high-resolution platform to identify and analyze such somatic amplicons. Within an amplicon, examination of informative (e.g., heterozygous) sites deviating from a 1:1 ratio may suggest selection of that allele. A naive approach examines the reads for each heterozygous site in isolation; however, this ignores available valuable linkage information across sites. We, therefore, present a novel hidden Markov model-based method—Haplotype Amplification in Tumor Sequences (HATS)—that analyzes tumor and normal sequence data, along with training data for phasing purposes, to infer amplified alleles and haplotypes in regions of copy number gain. Our method is designed to handle rare variants and biases in read data. We assess the performance of HATS using simulated amplified regions generated from varying copy number and coverage levels, followed by amplicons in real data. We demonstrate that HATS infers the amplified alleles more accurately than does the naive approach, especially at low to intermediate coverage levels and in cases (including high coverage) possessing stromal contamination or allelic bias.
+
+####################################################################
+#    8
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/23257116
+
+Brief Bioinform. 2014 May;15(3):431-42. doi: 10.1093/bib/bbs081. Epub 2012 Dec 19.
+Benchmarking of viral haplotype reconstruction programmes: an overview of the capacities and limitations of currently available programmes.
+Schirmer M1, Sloan WT, Quince C.
+Author information
+Abstract
+Viral haplotype reconstruction from a set of observed reads is one of the most challenging problems in bioinformatics today. Next-generation sequencing technologies enable us to detect single-nucleotide polymorphisms (SNPs) of haplotypes-even if the haplotypes appear at low frequencies. However, there are two major problems. First, we need to distinguish real SNPs from sequencing errors. Second, we need to determine which SNPs occur on the same haplotype, which cannot be inferred from the reads if the distance between SNPs on a haplotype exceeds the read length. We conducted an independent benchmarking study that directly compares the currently available viral haplotype reconstruction programmes. We also present nine in silico data sets that we generated to reflect biologically plausible populations. For these data sets, we simulated 454 and Illumina reads and applied the programmes to test their capacity to reconstruct whole genomes and individual genes. We developed a novel statistical framework to demonstrate the strengths and limitations of the programmes. Our benchmarking demonstrated that all the programmes we tested performed poorly when sequence divergence was low and failed to recover haplotype populations with rare haplotypes.
+
+KEYWORDS:
+benchmarking; in silico data sets; quasispecies; statistics for validation; viral haplotype reconstruction programmes
+
+####################################################################
+#    9
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/26178880
+
+BMC Bioinformatics. 2015 Jul 16;16:223. doi: 10.1186/s12859-015-0651-8.
+Joint haplotype assembly and genotype calling via sequential Monte Carlo algorithm.
+Ahn S1, Vikalo H2.
+Author information
+Abstract
+BACKGROUND:
+Genetic variations predispose individuals to hereditary diseases, play important role in the development of complex diseases, and impact drug metabolism. The full information about the DNA variations in the genome of an individual is given by haplotypes, the ordered lists of single nucleotide polymorphisms (SNPs) located on chromosomes. Affordable high-throughput DNA sequencing technologies enable routine acquisition of data needed for the assembly of single individual haplotypes. However, state-of-the-art high-throughput sequencing platforms generate data that is erroneous, which induces uncertainty in the SNP and genotype calling procedures and, ultimately, adversely affect the accuracy of haplotyping. When inferring haplotype phase information, the vast majority of the existing techniques for haplotype assembly assume that the genotype information is correct. This motivates the development of methods capable of joint genotype calling and haplotype assembly.
+
+RESULTS:
+We present a haplotype assembly algorithm, ParticleHap, that relies on a probabilistic description of the sequencing data to jointly infer genotypes and assemble the most likely haplotypes. Our method employs a deterministic sequential Monte Carlo algorithm that associates single nucleotide polymorphisms with haplotypes by exhaustively exploring all possible extensions of the partial haplotypes. The algorithm relies on genotype likelihoods rather than on often erroneously called genotypes, thus ensuring a more accurate assembly of the haplotypes. Results on both the 1000 Genomes Project experimental data as well as simulation studies demonstrate that the proposed approach enables highly accurate solutions to the haplotype assembly problem while being computationally efficient and scalable, generally outperforming existing methods in terms of both accuracy and speed.
+
+CONCLUSIONS:
+The developed probabilistic framework and sequential Monte Carlo algorithm enable joint haplotype assembly and genotyping in a computationally efficient manner. Our results demonstrate fast and highly accurate haplotype assembly aided by the re-examination of erroneously called genotypes. A C code implementation of ParticleHap will be available for download from https://sites.google.com/site/asynoeun/particlehap.
+
+PMID: 26178880 PMCID: PMC4503296 DOI: 10.1186/s12859-015-0651-8
+
+####################################################################
+#    10
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/27295635
+
+http://ieeexplore.ieee.org/document/7172486/
+
+IEEE/ACM Trans Comput Biol Bioinform. 2016 May-Jun;13(3):518-30. doi: 10.1109/TCBB.2015.2462367.
+Decoding Genetic Variations: Communications-Inspired Haplotype Assembly.
+Puljiz Z, Vikalo H.
+Abstract
+High-throughput DNA sequencing technologies allow fast and affordable sequencing of individual genomes and thus enable unprecedented studies of genetic variations. Information about variations in the genome of an individual is provided by haplotypes, ordered collections of single nucleotide polymorphisms. Knowledge of haplotypes is instrumental in finding genes associated with diseases, drug development, and evolutionary studies. Haplotype assembly from high-throughput sequencing data is challenging due to errors and limited lengths of sequencing reads. The key observation made in this paper is that the minimum error-correction formulation of the haplotype assembly problem is identical to the task of deciphering a coded message received over a noisy channel-a classical problem in the mature field of communication theory. Exploiting this connection, we develop novel haplotype assembly schemes that rely on the bit-flipping and belief propagation algorithms often used in communication systems. The latter algorithm is then adapted to the haplotype assembly of polyploids. We demonstrate on both simulated and experimental data that the proposed algorithms compare favorably with state-of-the-art haplotype assembly methods in terms of accuracy, while being scalable and computationally efficient.
+
+PMID: 27295635 DOI: 10.1109/TCBB.2015.2462367
+
+####################################################################
+#    11
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/22697235
+
+J Comput Biol. 2012 Jun;19(6):577-90. doi: 10.1089/cmb.2012.0084.
+HapCompass: a fast cycle basis algorithm for accurate haplotype assembly of sequence data.
+Aguiar D1, Istrail S.
+Author information
+Abstract
+Genome assembly methods produce haplotype phase ambiguous assemblies due to limitations in current sequencing technologies. Determining the haplotype phase of an individual is computationally challenging and experimentally expensive. However, haplotype phase information is crucial in many bioinformatics workflows such as genetic association studies and genomic imputation. Current computational methods of determining haplotype phase from sequence data--known as haplotype assembly--have difficulties producing accurate results for large (1000 genomes-type) data or operate on restricted optimizations that are unrealistic considering modern high-throughput sequencing technologies. We present a novel algorithm, HapCompass, for haplotype assembly of densely sequenced human genome data. The HapCompass algorithm operates on a graph where single nucleotide polymorphisms (SNPs) are nodes and edges are defined by sequence reads and viewed as supporting evidence of co-occurring SNP alleles in a haplotype. In our graph model, haplotype phasings correspond to spanning trees. We define the minimum weighted edge removal optimization on this graph and develop an algorithm based on cycle basis local optimizations for resolving conflicting evidence. We then estimate the amount of sequencing required to produce a complete haplotype assembly of a chromosome. Using these estimates together with metrics borrowed from genome assembly and haplotype phasing, we compare the accuracy of HapCompass, the Genome Analysis ToolKit, and HapCut for 1000 Genomes Project and simulated data. We show that HapCompass performs significantly better for a variety of data and metrics. HapCompass is freely available for download (www.brown.edu/Research/Istrail_Lab/).
+
+PMID: 22697235 PMCID: PMC3375639 DOI: 10.1089/cmb.2012.0084
+
+
+####################################################################
+#    12
+###################################################################
+
+https://www.ncbi.nlm.nih.gov/pubmed/24297529
+
+Pac Symp Biocomput. 2014:3-14.
+Tumor haplotype assembly algorithms for cancer genomics.
+Aguiar D1, Wong WS, Istrail S.
+Author information
+Abstract
+The growing availability of inexpensive high-throughput sequence data is enabling researchers to sequence tumor populations within a single individual at high coverage. But, cancer genome sequence evolution and mutational phenomena like driver mutations and gene fusions are difficult to investigate without first reconstructing tumor haplotype sequences. Haplotype assembly of single individual tumor populations is an exceedingly difficult task complicated by tumor haplotype heterogeneity, tumor or normal cell sequence contamination, polyploidy, and complex patterns of variation. While computational and experimental haplotype phasing of diploid genomes has seen much progress in recent years, haplotype assembly in cancer genomes remains uncharted territory. In this work, we describe HapCompass-Tumor a computational modeling and algorithmic framework for haplotype assembly of copy number variable cancer genomes containing haplotypes at different frequencies and complex variation. We extend our polyploid haplotype assembly model and present novel algorithms for (1) complex variations, including copy number changes, as varying numbers of disjoint paths in an associated graph, (2) variable haplotype frequencies and contamination, and (3) computation of tumor haplotypes using simple cycles of the compass graph which constrain the space of haplotype assembly solutions. The model and algorithm are implemented in the software package HapCompass-Tumor which is available for download from http://www.brown.edu/Research/Istrail_Lab/.
+
+PMID: 24297529 PMCID: PMC4051221
+
+
+####################################################################
+#    13
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/25948246
+Nat Rev Genet. 2015 Jun;16(6):344-58. doi: 10.1038/nrg3903. Epub 2015 May 7.
+Haplotype-resolved genome sequencing: experimental methods and applications.
+Snyder MW1, Adey A2, Kitzman JO3, Shendure J1.
+Author information
+Abstract
+Human genomes are diploid and, for their complete description and interpretation, it is necessary not only to discover the variation they contain but also to arrange it onto chromosomal haplotypes. Although whole-genome sequencing is becoming increasingly routine, nearly all such individual genomes are mostly unresolved with respect to haplotype, particularly for rare alleles, which remain poorly resolved by inferential methods. Here, we review emerging technologies for experimentally resolving (that is, 'phasing') haplotypes across individual whole-genome sequences. We also discuss computational methods relevant to their implementation, metrics for assessing their accuracy and completeness, and the relevance of haplotype information to applications of genome sequencing in research and clinical medicine.
+
+PMID: 25948246 DOI: 10.1038/nrg3903
+
+
+
+####################################################################
+#    14
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/29374225
+
+Sci Rep. 2018 Jan 26;8(1):1640. doi: 10.1038/s41598-018-20069-x.
+Long range haplotyping of paired-homologous chromosomes by single-chromosome sequencing of a single cell.
+Luo D1, Zhang M1, Liu T1, Cao W1, Guo J1, Mao C2, Li Y3, Wang J4, Huang W5, Lu D6, Zhang S7, Li Z8, He J9.
+Author information
+Abstract
+The longest possible haplotype is chromosome haplotype that is a set of co-inherited alleles occurred on a single strand chromosome inherited from one parent. Standard whole-genome shotgun sequencing technologies are limited by the inability to independently study the haplotype of homologous chromosomes due to the short-reads sequencing strategy and disturbance of homologue chromosomes. Here, we investigated several types of chromosomal abnormalities by a dilution-based method to separate an intact copy of homologous chromosome from human metaphase cells, and then single chromosomes were independently amplified by whole-genome amplification methods, converted into barcoded sequencing libraries, and sequenced in multiplexed pools by Illumina sequencers. We analyzed single chromosome derived from single metaphase cells of one patient with balanced chromosomal translocation t(3;5)(q24;q13), one patient with (47, XXY) karyotype and one with (47, XY, 21+) Down syndrome. We determined the translocation region of chromosomes in patient with t(3;5)(q24;q13) balanced chromosomal translocation by shallow whole-genome sequencing, which is helpful to pinpoint the chromosomal break point. We showed that SCS can physically separate and independently sequence three copies of chromosome 21 of Down syndrome patient. SCS has potential applications in personal genomics, single-cell genomics, and clinical diagnosis, particularly in revealing chromosomal level of genetic diseases.
+
+PMID: 29374225 PMCID: PMC5785984 DOI: 10.1038/s41598-018-20069-x
+
+####################################################################
+#    15
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/29078313
+
+Proc Natl Acad Sci U S A. 2017 Nov 21;114(47):12512-12517. doi: 10.1073/pnas.1707609114. Epub 2017 Oct 24.
+Ultraaccurate genome sequencing and haplotyping of single human cells.
+Chu WK1, Edge P2, Lee HS3, Bansal V2,4, Bafna V5, Huang X6, Zhang K6.
+Author information
+Abstract
+Accurate detection of variants and long-range haplotypes in genomes of single human cells remains very challenging. Common approaches require extensive in vitro amplification of genomes of individual cells using DNA polymerases and high-throughput short-read DNA sequencing. These approaches have two notable drawbacks. First, polymerase replication errors could generate tens of thousands of false-positive calls per genome. Second, relatively short sequence reads contain little to no haplotype information. Here we report a method, which is dubbed SISSOR (single-stranded sequencing using microfluidic reactors), for accurate single-cell genome sequencing and haplotyping. A microfluidic processor is used to separate the Watson and Crick strands of the double-stranded chromosomal DNA in a single cell and to randomly partition megabase-size DNA strands into multiple nanoliter compartments for amplification and construction of barcoded libraries for sequencing. The separation and partitioning of large single-stranded DNA fragments of the homologous chromosome pairs allows for the independent sequencing of each of the complementary and homologous strands. This enables the assembly of long haplotypes and reduction of sequence errors by using the redundant sequence information and haplotype-based error removal. We demonstrated the ability to sequence single-cell genomes with error rates as low as 10-8 and average 500-kb-long DNA fragments that can be assembled into haplotype contigs with N50 greater than 7 Mb. The performance could be further improved with more uniform amplification and more accurate sequence alignment. The ability to obtain accurate genome sequences and haplotype information from single cells will enable applications of genome sequencing for diverse clinical needs.
+
+KEYWORDS:
+haplotyping; microfluidics; mutation detection; single-cell sequencing
+
+####################################################################
+#    16
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/22785314
+
+Nature. 2012 Jul 11;487(7406):190-5. doi: 10.1038/nature11236.
+Accurate whole-genome sequencing and haplotyping from 10 to 20 human cells.
+Peters BA1, Kermani BG, Sparks AB, Alferov O, Hong P, Alexeev A, Jiang Y, Dahl F, Tang YT, Haas J, Robasky K, Zaranek AW, Lee JH, Ball MP, Peterson JE, Perazich H, Yeung G, Liu J, Chen L, Kennemer MI, Pothuraju K, Konvicka K, Tsoupko-Sitnikov M, Pant KP, Ebert JC, Nilsen GB, Baccash J, Halpern AL, Church GM, Drmanac R.
+Author information
+Abstract
+Recent advances in whole-genome sequencing have brought the vision of personal genomics and genomic medicine closer to reality. However, current methods lack clinical accuracy and the ability to describe the context (haplotypes) in which genome variants co-occur in a cost-effective manner. Here we describe a low-cost DNA sequencing and haplotyping process, long fragment read (LFR) technology, which is similar to sequencing long single DNA molecules without cloning or separation of metaphase chromosomes. In this study, ten LFR libraries were made using only ∼100 picograms of human DNA per sample. Up to 97% of the heterozygous single nucleotide variants were assembled into long haplotype contigs. Removal of false positive single nucleotide variants not phased by multiple LFR haplotypes resulted in a final genome error rate of 1 in 10 megabases. Cost-effective and accurate genome sequencing and haplotyping from 10-20 human cells, as demonstrated here, will enable comprehensive genetic studies and diverse clinical applications.
+
+Comment in
+Technology: when two halves are better than one whole. [Nat Rev Genet. 2012]
+
+
+####################################################################
+#    17
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/27724973
+
+Gigascience. 2016 Oct 11;5(1):42.
+The whole genome sequences and experimentally phased haplotypes of over 100 personal genomes.
+Mao Q1, Ciotlos S1, Zhang RY1, Ball MP2,3, Chin R1, Carnevali P1, Barua N1, Nguyen S1, Agarwal MR1, Clegg T2,4, Connelly A2,4, Vandewege W2,4, Zaranek AW2,4, Estep PW2, Church GM2, Drmanac R1,5, Peters BA6,7.
+Author information
+Abstract
+BACKGROUND:
+Since the completion of the Human Genome Project in 2003, it is estimated that more than 200,000 individual whole human genomes have been sequenced. A stunning accomplishment in such a short period of time. However, most of these were sequenced without experimental haplotype data and are therefore missing an important aspect of genome biology. In addition, much of the genomic data is not available to the public and lacks phenotypic information.
+
+FINDINGS:
+As part of the Personal Genome Project, blood samples from 184 participants were collected and processed using Complete Genomics' Long Fragment Read technology. Here, we present the experimental whole genome haplotyping and sequencing of these samples to an average read coverage depth of 100X. This is approximately three-fold higher than the read coverage applied to most whole human genome assemblies and ensures the highest quality results. Currently, 114 genomes from this dataset are freely available in the GigaDB repository and are associated with rich phenotypic data; the remaining 70 should be added in the near future as they are approved through the PGP data release process. For reproducibility analyses, 20 genomes were sequenced at least twice using independent LFR barcoded libraries. Seven genomes were also sequenced using Complete Genomics' standard non-barcoded library process. In addition, we report 2.6 million high-quality, rare variants not previously identified in the Single Nucleotide Polymorphisms database or the 1000 Genomes Project Phase 3 data.
+
+CONCLUSIONS:
+These genomes represent a unique source of haplotype and phenotype data for the scientific community and should help to expand our understanding of human genome evolution and function.
+
+KEYWORDS:
+Complete genomics; Haplotypes; LFR; Long fragment read; PGP; Personal Genome Project; Whole genome sequencing
+
+PMID: 27724973 PMCID: PMC5057367 DOI: 10.1186/s13742-016-0148-z
+
+####################################################################
+#    18
+###################################################################
+https://www.ncbi.nlm.nih.gov/pubmed/26829319
+
+Nat Biotechnol. 2016 Mar;34(3):303-11. doi: 10.1038/nbt.3432. Epub 2016 Feb 1.
+Haplotyping germline and cancer genomes with high-throughput linked-read sequencing.
+Zheng GX1, Lau BT2, Schnall-Levin M1, Jarosz M1, Bell JM2, Hindson CM1, Kyriazopoulou-Panagiotopoulou S1, Masquelier DA1, Merrill L1, Terry JM1, Mudivarti PA1, Wyatt PW1, Bharadwaj R1, Makarewicz AJ1, Li Y1, Belgrader P1, Price AD1, Lowe AJ1, Marks P1, Vurens GM1, Hardenbol P1, Montesclaros L1, Luo M1, Greenfield L1, Wong A1, Birch DE1, Short SW1, Bjornson KP1, Patel P1, Hopmans ES2, Wood C3, Kaur S1, Lockwood GK1, Stafford D1, Delaney JP1, Wu I1, Ordonez HS1, Grimes SM2, Greer S3, Lee JY1, Belhocine K1, Giorda KM1, Heaton WH1, McDermott GP1, Bent ZW1, Meschi F1, Kondov NO1, Wilson R1, Bernate JA1, Gauby S1, Kindwall A1, Bermejo C1, Fehr AN1, Chan A1, Saxonov S1, Ness KD1, Hindson BJ1, Ji HP2,3.
+Author information
+Abstract
+Haplotyping of human chromosomes is a prerequisite for cataloguing the full repertoire of genetic variation. We present a microfluidics-based, linked-read sequencing technology that can phase and haplotype germline and cancer genomes using nanograms of input DNA. This high-throughput platform prepares barcoded libraries for short-read sequencing and computationally reconstructs long-range haplotype and structural variant information. We generate haplotype blocks in a nuclear trio that are concordant with expected inheritance patterns and phase a set of structural variants. We also resolve the structure of the EML4-ALK gene fusion in the NCI-H2228 cancer cell line using phased exome sequencing. Finally, we assign genetic aberrations to specific megabase-scale haplotypes generated from whole-genome sequencing of a primary colorectal adenocarcinoma. This approach resolves haplotype information using up to 100 times less genomic DNA than some methods and enables the accurate detection of structural variants.
+
+Comment in
+Haplotypes drop by drop. [Nat Biotechnol. 2016]
+
+####################################################################
+#    19
+###################################################################
+
+https://www.ncbi.nlm.nih.gov/pubmed/23509297
+Proc Natl Acad Sci U S A. 2013 Apr 2;110(14):5552-7. doi: 10.1073/pnas.1218696110. Epub 2013 Mar 18.
+Whole-genome haplotyping by dilution, amplification, and sequencing.
+Kaper F1, Swamy S, Klotzle B, Munchel S, Cottrell J, Bibikova M, Chuang HY, Kruglyak S, Ronaghi M, Eberle MA, Fan JB.
+Author information
+Abstract
+Standard whole-genome genotyping technologies are unable to determine haplotypes. Here we describe a method for rapid and cost-effective long-range haplotyping. Genomic DNA is diluted and distributed into multiple aliquots such that each aliquot receives a fraction of a haploid copy. The DNA template in each aliquot is amplified by multiple displacement amplification, converted into barcoded sequencing libraries using Nextera technology, and sequenced in multiplexed pools. To assess the performance of our method, we combined two male genomic DNA samples at equal ratios, resulting in a sample with diploid X chromosomes with known haplotypes. Pools of the multiplexed sequencing libraries were subjected to targeted pull-down of a 1-Mb contiguous region of the X-chromosome Duchenne muscular dystrophy gene. We were able to phase the Duchenne muscular dystrophy region into two contiguous haplotype blocks with a mean length of 494 kb. The haplotypes showed 99% agreement with the consensus base calls made by sequencing the individual DNAs. We subsequently used the strategy to haplotype two human genomes. Standard genomic sequencing to identify all heterozygous SNPs in the sample was combined with dilution-amplification-based sequencing data to resolve the phase of identified heterozygous SNPs. Using this procedure, we were able to phase >95% of the heterozygous SNPs from the diploid sequence data. The N50 for a Yoruba male DNA was 702 kb whereas the N50 for a European female DNA was 358 kb. Therefore, the strategy described here is suitable for haplotyping of a set of targeted regions as well as of the entire genome.
+
+PMID: 23509297 PMCID: PMC3619281 DOI: 10.1073/pnas.1218696110
+
+####################################################################
+#    20
+###################################################################
+
+Proc Natl Acad Sci U S A. 2017 Nov 21;114(47):12362-12364. doi: 10.1073/pnas.1717798114. Epub 2017 Nov 7.
+Haplotype resolution at the single-cell level.
+Adey AC1,2.
+Author information
+PMID: 29114045 PMCID: PMC5703341 [Available on 2018-05-21] DOI: 10.1073/pnas.1717798114
+
+

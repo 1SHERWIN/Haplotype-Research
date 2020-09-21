@@ -1,0 +1,74 @@
+#########################################
+# Got the intersect of MIHA positions
+#########################################
+[s_m774@login2 120.comparison]$ pwd
+/home/s_m774/data/120.comparison
+
+[s_m774@login2 data]$ cp whatshap.data/results/phased.5sample.vcf 120.comparison/whatshap.5sample.vcf
+
+# Get the positions from dbm
+[s_m774@login2 120.comparison]$ cut -f 3 dbm.5sample.snps > positions.chr10.txt
+
+# grep from Whatshap phased results - whatshap returned 153 positions
+grep -f positions
+
+[s_m774@login2 120.comparison]$ grep -f positions.chr10.txt whatshap.5sample.vcf > intersect.whatshap.5sample.vcf
+
+[s_m774@login2 120.comparison]$ wc -l positions*
+ 120 positions.chr10.txt
+ 153 positions.whatshap.txt
+
+# Removed positions unique to whatshap
+[s_m774@login2 120.comparison]$ cat positions.whatshap.txt positions.chr10.txt | sort | uniq -u > unique.positions.whatshap.txt
+
+
+[s_m774@login2 120.comparison]$ grep -vf unique.positions.whatshap.txt intersect.whatshap.5sample.vcf > 120.intersect.whatshap.5sample.vcf
+
+[s_m774@login2 120.comparison]$ wc -l *
+    120 120.intersect.whatshap.5sample.vcf
+    120 dbm.5sample.snps
+    153 intersect.whatshap.5sample.vcf
+    120 positions.chr10.txt
+    153 positions.whatshap.txt
+     33 unique.positions.whatshap.txt
+  14344 whatshap.5sample.vcf
+
+
+# converted whatshap to allele format from whatshap.vcf
+tail 120.intersect.whatshap.5sample.vcf
+chr10   125738019       .       C       A       999     .       DP=769;VDB=0.00955459;RPB=0.360611;MQB=0.994956;BQB=0.367;MQSB=0.967797;SGB=-14.6386;MQ0F=0.0;AF1=0.8;AC1=8.0;MQ=60;FQ=999.0;PV4=0.0957736,0.00843349,0.280143,1.0;DP4=10,155,16,518      GT:PL:PS 0|1:151,0,255:125737861  1/1:255,255,0:. 0|1:255,0,255:125737861 1/1:255,255,0:. 1/1:255,255,0:.
+chr10   125738266       .       G       T       999     .       DP=837;VDB=0.00609716;RPB=0.29703;MQB=0.999562;BQB=0.998514;MQSB=0.995005;SGB=-20.0791;MQ0F=0.0;AF1=0.9;AC1=9.0;MQ=60;FQ=999.0;PV4=1.0,0.160155,0.430309,1.0;DP4=117,6,582,29     GT:PL   1/1:255,255,0     1/1:255,255,0   0/1:255,0,255   1/1:255,255,0   1/1:255,255,0
+
+
+[s_m774@login2 120.comparison]$ cut -f 1,2,4,5,10,11,12,13,14 120.intersect.whatshap.5sample.vcf | sed s/\\.//g | less
+chr10   24954018        C       T       0/0:0,255,255   1/1:255,255,0   0/1:255,0,255   0/1:255,0,255   0/0:0,255,255
+chr10   25176398        G       A       0/1:255,0,255   0/0:0,102,255   0/1:255,0,255   0/1:218,0,255   0/0:0,199,255
+chr10   25412412        C       G       0/1:255,0,255:  0/1:255,0,255:  1/1:255,255,0:  1/1:255,255,0:  1|0:255,0,255:25412412
+
+# several positions have 2 alternate alleles 
+# last 2 pipes handle this by using the first
+
+cut -f 2,4,5,10 120.intersect.whatshap.5sample.vcf | sed s/:/\\t/g | sed s/\\//\\t/g | sed s/\|/\\t/g | cut -f 1,4,5,2,3 | sed s/,/\\t/g | cut -f 1,4,5,2,3 > happy826.whatshap.txt
+cut -f 2,4,5,11 120.intersect.whatshap.5sample.vcf | sed s/:/\\t/g | sed s/\\//\\t/g | sed s/\|/\\t/g | cut -f 1,4,5,2,3 | sed s/,/\\t/g | cut -f 1,4,5,2,3 > happy827.whatshap.txt
+cut -f 2,4,5,12 120.intersect.whatshap.5sample.vcf | sed s/:/\\t/g | sed s/\\//\\t/g | sed s/\|/\\t/g | cut -f 1,4,5,2,3 | sed s/,/\\t/g | cut -f 1,4,5,2,3 > happy832.whatshap.txt
+cut -f 2,4,5,13 120.intersect.whatshap.5sample.vcf | sed s/:/\\t/g | sed s/\\//\\t/g | sed s/\|/\\t/g | cut -f 1,4,5,2,3 | sed s/,/\\t/g | cut -f 1,4,5,2,3 > happy847.whatshap.txt
+cut -f 2,4,5,14 120.intersect.whatshap.5sample.vcf | sed s/:/\\t/g | sed s/\\//\\t/g | sed s/\|/\\t/g | cut -f 1,4,5,2,3 | sed s/,/\\t/g | cut -f 1,4,5,2,3 > happy850.whatshap.txt
+
+# Used perl code getAllele.pl as final step
+[s_m774@login1 allele.whatshap]$ pwd
+/home/s_m774/data/120.comparison/allele.whatshap
+
+[s_m774@login1 allele.whatshap]$ perl getAlleles.pl happy826.whatshap.txt allele826.whatshap.txt     
+
+# 850
+[s_m774@login1 allele.whatshap]$ sort allele850.whatshap.txt | uniq -c
+    100 -       -
+      1 A       C
+      4 A       G
+      1 C       A
+      3 C       T
+      1 G       A
+      3 G       C
+      2 G       T
+      1 T       A
+      4 T       C

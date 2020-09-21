@@ -1,0 +1,427 @@
+###############################################
+# created 5 sample input (BAM BAI VCF)
+###############################################
+
+[s_m774@login2 whatshap.data]$ pwd
+/home/s_m774/data/whatshap.data
+
+[s_m774@login2 whatshap.data]$ cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa ./
+[s_m774@login1 whatshap.data]$ ls
+chr10.fa  chr10.fa.fai  results  trash
+
+[s_m774@login2 data]$ cp MIHA.input.2020.1.14/*sorted* whatshap.data/
+[s_m774@login2 whatshap.data]$ ls
+826.chr10.sorted.bam  827.chr10.sorted.bam  832.chr10.sorted.bam  847.chr10.sorted.bam  850.chr10.sorted.bam  trash
+
+
+# tagged each bam file with read group 
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:826' -r 'SM:826' -o 826RG.chr10.bam 826.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:827' -r 'SM:827' -o 827RG.chr10.bam 827.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:832' -r 'SM:832' -o 832RG.chr10.bam 832.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:847' -r 'SM:847' -o 847RG.chr10.bam 847.chr10.sorted.bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools addreplacerg -r 'ID:850' -r 'SM:850' -o 850RG.chr10.bam 850.chr10.sorted.bam
+
+
+# index each bam
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 826RG.chr10.bam 826RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 827RG.chr10.bam 827RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 832RG.chr10.bam 832RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 847RG.chr10.bam 847RG.chr10.bai
+/group/hon/hon3398o/0.course.files/software/samtools-1.9/samtools index 850RG.chr10.bam 850RG.chr10.bai
+
+# Used winSCP to make this:
+# bamList.txt 
+826RG.chr10.bam
+827RG.chr10.bam
+832RG.chr10.bam
+847RG.chr10.bam
+850RG.chr10.bam
+
+# call SNPs with mpileup
+# -g Genotype to BCF output
+# -f FASTA format index
+# -a AD annotate Allele Depth
+# -a DP annotate Depth
+# -I Indels are skipped
+
+# filter SNPs with bcftools call
+# -c consensus caller
+# -v variant sites only output
+# -o output file
+
+[s_m774@login2 whatshap.data]$ /group/hon/hon3398o/0.course.files/software/bcftools-1.9/bcftools mpileup -b bamList.txt -f chr10.fa | /group/hon/hon3398o/0.course.files/software/bcftools-1.9/bcftools call -cv -o 5sample.chr10.vcf
+
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+[mpileup] 5 samples in 5 input files
+
+
+
+
+
+# compress and index VCF
+# -l level of compression
+# -o output
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.9/bcftools view -l 1 -o 5sample.chr10.vcf.gz 5sample.chr10.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.9/bcftools index 5sample.chr10.vcf.gz
+
+
+# Phase with Whatshap
+[s_m774@login1 whatshap.data]$ whatshap phase -o results/phased.5sample.vcf 5sample.chr10.vcf 826RG.chr10.bam 827RG.chr10.bam 832RG.chr10.bam 847RG.chr10.bam 850RG.chr10.bam
+
+
+This is WhatsHap 0.18 running under Python 3.7.4
+Working on 5 samples from 5 families
+======== Working on chromosome 'chr10'
+---- Processing individual 826
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8779
+Reading alignments for sample '826'and detecting alleles ...
+Found 5736 reads covering 815 variants
+Kept 788 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 478 reads covering 398 variants
+Best-case phasing would result in 149 non-singleton phased blocks (149 in total)
+... after read selection: 149 non-singleton phased blocks (149 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 398
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 5340
+No. of phased blocks: 149
+Largest component contains 11 variants (2.8% of accessible variants) between position 43119791 and 43119827
+---- Processing individual 827
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8883
+Reading alignments for sample '827'and detecting alleles ...
+Found 6605 reads covering 995 variants
+Kept 1161 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 723 reads covering 518 variants
+Best-case phasing would result in 194 non-singleton phased blocks (194 in total)
+... after read selection: 194 non-singleton phased blocks (194 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 518
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 6605
+No. of phased blocks: 194
+Largest component contains 8 variants (1.5% of accessible variants) between position 43119801 and 43119827
+---- Processing individual 832
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8095
+Reading alignments for sample '832'and detecting alleles ...
+Found 13128 reads covering 1749 variants
+Kept 1770 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 937 reads covering 938 variants
+Best-case phasing would result in 326 non-singleton phased blocks (326 in total)
+... after read selection: 326 non-singleton phased blocks (326 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 938
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 6526
+No. of phased blocks: 326
+Largest component contains 14 variants (1.5% of accessible variants) between position 43119407 and 43119916
+---- Processing individual 847
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 9170
+Reading alignments for sample '847'and detecting alleles ...
+Found 7236 reads covering 872 variants
+Kept 1116 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 622 reads covering 452 variants
+Best-case phasing would result in 153 non-singleton phased blocks (153 in total)
+... after read selection: 153 non-singleton phased blocks (153 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 452
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 8249
+No. of phased blocks: 153
+Largest component contains 12 variants (2.7% of accessible variants) between position 43119646 and 43119827
+---- Processing individual 850
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 7412
+Reading alignments for sample '850'and detecting alleles ...
+Found 9812 reads covering 2486 variants
+Kept 1931 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 1264 reads covering 1293 variants
+Best-case phasing would result in 460 non-singleton phased blocks (460 in total)
+... after read selection: 460 non-singleton phased blocks (460 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 1293
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 8588
+No. of phased blocks: 460
+Largest component contains 15 variants (1.2% of accessible variants) between position 41877847 and 41878157
+======== Writing VCF
+Done writing VCF
+
+== SUMMARY ==
+Maximum memory usage: 0.199 GB
+Time spent reading BAM/CRAM:                    8.0 s
+Time spent parsing VCF:                         2.1 s
+Time spent selecting reads:                     0.6 s
+Time spent phasing:                             1.1 s
+Time spent writing VCF:                         2.0 s
+Time spent finding components:                  0.0 s
+Time spent on rest:                             2.1 s
+Total elapsed time:                            15.9 s
+
+
+
+[s_m774@login1 whatshap.data]$ tail results/phased.5sample.vcf
+chr10   133564956       .       C       T       21.0473 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.5;AC1=5.0;MQ=60;FQ=24.0401;PV4=1.0,1.0,1.0,0.485873;DP4=0,2,0,1        GT:PL:PS        0/1:0,0,0:.     0/1:0,0,0:.     0|1:51,0,101:133564759    0/1:0,0,0:.     0/1:0,0,0:.
+chr10   133566126       .       C       A       4.77841 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4812;DP4=0,0,1,0       GT:PL:PS        0/1:0,0,0:.     0/1:0,0,0:.     1|0:33,3,0:133566126    0/1:0,0,0:.     0/1:0,0,0:.
+chr10   133566184       .       C       T       146.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:120,6,0     1/1:0,0,0       1/1:60,3,0      1/1:0,0,0       1/1:0,0,0
+chr10   133566205       .       C       T       26.2327 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.422809;AC1=4.0;MQ=60;FQ=28.7814;PV4=1.0,1.0,1.0,1.0;DP4=1,1,0,1       GT:PL:PS        0/0:0,6,102:.   0/0:0,0,0:.     1|0:60,3,0:133566126      0/0:0,0,0:.     0/0:0,0,0:.
+chr10   133566206       .       A       C       142.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:116,6,0     1/1:0,0,0       1/1:60,3,0      1/1:0,0,0       1/1:0,0,0
+chr10   133566430       .       G       A       30.0226 .       DP=2;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,1,0       GT:PL   0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       1/1:60,3,0
+chr10   133592197       .       C       T       30.0226 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,0,1       GT:PL   0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       1/1:60,3,0
+chr10   133609302       .       T       G       12.2831 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4805;DP4=0,0,0,1       GT:PL   0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       0/1:0,0,0       1/1:42,3,0
+chr10   133659386       .       A       T       5.83979 .       DP=6;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.587685;MQ0F=0.333333;AF1=0.288117;AC1=2.0;MQ=35;FQ=7.2774;PV4=1.0,0.0104221,1.0,1.0;DP4=5,0,1,0       GT:PL   0/1:37,0,89     0/0:0,0,0       0/0:0,3,4       0/0:0,0,0 0/0:0,3,4
+chr10   133689541       .       A       T       15.3964 .       DP=5;VDB=0.427066;SGB=2.19727;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=15;FQ=-27.2266;DP4=0,0,0,5     GT:PL   1/1:0,0,0       1/1:0,0,0       1/1:0,0,0       1/1:0,0,0       1/1:48,15,0
+
+
+#############################################################
+# Phased single sample Note: Used the same vcf as a 5 sample
+#############################################################
+
+# Phase with Whatshap
+[s_m774@login1 whatshap.data]$ whatshap phase -o results/phased.826.ch10.vcf 5sample.chr10.vcf 826RG.chr10.bam
+
+whatshap phase -o results/phased.826.ch10.vcf 5sample.chr10.vcf 826RG.chr10.bam
+This is WhatsHap 0.18 running under Python 3.7.4
+Working on 5 samples from 5 families
+======== Working on chromosome 'chr10'
+---- Processing individual 826
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8779
+Reading alignments for sample '826'and detecting alleles ...
+Found 5736 reads covering 815 variants
+Kept 788 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 478 reads covering 398 variants
+Best-case phasing would result in 149 non-singleton phased blocks (149 in total)
+... after read selection: 149 non-singleton phased blocks (149 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 398
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 5340
+No. of phased blocks: 149
+Largest component contains 11 variants (2.8% of accessible variants) between position 43119791 and 43119827
+---- Processing individual 827
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8883
+Reading alignments for sample '827'and detecting alleles ...
+WARNING: Sample '827' not found in any BAM/CRAM file.
+Found 0 reads covering 0 variants
+Kept 0 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 0 reads covering 0 variants
+Best-case phasing would result in 0 non-singleton phased blocks (0 in total)
+... after read selection: 0 non-singleton phased blocks (0 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 0
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 0
+No. of phased blocks: 0
+---- Processing individual 832
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 8095
+Reading alignments for sample '832'and detecting alleles ...
+WARNING: Sample '832' not found in any BAM/CRAM file.
+Found 0 reads covering 0 variants
+Kept 0 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 0 reads covering 0 variants
+Best-case phasing would result in 0 non-singleton phased blocks (0 in total)
+... after read selection: 0 non-singleton phased blocks (0 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 0
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 0
+No. of phased blocks: 0
+---- Processing individual 847
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 9170
+Reading alignments for sample '847'and detecting alleles ...
+WARNING: Sample '847' not found in any BAM/CRAM file.
+Found 0 reads covering 0 variants
+Kept 0 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 0 reads covering 0 variants
+Best-case phasing would result in 0 non-singleton phased blocks (0 in total)
+... after read selection: 0 non-singleton phased blocks (0 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 0
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 0
+No. of phased blocks: 0
+---- Processing individual 850
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 7412
+Reading alignments for sample '850'and detecting alleles ...
+WARNING: Sample '850' not found in any BAM/CRAM file.
+Found 0 reads covering 0 variants
+Kept 0 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 0 reads covering 0 variants
+Best-case phasing would result in 0 non-singleton phased blocks (0 in total)
+... after read selection: 0 non-singleton phased blocks (0 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 0
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 0
+No. of phased blocks: 0
+======== Writing VCF
+Done writing VCF
+
+== SUMMARY ==
+Maximum memory usage: 0.188 GB
+Time spent reading BAM/CRAM:                    1.1 s
+Time spent parsing VCF:                         2.0 s
+Time spent selecting reads:                     0.0 s
+Time spent phasing:                             0.2 s
+Time spent writing VCF:                         1.8 s
+Time spent finding components:                  0.0 s
+Time spent on rest:                             2.0 s
+Total elapsed time:                             7.2 s
+
+
+
+#############################################
+# Compared 5 sample outputs (Bertie and I)
+#############################################
+
+# Sherwin WhatsHAP output
+---- Processing individual 826
+MEC cost: 5340
+No. of phased blocks: 149
+Largest component contains 11 variants (2.8% of accessible variants) between position 43119791 and 43119827
+---- Processing individual 827
+MEC cost: 6605
+No. of phased blocks: 194
+Largest component contains 8 variants (1.5% of accessible variants) between position 43119801 and 43119827
+---- Processing individual 832
+MEC cost: 6526
+No. of phased blocks: 326
+Largest component contains 14 variants (1.5% of accessible variants) between position 43119407 and 43119916
+---- Processing individual 847
+MEC cost: 8249
+No. of phased blocks: 153
+Largest component contains 12 variants (2.7% of accessible variants) between position 43119646 and 43119827
+---- Processing individual 850
+MEC cost: 8588
+No. of phased blocks: 460
+Largest component contains 15 variants (1.2% of accessible variants) between position 41877847 and 41878157
+
+
+# Bertie WhatsHAP output
+---- Processing individual 826T
+[W::hts_idx_load2] The index file is older than the data file: data/826T_chr10_PE_rg.bam.sorted.bai
+MEC cost: 5732
+No. of phased blocks: 120
+Largest component contains 10 variants (3.0% of accessible variants) between position 43119791 and 43119827
+---- Processing individual 827T
+MEC cost: 7040
+No. of phased blocks: 179
+Largest component contains 7 variants (1.4% of accessible variants) between position 133128749 and 133128801
+---- Processing individual 832T
+MEC cost: 7208
+No. of phased blocks: 279
+Largest component contains 14 variants (1.7% of accessible variants) between position 43119437 and 43119916
+---- Processing individual 847T
+MEC cost: 8089
+No. of phased blocks: 149
+Largest component contains 10 variants (2.3% of accessible variants) between position 43119646 and 43119827
+---- Processing individual 850T
+MEC cost: 8559
+No. of phased blocks: 411
+Largest component contains 11 variants (0.9% of accessible variants) between position 41877865 and 41878157
+
+######################################
+# Compared single sample and 5 sample
+######################################
+
+[s_m774@login1 results]$ pwd
+/home/s_m774/data/whatshap.data/results
+
+[s_m774@login1 results]$ mkdir compare.2020.1.31
+
+[s_m774@login1 results]$ cp * compare.2020.1.31/
+
+[s_m774@login1 compare.2020.1.31]$ cut -f 1-10 phased.5sample.vcf > phased.5sample.singleSample.vcf
+[s_m774@login1 compare.2020.1.31]$ tail phased.5sample.singleSample.vcf
+chr10   133564956       .       C       T       21.0473 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.5;AC1=5.0;MQ=60;FQ=24.0401;PV4=1.0,1.0,1.0,0.485873;DP4=0,2,0,1        GT:PL:PS        0/1:0,0,0:.
+chr10   133566126       .       C       A       4.77841 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4812;DP4=0,0,1,0       GT:PL:PS        0/1:0,0,0:.
+chr10   133566184       .       C       T       146.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:120,6,0
+chr10   133566205       .       C       T       26.2327 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.422809;AC1=4.0;MQ=60;FQ=28.7814;PV4=1.0,1.0,1.0,1.0;DP4=1,1,0,1       GT:PL:PS        0/0:0,6,102:.
+chr10   133566206       .       A       C       142.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:116,6,0
+chr10   133566430       .       G       A       30.0226 .       DP=2;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,1,0       GT:PL   0/1:0,0,0
+chr10   133592197       .       C       T       30.0226 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,0,1       GT:PL   0/1:0,0,0
+chr10   133609302       .       T       G       12.2831 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4805;DP4=0,0,0,1       GT:PL   0/1:0,0,0
+chr10   133659386       .       A       T       5.83979 .       DP=6;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.587685;MQ0F=0.333333;AF1=0.288117;AC1=2.0;MQ=35;FQ=7.2774;PV4=1.0,0.0104221,1.0,1.0;DP4=5,0,1,0       GT:PL   0/1:37,0,89
+chr10   133689541       .       A       T       15.3964 .       DP=5;VDB=0.427066;SGB=2.19727;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=15;FQ=-27.2266;DP4=0,0,0,5     GT:PL   1/1:0,0,0
+
+[s_m774@login1 compare.2020.1.31]$ cut -f 1-10 phased.826.ch10.vcf > phased.826.singleSample.vcf
+[s_m774@login1 compare.2020.1.31]$ tail phased.826.singleSample.vcf
+chr10   133564956       .       C       T       21.0473 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.5;AC1=5.0;MQ=60;FQ=24.0401;PV4=1.0,1.0,1.0,0.485873;DP4=0,2,0,1        GT:PL   0/1:0,0,0
+chr10   133566126       .       C       A       4.77841 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4812;DP4=0,0,1,0       GT:PL   0/1:0,0,0
+chr10   133566184       .       C       T       146.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:120,6,0
+chr10   133566205       .       C       T       26.2327 .       DP=3;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.422809;AC1=4.0;MQ=60;FQ=28.7814;PV4=1.0,1.0,1.0,1.0;DP4=1,1,0,1       GT:PL   0/0:0,6,102
+chr10   133566206       .       A       C       142.22  .       DP=3;VDB=0.327477;MQSB=1.0;SGB=0.0580431;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-28.0052;DP4=0,0,1,2  GT:PL   1/1:116,6,0
+chr10   133566430       .       G       A       30.0226 .       DP=2;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,1,0       GT:PL   0/1:0,0,0
+chr10   133592197       .       C       T       30.0226 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4804;DP4=0,0,0,1       GT:PL   0/1:0,0,0
+chr10   133609302       .       T       G       12.2831 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=60;FQ=-25.4805;DP4=0,0,0,1       GT:PL   0/1:0,0,0
+chr10   133659386       .       A       T       5.83979 .       DP=6;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.587685;MQ0F=0.333333;AF1=0.288117;AC1=2.0;MQ=35;FQ=7.2774;PV4=1.0,0.0104221,1.0,1.0;DP4=5,0,1,0       GT:PL   0/1:37,0,89
+chr10   133689541       .       A       T       15.3964 .       DP=5;VDB=0.427066;SGB=2.19727;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=15;FQ=-27.2266;DP4=0,0,0,5     GT:PL   1/1:0,0,0
+
+
+
+[s_m774@login1 compare.2020.1.31]$ diff phased.826.singleSample.vcf phased.5sample.singleSample.vcf | wc -l
+8186
+
+diff phased.5sample.singleSample.vcf phased.826.singleSample.vcf | cut -f 1,2,4,5,9,10 | less
+
+< chr10 47754   T       C       GT:PL:PS        0/0:0,21,110:.
+< chr10 47771   C       T       GT:PL:PS        0/0:0,15,152:.
+< chr10 47774   A       C       GT:PL:PS        0/0:0,15,152:.
+---
+> chr10 47754   T       C       GT:PL   0/0:0,21,110
+> chr10 47771   C       T       GT:PL   0/0:0,15,152
+> chr10 47774   A       C       GT:PL   0/0:0,15,152
+503,504c503,504
+< chr10 76557   G       T       GT:PL:PS        0/1:0,0,0:.
+< chr10 76560   G       T       GT:PL:PS        0/1:0,0,0:.
+---
+> chr10 76557   G       T       GT:PL   0/1:0,0,0
+> chr10 76560   G       T       GT:PL   0/1:0,0,0
+
+[s_m774@login1 compare.2020.1.31]$ diff phased.5sample.singleSample.vcf phased.826.singleSample.vcf |  grep '|' | wc -l
+0
+
+
+[s_m774@login1 compare.2020.1.31]$ grep '|' phased.5sample.singleSample.vcf | tail
+chr10   132908387       .       C       G       10.4261 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499996;AC1=5.0;MQ=60;FQ=13.1527;PV4=1.0,1.0,1.0,1.0;DP4=1,0,0,1       GT:PL:PS        1|0:43,3,0:132908271
+chr10   132908393       .       G       A       10.4261 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499996;AC1=5.0;MQ=60;FQ=13.1527;PV4=1.0,1.0,1.0,1.0;DP4=1,0,0,1       GT:PL:PS        1|0:43,3,0:132908271
+chr10   132983083       .       A       C       9.53168 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=39;FQ=-25.4806;DP4=0,0,0,1       GT:PL:PS        1|0:39,3,0:132983083
+chr10   132983094       .       A       C       9.53168 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=39;FQ=-25.4806;DP4=0,0,0,1       GT:PL:PS        1|0:39,3,0:132983083
+chr10   133268798       .       G       C       13.225  .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499998;AC1=5.0;MQ=60;FQ=15.8066;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0        GT:PL:PS        1|0:43,0,54:133268798
+chr10   133268866       .       T       C       4.12993 .       DP=4;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.250105;AC1=2.0;MQ=60;FQ=4.93838;PV4=1.0,0.00336704,1.0,1.0;DP4=1,2,0,1        GT:PL:PS        1|0:35,0,54:133268798
+chr10   133268870       .       A       C       4.77002 .       DP=4;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.250129;AC1=2.0;MQ=60;FQ=5.6417;PV4=1.0,0.0896837,1.0,1.0;DP4=1,2,0,1  GT:PL:PS        1|0:36,0,54:133268798
+chr10   133329907       .       G       T       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3574;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,54:133329907
+chr10   133329910       .       C       A       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3126;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,52:133329907
+chr10   133329912       .       C       T       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3574;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,54:133329907
+
+
+[s_m774@login1 compare.2020.1.31]$ grep '|' phased.826.singleSample.vcf | tail
+chr10   132908387       .       C       G       10.4261 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499996;AC1=5.0;MQ=60;FQ=13.1527;PV4=1.0,1.0,1.0,1.0;DP4=1,0,0,1       GT:PL:PS        1|0:43,3,0:132908271
+chr10   132908393       .       G       A       10.4261 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499996;AC1=5.0;MQ=60;FQ=13.1527;PV4=1.0,1.0,1.0,1.0;DP4=1,0,0,1       GT:PL:PS        1|0:43,3,0:132908271
+chr10   132983083       .       A       C       9.53168 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=39;FQ=-25.4806;DP4=0,0,0,1       GT:PL:PS        1|0:39,3,0:132983083
+chr10   132983094       .       A       C       9.53168 .       DP=1;SGB=-0.0550748;MQ0F=0.0;AF1=1.0;AC1=10.0;MQ=39;FQ=-25.4806;DP4=0,0,0,1       GT:PL:PS        1|0:39,3,0:132983083
+chr10   133268798       .       G       C       13.225  .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.499998;AC1=5.0;MQ=60;FQ=15.8066;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0        GT:PL:PS        1|0:43,0,54:133268798
+chr10   133268866       .       T       C       4.12993 .       DP=4;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.250105;AC1=2.0;MQ=60;FQ=4.93838;PV4=1.0,0.00336704,1.0,1.0;DP4=1,2,0,1        GT:PL:PS        1|0:35,0,54:133268798
+chr10   133268870       .       A       C       4.77002 .       DP=4;RPB=1.0;MQB=1.0;BQB=1.0;MQSB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.250129;AC1=2.0;MQ=60;FQ=5.6417;PV4=1.0,0.0896837,1.0,1.0;DP4=1,2,0,1  GT:PL:PS        1|0:36,0,54:133268798
+chr10   133329907       .       G       T       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3574;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,54:133329907
+chr10   133329910       .       C       A       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3126;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,52:133329907
+chr10   133329912       .       C       T       7.80186 .       DP=2;RPB=1.0;MQB=1.0;BQB=1.0;SGB=-0.0550748;MQ0F=0.0;AF1=0.49999;AC1=5.0;MQ=60;FQ=10.3574;PV4=1.0,1.0,1.0,1.0;DP4=1,0,1,0 GT:PL:PS        0|1:37,0,54:133329907

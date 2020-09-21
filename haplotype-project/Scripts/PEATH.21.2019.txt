@@ -1,0 +1,53 @@
+##############################################
+# Created by: Allison Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Software/PEATH
+#
+# online mannual: https://github.com/jcna99/PEATH
+# 5.21.2019
+##############################################
+#
+# Example script run
+# ex) ./PEATH chr1.matrix.SORTED chr1.haplo
+#
+
+[abj15@login2 Software]$ cd PEATH/
+[abj15@login2 PEATH]$ cd PEATH-master
+[abj15@login2 PEATH-master]$ ls
+DataSet  README.md  src
+[abj15@login2 PEATH-master]$ mkdir 5.21.2019
+[abj15@login2 PEATH-master]$ ls
+5.21.2019  DataSet  README.md  src
+[abj15@login2 PEATH-master]$ cd DataSet/
+[abj15@login2 DataSet]$ cd Simulated_chromosomes
+[abj15@login2 Simulated_chromosomes]$ ls
+new_matrix_05_001.MATRIX.SORTED  new_matrix_05_017.MATRIX.SORTED  new_matrix_10_013.MATRIX.SORTED  new_matrix_15_009.MATRIX.SORTED  new_matrix_20_005.MATRIX.SORTED
+new_matrix_05_002.MATRIX.SORTED  new_matrix_05_018.MATRIX.SORTED  new_matrix_10_014.MATRIX.SORTED  new_matrix_15_010.MATRIX.SORTED  new_matrix_20_006.MATRIX.SORTED
+new_matrix_05_003.MATRIX.SORTED  new_matrix_05_019.MATRIX.SORTED  new_matrix_10_015.MATRIX.SORTED  new_matrix_15_011.MATRIX.SORTED  new_matrix_20_007.MATRIX.SORTED
+new_matrix_05_004.MATRIX.SORTED  new_matrix_05_020.MATRIX.SORTED  new_matrix_10_016.MATRIX.SORTED  new_matrix_15_012.MATRIX.SORTED  new_matrix_20_008.MATRIX.SORTED
+new_matrix_05_005.MATRIX.SORTED  new_matrix_10_001.MATRIX.SORTED  new_matrix_10_017.MATRIX.SORTED  new_matrix_15_013.MATRIX.SORTED  new_matrix_20_009.MATRIX.SORTED
+new_matrix_05_006.MATRIX.SORTED  new_matrix_10_002.MATRIX.SORTED  new_matrix_10_018.MATRIX.SORTED  new_matrix_15_014.MATRIX.SORTED  new_matrix_20_010.MATRIX.SORTED
+new_matrix_05_007.MATRIX.SORTED  new_matrix_10_003.MATRIX.SORTED  new_matrix_10_019.MATRIX.SORTED  new_matrix_15_015.MATRIX.SORTED  new_matrix_20_011.MATRIX.SORTED
+new_matrix_05_008.MATRIX.SORTED  new_matrix_10_004.MATRIX.SORTED  new_matrix_10_020.MATRIX.SORTED  new_matrix_15_016.MATRIX.SORTED  new_matrix_20_012.MATRIX.SORTED
+new_matrix_05_009.MATRIX.SORTED  new_matrix_10_005.MATRIX.SORTED  new_matrix_15_001.MATRIX.SORTED  new_matrix_15_017.MATRIX.SORTED  new_matrix_20_013.MATRIX.SORTED
+new_matrix_05_010.MATRIX.SORTED  new_matrix_10_006.MATRIX.SORTED  new_matrix_15_002.MATRIX.SORTED  new_matrix_15_018.MATRIX.SORTED  new_matrix_20_014.MATRIX.SORTED
+new_matrix_05_011.MATRIX.SORTED  new_matrix_10_007.MATRIX.SORTED  new_matrix_15_003.MATRIX.SORTED  new_matrix_15_019.MATRIX.SORTED  new_matrix_20_015.MATRIX.SORTED
+new_matrix_05_012.MATRIX.SORTED  new_matrix_10_008.MATRIX.SORTED  new_matrix_15_004.MATRIX.SORTED  new_matrix_15_020.MATRIX.SORTED  new_matrix_20_016.MATRIX.SORTED
+new_matrix_05_013.MATRIX.SORTED  new_matrix_10_009.MATRIX.SORTED  new_matrix_15_005.MATRIX.SORTED  new_matrix_20_001.MATRIX.SORTED  new_matrix_20_017.MATRIX.SORTED
+new_matrix_05_014.MATRIX.SORTED  new_matrix_10_010.MATRIX.SORTED  new_matrix_15_006.MATRIX.SORTED  new_matrix_20_002.MATRIX.SORTED  new_matrix_20_018.MATRIX.SORTED
+new_matrix_05_015.MATRIX.SORTED  new_matrix_10_011.MATRIX.SORTED  new_matrix_15_007.MATRIX.SORTED  new_matrix_20_003.MATRIX.SORTED  new_matrix_20_019.MATRIX.SORTED
+new_matrix_05_016.MATRIX.SORTED  new_matrix_10_012.MATRIX.SORTED  new_matrix_15_008.MATRIX.SORTED  new_matrix_20_004.MATRIX.SORTED  new_matrix_20_020.MATRIX.SORTED
+[abj15@login2 Simulated_chromosomes]$
+
+#
+# Simulated data is not in the format of example script in mannual "chr1.matrix.SORTED"
+#
+
+[abj15@login2 PEATH-master]$ cd 5.21.2019/
+[abj15@login2 5.21.2019]$ ./PEATH ../DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED test1.haplo
+-bash: ./PEATH: No such file or directory
+[abj15@login2 5.21.2019]$ cd ..
+[abj15@login2 PEATH-master]$ ./PEATH ../DataSet/Simulated_chromosomes/new_matrix_05_001.MATRIX.SORTED 5.21.2019/test1.haplo
+-bash: ./PEATH: No such file or directory
+[abj15@login2 PEATH-master]$ ls
+5.21.2019  DataSet  README.md  src
+#######################################################

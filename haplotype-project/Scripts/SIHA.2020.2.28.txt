@@ -1,0 +1,72 @@
+##############################################################
+# Added support renumber Block IDs 1 to n in compare2HA.pl
+##############################################################
+
+# Bertie's input file location
+/home/abj15/Research.Project/Run/Comparisons/pair-wise/7.Feb10.2020
+
+File names: 
+  hapcut2.sortbySNV.Feb10.2020.txt  | sorted by SNV
+  hapcut2.sortbyblk.Feb10.2020.txt  | sorted by block id
+
+[s_m774@login2 SIHA]$ pwd
+/home/s_m774/data/SIHA
+
+[s_m774@login2 SIHA]$ ls
+hapcut2.sortbyblk.Feb10.2020.txt  hapcut2.sortbySNV.Feb10.2020.txt  mixSIH.4col.txt  peath.4col.txt  trash  whatshap.4col.txt
+
+ wc -l *
+  115213 hapcut2.sortbyblk.Feb10.2020.txt
+  115213 hapcut2.sortbySNV.Feb10.2020.txt
+  115813 matchap.4col.txt
+  115792 mixSIH.4col.txt
+  115217 non.consecutive.hapcut.4col.txt
+  115813 peath.4col.txt
+
+
+
+[s_m774@login1 2WaySIHA2020.feb.27]$ pwd
+/home/s_m774/Haplotype-Research/2WaySIHA2020.feb.27
+
+tail -n 100000 data/SIHA/hapcut2.sortbySNV.Feb10.2020.txt > Haplotype-Research/2WaySIHA2020.feb.27/last.100k.hapcut.txt
+
+perl ../compare2HA.pl last.100k.hapcut.txt peath.4col.txt results/snvSortedHapcutPeath
+
+
+# new block IDs in results/snvSortedHapcutPeath.blocks.txt
+Block   CountA  CountB  SNVs    Haplotype
+1       40      40      match   -
+2       2       2       match   match
+3       2       2       match   match
+4       4       4       match   match
+5       5       5       match   match
+6       2       2       match   match
+7       3       3       match   match
+8       10      10      match   match
+9       2       2       match   match
+10      4       4       match   match
+11      4       4       match   match
+12      3       3       match   match
+13      3       3       match   match
+14      3       3       match   match
+15      2       2       match   match
+16      3       3       match   match
+17      6       6       match   match
+18      2       2       match   match
+19      5       5       match   match
+20      2       2       match   match
+21      3       3       match   match
+22      2       2       match   -
+23      3       3       match   match
+24      6       6       match   match
+25      12      12      match   match
+26      2       2       match   match
+27      4       4       match   match
+
+
+perl ../compare2HA.pl hapcut2.sortbySNV.Feb10.2020.txt peath.4col.txt results/snvSortedHapcutPeath
+
+Haplotype agreement is printed below and saved to file
+Key     agree   disag   total   agree%  disagree%
+Block   31964   188     32152   0.994152774321971       0.00584722567802936
+SNV     109063  6150    115213  0.946620607049552       0.0533793929504483

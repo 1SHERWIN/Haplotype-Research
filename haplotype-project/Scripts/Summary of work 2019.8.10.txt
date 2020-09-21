@@ -1,0 +1,43 @@
+# Summary of work 2019.8.10
+
+
+
+# Single end SNPs at ≥1 coverage
+/home/s_m774/data/dbm/single.1depth.3sample/intersect
+wc -l *.pos
+  438 826.pos
+  461 827.pos
+  984 832.pos
+ 1883 total
+
+
+# Single end SNPs at ≥4 coverage
+/home/s_m774/data/dbm/single.4depth.3sample/7.8
+wc -l *.pos
+   96 826.pos
+  120 827.pos
+  142 832.pos
+  358 total
+
+
+# Pair end SNPs at ≥2 coverage
+/home/s_m774/data/dbm/pair.2depth.5sample/7.28
+wc -l *.pos
+   355 826.pos
+   505 827.pos
+   793 832.pos
+   506 847.pos
+  1449 850.pos
+  3875 total
+
+
+
+# Pair end SNPs at ≥4 coverage
+/home/s_m774/data/dbm/pair.4depth.3sample/7.28
+wc -l *.pos
+  149 826.pos
+  185 827.pos
+  233 832.pos
+  567 total
+
+

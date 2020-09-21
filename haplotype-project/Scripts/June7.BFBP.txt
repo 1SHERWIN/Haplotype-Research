@@ -1,0 +1,125 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Paper http://users.ece.utexas.edu/~hvikalo/pubs/TCBB15.pdf
+# Download  https://sourceforge.net/projects/bfbp/files/
+# Installation
+#################################################################################
+
+# From README.txt
+****************************
+Installing:
+****************************
+
+Unzip the files:
+
+tar -xvzf BPFP.tgz
+
+Compile the files:
+
+diploid:
+g++ -O3 -std=c++0x BitFlipping.cpp -o BF
+gcc -std=c99 -O3 BeliefPropagation.c -o BP
+
+Add running permissions:
+
+chmod 755 ./BF
+chmod 755 ./BP
+chmod 755 ./PBP
+
+/home/s_m774/software/BFBP
+
+gunzip BFBP.tgz
+ tar -xvf BFBP.tar
+./._BeliefPropagation.c
+BeliefPropagation.c
+./._BitFlipping.cpp
+BitFlipping.cpp
+./._PBP.c
+PBP.c
+./._example.matrix
+example.matrix
+./._poly.constraint
+poly.constraint
+./._poly.matrix
+poly.matrix
+./._README
+README
+
+g++ -O3 -std=c++0x BitFlipping.cpp -o BF
+gcc -std=c99 -O3 BeliefPropagation.c -o BP
+
+chmod 755 ./BF
+chmod 755 ./BP
+chmod 755 ./PBP
+
+
+#################################################################################
+# Running example data 
+#################################################################################
+
+
+# From README.txt
+*****************************
+Running:
+*****************************
+
+./BF -f [matrix_file]
+./BP -f [matrix_file]
+./PBP -f [matrix_file] -p [poly_order] -c [constraint_file]
+
+matrix_file - Fragment matrix file, it should cover a connected component, i.e. BLOCK.
+
+poly_order - Polyploid oder.
+
+constraint_file - File containing the ratio of reference alleles to alternative alleles.
+
+For BP algorithm the haplotype is given in the file out_BP.txt as a list of SNP values and associated belief.
+
+The haplotype is given in the file hap_PBP1.txt as a list of SNP values. For each SNP there are poly_order tab separated number of entries each associated with one haplotype.
+
+*****************************
+Format of matrix_file:
+*****************************
+
+Fragment matrix file has the following format:
+#reads #SNPs
+#alleles read_ID SNP value SNP value ... SNP value
+…
+#alleles read_ID SNP value SNP value ... SNP value
+
+For example file:
+23 13
+3 1 1 0 2 1 5 0
+2 2 3 1 5 1 
+…
+
+First line indicates that there are 23 reads and 13 SNPs.
+Second line describes the first read (read 1) is covering 3 SNPs, in particular SNP 1 with value 0, SNP 2 with value 1 and SNP 5 with value 0.
+
+This format is similar to the HapCUT style of the fragment matrix.
+
+*****************************
+Format of constraint_file:
+*****************************
+
+Constraint file determines the number of reference alleles for each SNP location. A line corresponds to a SNP location and contains polyploid order (k) number of 1/-1 space separated entries indicating the number of reference and alternative alleles at SNP location, i.e. is a read in format allele_1 allele_2 . . allele_k , for example 1 1 -1 there is a value 1 for each reference allele and -1 for alternative allele
+
+*****************************
+Example usage:
+*****************************
+
+./BF -f example.matrix
+./BP -f example.matrix
+./PBP -f poly.matrix -p 3 -c poly.constraint
+
+/home/s_m774/project/run/BFBP
+
+# 1st run
+/home/s_m774/software/BFBP/BP -f /home/s_m774/project/run/BFBP/example.matrix
+
+# Output to hap_BP.txt
+0       0.0000
+1       1.0000
+1       1.0000
+1       1.0000
+1       1.0000

@@ -1,5 +1,0 @@
-Block	Agreement	SNP count
-1	match	3
-2	match	4
-3	-	4
-4	match	2

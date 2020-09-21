@@ -1,0 +1,50 @@
+########################################
+# Directory Created by: Allison Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Software/AROHap
+# Online mannual: https://github.com/mholyaee/AROHap
+#
+########################################
+# 5.21.2019
+
+[abj15@login2 Software]$ cd AROHap/
+[abj15@login2 AROHap]$ ls
+AROHap-master.zip
+[abj15@login2 AROHap]$ unzip AROHap-master.zip
+Archive:  AROHap-master.zip
+e0778eb617eb23c4dc8c0e886af8704933bba148
+   creating: AROHap-master/
+  inflating: AROHap-master/AROHap_V2.m
+  inflating: AROHap-master/CompleteHap.m
+  inflating: AROHap-master/Create_rand.m
+  inflating: AROHap-master/FCGraph.m
+  inflating: AROHap-master/FCMhap_V2.m
+  inflating: AROHap-master/Fasthap.m
+  inflating: AROHap-master/FuzzyConflictGraph.m
+  inflating: AROHap-master/FuzzyDis.m
+  inflating: AROHap-master/GAHAP.m
+  inflating: AROHap-master/GetWholeHap.m
+  inflating: AROHap-master/H_assem2to4.m
+  inflating: AROHap-master/HapFitness.m
+  inflating: AROHap-master/Heter4to2.m
+  inflating: AROHap-master/ImproveHap.m
+  inflating: AROHap-master/MEC.m
+  inflating: AROHap-master/MakeHapbyMajority.m
+  inflating: AROHap-master/ProduceLarva.m
+  inflating: AROHap-master/README.md
+  inflating: AROHap-master/RR4.m
+  inflating: AROHap-master/Rank.m
+  inflating: AROHap-master/Reproduce.m
+  inflating: AROHap-master/SinglePoint.m
+  inflating: AROHap-master/Union.m
+  inflating: AROHap-master/dist.m
+  inflating: AROHap-master/inputdata.m
+  inflating: AROHap-master/merge.m
+  inflating: AROHap-master/mutation.m
+[abj15@login2 AROHap]$ ls
+AROHap-master  AROHap-master.zip
+[abj15@login2 AROHap]$ cd AROHap-master
+[abj15@login2 AROHap-master]$ ls
+AROHap_V2.m    dist.m     FCMhap_V2.m           GAHAP.m        H_assem2to4.m  inputdata.m          merge.m         Rank.m       RR4.m
+CompleteHap.m  Fasthap.m  FuzzyConflictGraph.m  GetWholeHap.m  Heter4to2.m    MakeHapbyMajority.m  mutation.m      README.md    SinglePoint.m
+Create_rand.m  FCGraph.m  FuzzyDis.m            HapFitness.m   ImproveHap.m   MEC.m                ProduceLarva.m  Reproduce.m  Union.m
+###################################################

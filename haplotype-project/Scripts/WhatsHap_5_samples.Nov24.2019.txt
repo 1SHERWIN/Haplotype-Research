@@ -1,0 +1,358 @@
+###########################################
+# Created By: Bertie Johnson 
+# Working Directory: /home/abj15/Research.Project/Run/Whatshap/Cancer_data_chr10_PE/Nov24.2019_5_samples
+# Formatting vcf and bam files for 
+# WhatsHap using 5 samples
+###########################################
+# Copy sorted bam files
+
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/826T_chr10_PE/826T_chr10_PE_.bwa.bam.sorted .
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/827T_chr10_PE/827T_chr10_PE_.bwa.bam.sorted .
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/832T_chr10_PE/832T_chr10_PE_.bwa.bam.sorted .
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/847T_chr10_PE/847T_chr10_PE_.bwa.bam.sorted .
+cp /home/abj15/Research.Project/Datasets/chr10_PE_Cancer_data/Nov.8.2019/850T_chr10_PE/850T_chr10_PE_.bwa.bam.sorted .
+
+###########################################
+# Take sorted .bam file and run picard to add @RGtag to bam file 
+
+java -jar /home/abj15/Research.Project/Software/Picard/picard.jar AddOrReplaceReadGroups \
+       I=826T_chr10_PE_.bwa.bam.sorted \
+       O=826T_chr10_PE_.rg \
+       RGID=1 \
+       RGLB=lib1 \
+       RGPL=illumina \
+       RGPU=unit1\
+       RGSM=826T
+
+java -jar /home/abj15/Research.Project/Software/Picard/picard.jar AddOrReplaceReadGroups \
+       I=827T_chr10_PE_.bwa.bam.sorted \
+       O=827T_chr10_PE_.rg \
+       RGID=2 \
+       RGLB=lib2 \
+       RGPL=illumina \
+       RGPU=unit2\
+       RGSM=827T
+
+java -jar /home/abj15/Research.Project/Software/Picard/picard.jar AddOrReplaceReadGroups \
+       I=832T_chr10_PE_.bwa.bam.sorted \
+       O=832T_chr10_PE_.rg \
+       RGID=3 \
+       RGLB=lib3 \
+       RGPL=illumina \
+       RGPU=unit3\
+       RGSM=832T
+
+java -jar /home/abj15/Research.Project/Software/Picard/picard.jar AddOrReplaceReadGroups \
+       I=847T_chr10_PE_.bwa.bam.sorted \
+       O=847T_chr10_PE_.rg \
+       RGID=4 \
+       RGLB=lib4 \
+       RGPL=illumina \
+       RGPU=unit4\
+       RGSM=847T
+
+java -jar /home/abj15/Research.Project/Software/Picard/picard.jar AddOrReplaceReadGroups \
+       I=850T_chr10_PE_.bwa.bam.sorted \
+       O=850T_chr10_PE_.rg \
+       RGID=5 \
+       RGLB=lib5 \
+       RGPL=illumina \
+       RGPU=unit5\
+       RGSM=850T
+
+####################################################
+wc -l *
+    30136 826T_chr10_PE_.bwa.bam.sorted
+    30671 826T_chr10_PE_.rg
+    29948 827T_chr10_PE_.bwa.bam.sorted
+    29859 827T_chr10_PE_.rg
+    58706 832T_chr10_PE_.bwa.bam.sorted
+    59361 832T_chr10_PE_.rg
+    33026 847T_chr10_PE_.bwa.bam.sorted
+    32930 847T_chr10_PE_.rg
+    63724 850T_chr10_PE_.bwa.bam.sorted
+    62911 850T_chr10_PE_.rg
+   431272 total
+
+###################################################
+# Convert bam files that contain @RG via picard into bam file that contain their headers
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b -h -o 826T_chr10_PE_rg.bam 826T_chr10_PE_.rg
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b -h -o 827T_chr10_PE_rg.bam 827T_chr10_PE_.rg
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b -h -o 832T_chr10_PE_rg.bam 832T_chr10_PE_.rg
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b -h -o 847T_chr10_PE_rg.bam 847T_chr10_PE_.rg
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools view -b -h -o 850T_chr10_PE_rg.bam 850T_chr10_PE_.rg
+
+###################################################
+wc -l *
+    30136 826T_chr10_PE_.bwa.bam.sorted
+    30671 826T_chr10_PE_.rg
+    30249 826T_chr10_PE_rg.bam
+    29948 827T_chr10_PE_.bwa.bam.sorted
+    29859 827T_chr10_PE_.rg
+    29626 827T_chr10_PE_rg.bam
+    58706 832T_chr10_PE_.bwa.bam.sorted
+    59361 832T_chr10_PE_.rg
+    58467 832T_chr10_PE_rg.bam
+    33026 847T_chr10_PE_.bwa.bam.sorted
+    32930 847T_chr10_PE_.rg
+    32388 847T_chr10_PE_rg.bam
+    63724 850T_chr10_PE_.bwa.bam.sorted
+    62911 850T_chr10_PE_.rg
+    63608 850T_chr10_PE_rg.bam
+   645610 total
+###################################################
+# sort @RG bam files
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 826T_chr10_PE_rg.bam -T tmpt.sorted -o 826T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 827T_chr10_PE_rg.bam -T tmpt.sorted -o 827T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 832T_chr10_PE_rg.bam -T tmpt.sorted -o 832T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 847T_chr10_PE_rg.bam -T tmpt.sorted -o 847T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools sort 850T_chr10_PE_rg.bam -T tmpt.sorted -o 850T_chr10_PE_rg.bam.sorted
+
+###################################################
+# index @RG bam files
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 826T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 827T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 832T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 847T_chr10_PE_rg.bam.sorted
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools index 850T_chr10_PE_rg.bam.sorted
+###################################################
+# convert @RG bam files into bcf files
+
+cp /group/hon/hon3398o/0.course.files/Data/Reference/hg38/chroms/chr10.fa .
+
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -f chr10.fa 826T_chr10_PE_rg.bam.sorted > 826T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -f chr10.fa 827T_chr10_PE_rg.bam.sorted > 827T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -f chr10.fa 832T_chr10_PE_rg.bam.sorted > 832T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -f chr10.fa 847T_chr10_PE_rg.bam.sorted > 847T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/samtools-1.7/samtools mpileup -g -f chr10.fa 850T_chr10_PE_rg.bam.sorted > 850T_chr10_PE_rg.bcf
+###################################################
+ wc -l *
+    30136 826T_chr10_PE_.bwa.bam.sorted
+    30671 826T_chr10_PE_.rg
+    30249 826T_chr10_PE_rg.bam
+    30249 826T_chr10_PE_rg.bam.sorted
+      144 826T_chr10_PE_rg.bam.sorted.bai
+    30549 826T_chr10_PE_rg.bcf
+    29948 827T_chr10_PE_.bwa.bam.sorted
+    29859 827T_chr10_PE_.rg
+    29626 827T_chr10_PE_rg.bam
+    29626 827T_chr10_PE_rg.bam.sorted
+      594 827T_chr10_PE_rg.bam.sorted.bai
+    32431 827T_chr10_PE_rg.bcf
+    58706 832T_chr10_PE_.bwa.bam.sorted
+    59361 832T_chr10_PE_.rg
+    58467 832T_chr10_PE_rg.bam
+    58467 832T_chr10_PE_rg.bam.sorted
+      407 832T_chr10_PE_rg.bam.sorted.bai
+    59084 832T_chr10_PE_rg.bcf
+    33026 847T_chr10_PE_.bwa.bam.sorted
+    32930 847T_chr10_PE_.rg
+    32388 847T_chr10_PE_rg.bam
+    32388 847T_chr10_PE_rg.bam.sorted
+      180 847T_chr10_PE_rg.bam.sorted.bai
+    25805 847T_chr10_PE_rg.bcf
+    63724 850T_chr10_PE_.bwa.bam.sorted
+    62911 850T_chr10_PE_.rg
+    63608 850T_chr10_PE_rg.bam
+    63608 850T_chr10_PE_rg.bam.sorted
+      758 850T_chr10_PE_rg.bam.sorted.bai
+    88476 850T_chr10_PE_rg.bcf
+  2675950 chr10.fa
+        1 chr10.fa.fai
+  3774327 total
+###################################################
+# Create index files for the .bcf files 
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index 826T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index 827T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index 832T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index 847T_chr10_PE_rg.bcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index 850T_chr10_PE_rg.bcf
+###################################################
+# back to converting bcf files into vcf files
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 826T_chr10_PE_rg.bcf -o 826T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 827T_chr10_PE_rg.bcf -o 827T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 832T_chr10_PE_rg.bcf -o 832T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 847T_chr10_PE_rg.bcf -o 847T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools call -c -v 850T_chr10_PE_rg.bcf -o 850T_chr10_PE_rg.vcf
+###################################################
+# Remove all INFO fields and all FORMAT fields except for GT
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools annotate -x INFO,^FORMAT/GT 826T_chr10_PE_rg.vcf -o GT_826T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools annotate -x INFO,^FORMAT/GT 827T_chr10_PE_rg.vcf -o GT_827T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools annotate -x INFO,^FORMAT/GT 832T_chr10_PE_rg.vcf -o GT_832T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools annotate -x INFO,^FORMAT/GT 847T_chr10_PE_rg.vcf -o GT_847T_chr10_PE_rg.vcf
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools annotate -x INFO,^FORMAT/GT 850T_chr10_PE_rg.vcf -o GT_850T_chr10_PE_rg.vcf
+###################################################
+wc -l *
+    30136 826T_chr10_PE_.bwa.bam.sorted
+    30671 826T_chr10_PE_.rg
+    30249 826T_chr10_PE_rg.bam
+    30249 826T_chr10_PE_rg.bam.sorted
+      144 826T_chr10_PE_rg.bam.sorted.bai
+    30549 826T_chr10_PE_rg.bcf
+       55 826T_chr10_PE_rg.bcf.csi
+     2238 826T_chr10_PE_rg.vcf
+    29948 827T_chr10_PE_.bwa.bam.sorted
+    29859 827T_chr10_PE_.rg
+    29626 827T_chr10_PE_rg.bam
+    29626 827T_chr10_PE_rg.bam.sorted
+      594 827T_chr10_PE_rg.bam.sorted.bai
+    32431 827T_chr10_PE_rg.bcf
+       31 827T_chr10_PE_rg.bcf.csi
+     2496 827T_chr10_PE_rg.vcf
+    58706 832T_chr10_PE_.bwa.bam.sorted
+    59361 832T_chr10_PE_.rg
+    58467 832T_chr10_PE_rg.bam
+    58467 832T_chr10_PE_rg.bam.sorted
+      407 832T_chr10_PE_rg.bam.sorted.bai
+    59084 832T_chr10_PE_rg.bcf
+       53 832T_chr10_PE_rg.bcf.csi
+     4467 832T_chr10_PE_rg.vcf
+    33026 847T_chr10_PE_.bwa.bam.sorted
+    32930 847T_chr10_PE_.rg
+    32388 847T_chr10_PE_rg.bam
+    32388 847T_chr10_PE_rg.bam.sorted
+      180 847T_chr10_PE_rg.bam.sorted.bai
+    25805 847T_chr10_PE_rg.bcf
+       47 847T_chr10_PE_rg.bcf.csi
+     2037 847T_chr10_PE_rg.vcf
+    63724 850T_chr10_PE_.bwa.bam.sorted
+    62911 850T_chr10_PE_.rg
+    63608 850T_chr10_PE_rg.bam
+    63608 850T_chr10_PE_rg.bam.sorted
+      758 850T_chr10_PE_rg.bam.sorted.bai
+    88476 850T_chr10_PE_rg.bcf
+       72 850T_chr10_PE_rg.bcf.csi
+     6354 850T_chr10_PE_rg.vcf
+  2675950 chr10.fa
+        1 chr10.fa.fai
+     2219 GT_826T_chr10_PE_rg.vcf
+     2477 GT_827T_chr10_PE_rg.vcf
+     4448 GT_832T_chr10_PE_rg.vcf
+     2018 GT_847T_chr10_PE_rg.vcf
+     6335 GT_850T_chr10_PE_rg.vcf
+  3809674 total
+###################################################
+# the VCF files need to be compressed using bgzip, and indexed using tabix:
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view GT_826T_chr10_PE_rg.vcf -Oz -o GT_826T_chr10_PE_rg.vcf.gz
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index GT_826T_chr10_PE_rg.vcf.gz
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view GT_827T_chr10_PE_rg.vcf -Oz -o GT_827T_chr10_PE_rg.vcf.gz
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index GT_827T_chr10_PE_rg.vcf.gz
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view GT_832T_chr10_PE_rg.vcf -Oz -o GT_832T_chr10_PE_rg.vcf.gz
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index GT_832T_chr10_PE_rg.vcf.gz
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view GT_847T_chr10_PE_rg.vcf -Oz -o GT_847T_chr10_PE_rg.vcf.gz
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index GT_847T_chr10_PE_rg.vcf.gz
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools view GT_850T_chr10_PE_rg.vcf -Oz -o GT_850T_chr10_PE_rg.vcf.gz
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools index GT_850T_chr10_PE_rg.vcf.gz
+###################################################
+# Then merge the 5 .vcf.gz files into one vcf
+
+/group/hon/hon3398o/0.course.files/software/bcftools-1.7/bcftools merge GT_826T_chr10_PE_rg.vcf.gz GT_827T_chr10_PE_rg.vcf.gz GT_832T_chr10_PE_rg.vcf.gz GT_847T_chr10_PE_rg.vcf.gz GT_850T_chr10_PE_rg.vcf.gz > merged_all_5_samples.vcf
+###################################################
+# Run WhatsHap using merged_GT_826T_827T_chr10_PE_rg.vcf
+ cd ../
+
+whatshap phase -o merged_all_5_samples_phased.vcf data/merged_all_5_samples.vcf data/826T_chr10_PE_rg.bam.sorted data/827T_chr10_PE_rg.bam.sorted data/832T_chr10_PE_rg.bam.sorted data/847T_chr10_PE_rg.bam.sorted data/850T_chr10_PE_rg.bam.sorted
+
+###################################################
+#Create file containing only the lines that have both samples GT info 
+
+awk '{if($$10!~/\./ && $11!~/\./ && $12!~/\./ && $13!~/\./ && $14!~/\./) print $0}' merged_all_5_samples_phased.vcf > shared_all_5_samples_phased
+###################################################
+grep '##' shared_all_5_samples_phased | wc -l
+462
+wc -l shared_all_5_samples_phased
+491 shared_all_5_samples_phased
+###################################################
+
+tail -29  shared_all_5_samples_phased > shared_all_5_samples_phased.noheader
+[abj15@login2 Nov24.2019_5_samples]$ more shared_all_5_samples_phased.noheader
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  826T    827T    832T    847T    850T
+chr10   3010999 .       A       C       222.003 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   5073715 .       T       G       225.009 .       .       GT      1/1     1/1     1/1     0/1     1/1
+chr10   12702503        .       A       G       222.001 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   12702514        .       A       T       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   19612084        .       C       G       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   19612198        .       A       T       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   35605738        .       A       G       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   35605833        .       G       A       222.001 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   43108942        .       A       T       225.009 .       .       GT      1/1     1/1     0/1     1/1     0/1
+chr10   43119821        .       A       C       206.009 .       .       GT:PS   1|0:43119791    0|1:43119804    0|1:43119437    0|1:43119646    0|1:43119797
+chr10   49472639        .       A       C       222.008 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   49483314        .       T       C       225.009 .       .       GT      1/1     1/1     1/1     0/1     1/1
+chr10   49493110        .       G       A       225.009 .       .       GT      1/1     0/1     1/1     0/1     1/1
+chr10   62682789        .       G       C       222.135 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   64132310        .       C       T       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   67338870        .       T       C       221.999 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   71284625        .       T       A       150.514 .       .       GT      1/1     1/1     1/1     1/1     1/1
+chr10   86366299        .       T       G       222.033 .       .       GT      1/1     1/1     1/1     1/1     1/1
+
+###################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

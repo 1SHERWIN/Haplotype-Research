@@ -1,0 +1,120 @@
+#######################################
+# Pair wise comparison with Whatshap 
+# Using Whatshap block ID as a key
+#######################################
+
+# Directory
+/home/s_m774/Haplotype-Research/SIHAtest2019.12.6
+
+#############################################################
+# Perl program generated the same results as our poster data 
+#############################################################
+
+
+ 
+perl ../compare2HA.pl peath.4col.txt hapcut.4col.txt  1 results/peathHapcut.txt
+peath.4col.txt and hapcut.4col.txt agreement: 30343 blocks and 102892 SNVs
+
+
+# Peath key and Hapcut
+
+31355 - 30343 = 1012 block disagreement
+115813 - 102892 = 12921 SNV disagreement
+
+
+
+
+
+
+
+perl ../compare2HA.pl peath.4col.txt mixSIH.4col.txt  1 results/peathMix.txt
+
+peath.4col.txt and mixSIH.4col.txt agreement: 30394 blocks and 102235 SNVs
+
+# Peath key and Mix
+
+31355 - 30394 = 961 block disagreement
+115813 - 102235 = 13578 SNV disagreement
+
+
+
+
+
+
+
+
+
+../compare2HA.pl peath.4col.txt hapcut.4col.txt  2 results/hapcutPeath.txt
+peath.4col.txt and hapcut.4col.txt agreement: 31610 blocks and 107134 SNVs
+
+# Hapcut key and Peath
+
+32252 - 31610 = 642 block disagreement
+115813 - 107134 = 8679 SNV disagreement
+
+
+
+
+
+wc -l *
+  115813 8col.txt
+  115813 hapcut.4col.txt
+  115813 mixSIH.4col.txt
+  115813 package1.txt
+  115813 package2.txt
+  115813 peath.4col.txt
+  115813 sorted8col.txt
+  178524 whatshap.4col.txt
+
+
+
+##################################################
+# Used Whatshap as the key to compare HA packages
+##################################################
+
+perl ../compare2HA.pl whatshap.4col.txt  peath.4col.txt  1 results/whatshapPeath.txt
+whatshap.4col.txt and peath.4col.txt agreement: 5921 blocks and 22525 SNVs
+
+# Whatshap key and Peath
+
+10133 - 5921 = 4212 Block disagreement
+178524 - 22525 = 155999 SNV disagreement
+
+
+
+
+
+
+perl ../compare2HA.pl whatshap.4col.txt  hapcut.4col.txt  1 results/whatshapHapcut.txt
+whatshap.4col.txt and hapcut.4col.txt agreement: 5788 blocks and 21061 SNVs
+
+# Whatshap key and Hapcut
+10133 - 5788 = 4345 Block disagreement
+178524 - 21061 = 157463 SNV disagreement
+
+
+
+
+
+
+
+perl ../compare2HA.pl whatshap.4col.txt  mixSIH.4col.txt  1 results/whatshapMix.txt
+whatshap.4col.txt and mixSIH.4col.txt agreement: 5893 blocks and 22134 SNVs
+
+
+# Whatshap key and Mix 
+10133 - 5893 = 4240 Block disagreement
+178524 - 22134 = 156390 SNV disagreement
+
+
+
+
+
+
+########################################################
+# Permission denied running my own Perl code 12/11/2019 
+########################################################
+
+../compare2HA.pl peath.4col.txt hapcut.4col.txt  2 results/hapcutPeath.txt
+-bash: ../compare2HA.pl: Permission denied
+

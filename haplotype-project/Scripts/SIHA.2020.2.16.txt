@@ -1,0 +1,120 @@
+##############################################################
+# Added support for non continuous block ID in compare2HA.pl
+##############################################################
+
+# Bertie's input file location
+/home/abj15/Research.Project/Run/Comparisons/pair-wise/7.Feb10.2020
+
+File names: 
+  hapcut2.sortbySNV.Feb10.2020.txt  | sorted by SNV
+  hapcut2.sortbyblk.Feb10.2020.txt  | sorted by block id
+
+Command to create files: 
+sort -n -k 1 hapcut2.renum.output > hapcut2.sortbySNV.Feb10.2020.txt
+sort -n -k 4 hapcut2.renum.output > hapcut2.sortbyblk.Feb10.2020.txt
+diff hapcut2.sortbySNV.Feb10.2020.txt hapcut2.sortbyblk.Feb10.2020.txt | wc -l
+4664
+
+[s_m774@login2 SIHA]$ pwd
+/home/s_m774/data/SIHA
+[s_m774@login2 SIHA]$ ls
+hapcut2.sortbyblk.Feb10.2020.txt  hapcut2.sortbySNV.Feb10.2020.txt  mixSIH.4col.txt  peath.4col.txt  trash  whatshap.4col.txt
+
+[s_m774@login2 ~]$ cp data/SIHA/* Haplotype-Research/2WaySIHA2020.2.20/
+
+[s_m774@login2 2WaySIHA2020.2.20]$ pwd
+/home/s_m774/Haplotype-Research/2WaySIHA2020.2.20
+
+###############################
+# Sorting is handled by script
+###############################
+
+# Hapcut as a key
+[s_m774@login2 2WaySIHA2020.2.20]$ perl ../compare2HA.pl hapcut2.sortbySNV.Feb10.2020.txt peath.4col.txt results/snvSortedHapcutPeath
+Haplotype agreeement is printed below and saved to file
+Key     agree   disag   total   agree%  disagree%
+Block   31964   188     32152   0.994152774321971       0.00584722567802936
+SNV     109063  6150    115213  0.946620607049552       0.0533793929504483
+
+[s_m774@login2 2WaySIHA2020.2.20]$ perl ../compare2HA.pl hapcut2.sortbyblk.Feb10.2020.txt peath.4col.txt results/blockSortedHapcut
+Peath
+Haplotype agreeement is printed below and saved to file
+Key     agree   disag   total   agree%  disagree%
+Block   31964   188     32152   0.994152774321971       0.00584722567802936
+SNV     109063  6150    115213  0.946620607049552       0.0533793929504483
+
+
+# Peath as a key
+[s_m774@login2 2WaySIHA2020.2.20]$ perl ../compare2HA.pl peath.4col.txt hapcut2.sortbyblk.Feb10.2020.txt results/peathHapcutBlocks
+Haplotype agreeement is printed below and saved to file
+Key     agree   disag   total   agree%  disagree%
+Block   30342   1013    31355   0.967692553021847       0.0323074469781534
+SNV     102828  12985   115813  0.887879599008747       0.112120400991253
+
+[s_m774@login2 2WaySIHA2020.2.20]$ perl ../compare2HA.pl peath.4col.txt hapcut2.sortbySNV.Feb10.2020.txt results/peathHapcutSNV
+Haplotype agreeement is printed below and saved to file
+Key     agree   disag   total   agree%  disagree%
+Block   30342   1013    31355   0.967692553021847       0.0323074469781534
+SNV     102828  12985   115813  0.887879599008747       0.112120400991253
+
+[s_m774@login2 results]$ diff blockSortedHapcutPeath.blocks.txt snvSortedHapcutPeath.blocks.txt
+[s_m774@login2 results]$ diff peathHapcutBlocks.blocks.txt peathHapcutSNV.blocks.txt
+
+
+[s_m774@login2 ~]$ cp data/dbm/pair.2depth.5sample/5sampleDBM.9.28/sample.snps data/MIHA/positions.chr10.txt
+[s_m774@login2 ~]$ cd data/MIHA/
+[s_m774@login2 MIHA]$ wc -l *
+120 positions.chr10.txt
+
+
+[s_m774@login2 MIHA]$ tail positions.chr10.txt
+111     chr10   125738019       179.930132      C       A
+112     chr10   125738266       222.601 G       T
+113     chr10   125747479       190.253675      C       T
+114     chr10   125747842       222.203 T       C
+115     chr10   125748205       119.069 T       C
+116     chr10   125753004       168.80252       G       T
+117     chr10   128189311       29.4360333333333        A       C
+118     chr10   128893168       64.0835333333333        G       A
+119     chr10   130767536       50.55632        A       G
+120     chr10   132751327       50.4533533333333        T       C
+
+
+##################
+# Meeting 2/21
+##################
+
+/home/s_m774/Haplotype-Research/2WaySIHA2020.2.20
+
+grep -v '-' trash/dashHapcut.4col.txt > non.consecutive.hapcut.4col.txt  
+
+[s_m774@login1 2WaySIHA2020.2.20]$ wc -l *
+  115213 hapcut2.sortbyblk.Feb10.2020.txt
+  115213 hapcut2.sortbySNV.Feb10.2020.txt
+  115813 matchap.4col.txt
+  115792 mixSIH.4col.txt
+  115217 non.consecutive.hapcut.4col.txt
+
+perl ../compare2HA.pl peath.4col.txt non.consecutive.hapcut.4col.txt nonconsecutive.results/hapcut.peath                              
+
+perl ../compare2HA.pl non.consecutive.hapcut.4col.txt peath.4col.txt nonconsecutive.results/peath.hapcut    
+
+
+[s_m774@login1 2WaySIHA2020.2.20]$ cut -f 1 non.consecutive.hapcut.4col.txt > dataset.comparison/sherwin.hapcut.txt
+[s_m774@login1 2WaySIHA2020.2.20]$ cut -f 1 hapcut2.sortbyblk.Feb10.2020.txt > dataset.comparison/bertie.hapcut.txt
+
+
+[s_m774@login1 2WaySIHA2020.2.20]$ cd dataset.comparison/
+[s_m774@login1 dataset.comparison]$ cat sherwin.hapcut.txt bertie.hapcut.txt | sort | uniq -u
+117343574
+117343656
+12455492
+125014758
+15085127
+29029418
+38773078
+39095078
+393674
+42388730
+79055533
+99011510

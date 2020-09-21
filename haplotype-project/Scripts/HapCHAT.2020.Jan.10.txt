@@ -1,0 +1,52 @@
+#################################
+# HapCHAT ran on smaller sample of NA data
+# http://hapchat.algolab.eu/
+#################################
+
+(mypython352) [s_m774@login2 HapCHAT-master]$ pwd
+/home/s_m774/HapCHAT_build/HapCHAT-master
+
+# Setup the enviorenment
+source activate mypython352
+module load gcc/7.2.0
+module list
+
+(mypython352) [s_m774@login1 dataNA]$ pwd
+/home/s_m774/hapCHAT/dataNA
+
+head -n 1000 NA12878.chr10.vcf > NA.chr10.first1000.vcf    
+head -n 100 NA12878.chr10.vcf > NA.chr10.first100.vcf    
+
+# Error logged when running Hapchat
+
+(mypython352) [s_m774@login1 HapCHAT-master]$ python HapCHAT.py real.data/NA.chr10.first1000.vcf real.data/NA12878.chr10.bam
+
+(mypython352) [s_m774@login1 .NA12878.chr10.bam.hx_]$ pwd
+/home/s_m774/hapCHAT/HapCHAT-master/real.data/.NA12878.chr10.bam.hx_
+
+(mypython352) [s_m774@login1 .NA12878.chr10.bam.hx_]$ less raw.wif.merged_e15_m25_t6_n3.wif.downs.s1.m15.wif.hap.vcf.log
+Traceback (most recent call last):
+  File "/gpfs/home/s_m774/hapCHAT/HapCHAT-master/scripts/subvcf.py", line 147, in <module>
+    phasing = setup_phasing(h0, h1, phase_set)
+  File "/gpfs/home/s_m774/hapCHAT/HapCHAT-master/scripts/subvcf.py", line 115, in setup_phasing
+    assert i == len(sites), 'number of sites different than haplotype length'
+AssertionError: number of sites different than haplotype length
+
+# HapCHAT ran when I commented line 115 in subvcf.py
+(mypython352) [s_m774@login1 real.data]$ python HapCHAT.py real.data/NA.chr10.first100.vcf real.data/NA12878.chr10.bam > real.data/NA.chr10.first100.haplotype.txt        
+
+# 44 SNV in vcf
+# 19 + 11 = 30 phased by HapCHAT
+
+# New copy of HapCHAT created to modify HapCHAT.py line 178: added -H option
+
+
+
+
+
+
+
+# Deactivate Python 3.5.2 environment if no longer needed
+(mypython352) [me@login2 HapCHAT-master]$ conda deactivate mypython352
+
+

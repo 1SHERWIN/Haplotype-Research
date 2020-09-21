@@ -1,0 +1,206 @@
+###############################
+# Created By: Allison Bertie Johnson
+# Working Directories: 
+# 	/home/abj15 - for whatshap installation 
+# 	/home/abj15/Research.Project/Datasets/NA12878/wget/9.10.2019.wget.BAM.NA12878.chr10.hg19  - running whatshap
+# 	/home/abj15/Research.Project/Run/Whatshap/BAM_NA12878/ - output for whatshap haplotypes
+#
+# WhatsHap Installation:
+# manual: https://whatshap.readthedocs.io/en/latest/installation.html
+#
+#################################
+#Version of Conda:
+#
+module -V conda
+
+VERSION=3.2.10
+DATE=2012-12-21
+
+AUTOLOADPATH=undef
+BASEPREFIX="/usr/share"
+BEGINENV=99
+CACHE_AVAIL=undef
+DEF_COLLATE_BY_NUMBER=undef
+DOT_EXT=""
+EVAL_ALIAS=1
+HAS_BOURNE_FUNCS=1
+HAS_BOURNE_ALIAS=1
+HAS_TCLXLIBS=undef
+HAS_X11LIBS=1
+LMSPLIT_SIZE=1000
+MODULEPATH="/etc/modulefiles"
+MODULES_INIT_DIR="/usr/share/Modules/init"
+PREFIX="/usr/share/Modules"
+TCL_VERSION="8.5"
+TCL_PATCH_LEVEL="8.5.7"
+TMP_DIR="/tmp"
+USE_FREE=undef
+VERSION_MAGIC=1
+VERSIONPATH=undef
+WANTS_VERSIONING=0
+WITH_DEBUG_INFO=undef
+###########################
+# proper settings to enable the “bioconda” channel
+#### 
+
+conda config --add channels defaults
+Warning: 'defaults' already in 'channels' list, moving to the top
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+##################################
+# After installing WhatsHap, run:
+##################################
+# Ran in directory: /home/abj15/Research.Project/Datasets/NA12878/wget/9.10.2019.wget.BAM.NA12878.chr10.hg19
+
+whatshap phase -o /home/abj15/Research.Project/Run/Whatshap/BAM_NA12878/Haplotype_WhatsHap_BAM_NA12878_chr10_hg19 NA12878_S1_chr10.vcf NA12878_S1_chr10.bam.sorted
+This is WhatsHap 0.18 running under Python 3.7.3
+Working on 1 samples from 1 family
+======== Working on chromosome 'chr10'
+---- Processing individual NA12878
+Using maximum coverage per sample of 15X
+Number of variants skipped due to missing genotypes: 0
+Number of remaining heterozygous variants: 192413
+Reading alignments for sample 'NA12878'and detecting alleles ...
+Found 3354867 reads covering 192402 variants
+Kept 1060638 reads that cover at least two variants each
+Reducing coverage to at most 15X by selecting most informative reads ...
+Selected 347826 reads covering 178627 variants
+Best-case phasing would result in 10009 non-singleton phased blocks (10009 in total)
+... after read selection: 10133 non-singleton phased blocks (10133 in total)
+Variants covered by at least one phase-informative read in at least one individual after read selection: 178627
+Phasing 1 sample by solving the MEC problem ...
+MEC cost: 1149163
+No. of phased blocks: 10133
+Largest component contains 5196 variants (2.9% of accessible variants) between position 35482793 and 62504903
+======== Writing VCF
+Done writing VCF
+
+== SUMMARY ==
+Maximum memory usage: 4.676 GB
+Time spent reading BAM/CRAM:                  366.1 s
+Time spent parsing VCF:                        22.2 s
+Time spent selecting reads:                   499.4 s
+Time spent phasing:                           588.8 s
+Time spent writing VCF:                        38.8 s
+Time spent finding components:                  3.1 s
+Time spent on rest:                            31.1 s
+Total elapsed time:                          1549.5 s
+
+############################################################
+# Interpreting the results
+# From manual: "WhatsHap uses the sequencing reads to reconstruct the haplotypes and then writes out the input VCF augmented with phasing information."
+#
+############################################################
+
+head Haplotype_WhatsHap_BAM_NA12878_chr10_hg19
+##fileformat=VCFv4.2
+##samtoolsVersion=1.7+htslib-1.7
+##samtoolsCommand=samtools mpileup -g -d 700000000 -f chr10.fa NA12878_S1_chr10.bam.sorted
+##reference=file://chr10.fa
+##bcftools_callVersion=1.7+htslib-1.7
+##bcftools_callCommand=call -c -v -o NA12878_S1_chr10.vcf NA12878_S1_chr10.bcf; Date=Thu Sep 12 06:23:38 2019
+##commandline="(whatshap 0.18) phase -o /home/abj15/Research.Project/Run/Whatshap/BAM_NA12878/Haplotype_WhatsHap_BAM_NA12878_chr10_hg19 NA12878_S1_chr10.vcf NA12878_S1_chr10.bam.sorted"
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of reads supporting an indel">
+##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of reads supporting an indel">
+
+
+tail Haplotype_WhatsHap_BAM_NA12878_chr10_hg19
+chr10   135519783       .       C       T       30.0354 .       DP=9;VDB=0.817761;MQSB=0.833333;SGB=-0.651104;MQ0F=0.333333;AF1=1.0;AC1=2.0;MQ=13;FQ=-50.986;DP4=0,0,2,6        GT:PL   1/1:63,24,0
+chr10   135523246       .       T       C       58.0086 .       DP=13;VDB=0.100108;RPB=0.356243;MQB=0.15118;BQB=0.127819;MQSB=0.699673;SGB=-0.670168;MQ0F=0.230769;AF1=0.500158;AC1=1.0;MQ=27;FQ=6.20451;PV4=0.527972,1.0,0.00712933,1.0;DP4=0,3,3,7 GT:PL   0/1:88,0,32
+chr10   135524334       .       A       G       48.0141 .       DP=12;VDB=0.0221831;RPB=0.594025;MQB=0.979382;BQB=0.184981;MQSB=0.333333;SGB=-0.651104;MQ0F=0.0;AF1=0.500792;AC1=1.0;MQ=20;FQ=-4.11552;PV4=0.490909,0.0501645,1.0,1.0;DP4=1,2,1,7    GT:PL   0/1:78,0,25
+chr10   135524443       .       C       G       3.01577 .       DP=5;VDB=0.0349627;RPB=0.0;MQB=0.5;BQB=0.5;SGB=-0.511536;MQ0F=0.0;AF1=0.500249;AC1=1.0;MQ=21;FQ=-3.97273;PV4=1.0,1.0,0.300044,0.247513;DP4=0,2,0,3      GT:PL   0/1:30,0,27
+chr10   135524466       .       tggg    tAggg   19.621  .       INDEL;IDV=13;IMF=0.619048;DP=19;VDB=0.00164944;MQSB=0.625;SGB=-0.590765;MQ0F=0.0;AF1=0.512851;AC1=1.0;MQ=22;FQ=-21.5554;PV4=1.0,1.0,0.15153,0.00825048;DP4=0,1,2,3      GT:PL0/1:57,0,13
+chr10   135524635       .       C       G,T     81.9994 .       DP=15;VDB=0.000323975;MQSB=0.884615;SGB=-0.688148;MQ0F=0.0;AF1=1.0;AC1=2.0;MQ=21;FQ=-62.9862;DP4=0,0,2,13       GT:PL   1/1:130,51,15,105,0,96
+chr10   135524671       .       G       T       39.0076 .       DP=36;VDB=0.0459176;RPB=0.0146634;MQB=0.033862;BQB=0.0452561;MQSB=1.0;SGB=-0.691153;MQ0F=0.111111;AF1=0.5;AC1=1.0;MQ=19;FQ=41.9472;PV4=1.0,1.0,0.0101844,0.089202;DP4=0,14,1,17      GT:PL:PS        0|1:69,0,87:135524671
+chr10   135524695       .       G       T       7.79563 .       DP=34;VDB=0.108449;RPB=0.0846563;MQB=0.00138748;BQB=0.231995;MQSB=1.0;SGB=-0.691153;MQ0F=0.117647;AF1=0.49995;AC1=1.0;MQ=18;FQ=10.4269;PV4=1.0,1.0,0.000106295,1.0;DP4=0,14,1,17     GT:PL:PS        0|1:37,0,76:135524671
+chr10   135524713       .       G       T       11.3383 .       DP=27;VDB=0.000431296;RPB=0.0455921;MQB=0.218985;BQB=0.86026;SGB=-0.688148;MQ0F=0.148148;AF1=0.500005;AC1=1.0;MQ=17;FQ=10.8485;PV4=1.0,1.0,0.0274582,1.0;DP4=0,8,0,15   GT:PL:PS     0|1:41,0,40:135524671
+chr10   135524731       .       G       T       3.54275 .       DP=21;VDB=5.07543e-05;RPB=0.0134778;MQB=0.377804;BQB=0.513417;SGB=-0.662043;MQ0F=0.190476;AF1=0.499811;AC1=1.0;MQ=17;FQ=5.31496;PV4=1.0,1.0,0.0877445,1.0;DP4=0,8,0,9   GT:PL:PS     0|1:31,0,44:135524671
+
+####################################################
+# Visualizing phasing results: https://whatshap.readthedocs.io/en/latest/guide.html#visualizing-phasing-results
+#
+#####################################################
+# Run whatshap stats option:
+###############################
+##############################################################
+# WhatsHap Suggests using Integrative Genomics Viewer (IGV)
+# Sometimes it is helpful to visually inspect phasing results by looking at them in a genome browser. 
+# The steps here assume that you use the Integrative Genomics Viewer (IGV).
+# 
+# GTF with haplotype blocks
+# WhatsHap can create a GTF file from a phased VCF file that describes the haplotype blocks. 
+# With phasing results in phased.vcf, run: 
+# 						whatshap stats --gtf=phased.gtf phased.vcf
+#
+# WhatsHap will print some statistics about the phasing in the VCF, and it will also create the file phased.gtf.
+# 
+# Now open both phased.vcf and phased.gtf in IGV in order to inspect the haplotype block structure. 
+# 
+######################################################################
+
+
+whatshap stats --gtf=phased.gtf Haplotype_WhatsHap_BAM_NA12878_chr10_hg19
+Found 1 sample(s) in input VCF
+Reporting results for sample NA12878
+Phasing statistics for sample NA12878 from file Haplotype_WhatsHap_BAM_NA12878_chr10_hg19
+WARNING: Skipping duplicated position 1086797 on chromosome 'chr10'
+WARNING: Skipping duplicated position 1086801 on chromosome 'chr10'
+WARNING: Skipping duplicated position 2139425 on chromosome 'chr10'
+WARNING: Skipping duplicated position 2434532 on chromosome 'chr10'
+WARNING: Skipping duplicated position 2797190 on chromosome 'chr10'
+WARNING: Skipping duplicated position 2918257 on chromosome 'chr10'
+WARNING: Skipping duplicated position 3208583 on chromosome 'chr10'
+.
+.
+.
+WARNING: Skipping duplicated position 128834307 on chromosome 'chr10'
+WARNING: Skipping duplicated position 129161141 on chromosome 'chr10'
+WARNING: Skipping duplicated position 130262890 on chromosome 'chr10'
+WARNING: Skipping duplicated position 130381822 on chromosome 'chr10'
+WARNING: Skipping duplicated position 131787851 on chromosome 'chr10'
+WARNING: Skipping duplicated position 132141631 on chromosome 'chr10'
+WARNING: Skipping duplicated position 132486491 on chromosome 'chr10'
+WARNING: Skipping duplicated position 132975104 on chromosome 'chr10'
+WARNING: Skipping duplicated position 132975108 on chromosome 'chr10'
+WARNING: Skipping duplicated position 133088164 on chromosome 'chr10'
+WARNING: Skipping duplicated position 133184725 on chromosome 'chr10'
+WARNING: Skipping duplicated position 133855688 on chromosome 'chr10'
+WARNING: Skipping duplicated position 134779345 on chromosome 'chr10'
+WARNING: Skipping duplicated position 135097227 on chromosome 'chr10'
+WARNING: Skipping duplicated position 135473450 on chromosome 'chr10'
+---------------- Chromosome chr10 ----------------
+     Variants in VCF:   286614
+        Heterozygous:   208168 (  192413 SNVs)
+              Phased:   178523 (  178523 SNVs)
+            Unphased:    29644 (not considered below)
+          Singletons:        1 (not considered below)
+              Blocks:    10132
+
+Block sizes (no. of variants)
+   Median block size:        4.00 variants
+  Average block size:       17.62 variants
+       Largest block:     5194    variants
+      Smallest block:        2    variants
+
+Block lengths (basepairs)
+      Sum of lengths: 433924468    bp
+ Median block length:     2901.00 bp
+Average block length:    42827.13 bp
+       Longest block: 96738452    bp
+      Shortest block:        1    bp
+           Block N50:      nan    bp
+
+#########################################################
+# reviewed phased.vcf and phased.gtf in IGV
+# See slide notes for more detailes 
+
+
+
+
+
+
+
+
+

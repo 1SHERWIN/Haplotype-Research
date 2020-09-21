@@ -1,0 +1,47 @@
+#########################################################
+# Corrected comparing SIHA peath hapcut2 mixsih
+#########################################################
+
+# corrected: script will now print the last block
+
+Path
+----
+C:\Users\Win\Documents\GitHub\Haplotype-Research
+
+gc .\sampleResult.txt | Measure-Object -Line
+
+Lines Words Characters Property
+----- ----- ---------- --------
+31355
+
+# Added last block
+
+perl getAgreement12Col.pl test/peath.hapcut2.mixSIH.12col.txt 8 test/hapcut2Result.txt
+
+gc test\sampleResult.txt | Measure-Object -Line
+
+Lines Words Characters Property
+----- ----- ---------- --------
+31356
+
+###########################################################
+# LEAP server results
+###########################################################
+
+/home/s_m774/Haplotype-Research
+
+git pull
+
+
+
+# SIHA agreement counted using 3 different keys
+perl ../getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 4 peathResult.txt
+perl ../getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 8 hapcut2Result.txt
+perl ../getAgreement12Col.pl peath.hapcut2.mixSIH.12col.txt 12 mixsihResult.txt
+
+ wc -l *Result.txt
+ 32253 hapcut2Result.txt
+ 32253 mixsihResult.txt
+ 31356 peathResult.txt
+ 
+ 

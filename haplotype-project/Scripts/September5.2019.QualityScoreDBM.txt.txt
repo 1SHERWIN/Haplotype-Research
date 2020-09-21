@@ -1,0 +1,58 @@
+#################################################################################
+# Created by Sherwin Massoudian
+# Preparing Real Data
+#################################################################################
+
+# Generated a quality table
+/home/s_m774/data/dbm/pair.2depth.5sample/qualityDBM.8.21
+
+perl /home/s_m774/software/DBM/perl/get5SampleQuality.pl 826chr10.pos 827chr10.pos 832chr10.pos 847chr10.pos 850chr10.pos 1
+Job took 0 seconds
+
+# quality.txt
+chr10   46025   NA      NA      NA      NA      21.7931
+chr10   46026   NA      NA      NA      NA      21.7931
+chr10   47663   NA      NA      NA      NA      21.7931
+chr10   47754   NA      NA      NA      45.0928 4.76875
+chr10   47771   NA      NA      NA      35.0083 NA
+chr10   47774   NA      NA      NA      41.0074 NA
+chr10   48086   NA      NA      24.528  NA      NA
+chr10   48486   NA      NA      NA      NA      81.5134
+chr10   50655   NA      NA      NA      NA      34.7659
+chr10   76388   NA      NA      21.7931 NA      NA
+chr10   107997  NA      NA      NA      NA      5.46076
+chr10   282815  NA      NA      30.768  NA      NA
+chr10   411314  NA      65.9724 NA      NA      NA
+chr10   411367  NA      17.0581 NA      NA      NA
+chr10   478040  NA      NA      21.7931 NA      NA
+chr10   582461  NA      NA      NA      NA      4.76933
+chr10   789566  NA      NA      28.0137 NA      NA
+chr10   814408  NA      NA      NA      NA      39.765
+chr10   943843  NA      7.59436 NA      NA      NA
+
+
+
+# Generated a DBM input file
+perl /home/s_m774/software/DBM/perl/get5SampleKey.pl 826chr10.pos 827chr10.pos 832chr10.pos 847chr10.pos 850chr10.pos 1
+Job took 0 seconds
+
+# sample.snps
+1       chr10   46025   21.7931 C       A
+2       chr10   46026   21.7931 C       A
+3       chr10   47663   21.7931 C       T
+4       chr10   47754   24.930775       T       C
+5       chr10   47771   35.0083 C       T
+6       chr10   47774   41.0074 A       C
+7       chr10   48086   24.528  G       A
+8       chr10   48486   81.5134 C       T
+9       chr10   50655   34.7659 A       C
+10      chr10   76388   21.7931 T       C
+11      chr10   107997  5.46076 G       A
+12      chr10   282815  30.768  C       T
+13      chr10   411314  65.9724 T       C
+14      chr10   411367  17.0581 G       A
+15      chr10   478040  21.7931 G       A
+16      chr10   582461  4.76933 A       T
+17      chr10   789566  28.0137 G       A
+18      chr10   814408  39.765  C       T
+19      chr10   943843  7.59436 G       A
