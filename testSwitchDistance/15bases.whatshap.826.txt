@@ -1,0 +1,15 @@
+C T
+C T
+T T
+G G
+G A
+C C
+A A
+T T
+G G
+C T
+C C
+G A
+C G
+G G
+T T
