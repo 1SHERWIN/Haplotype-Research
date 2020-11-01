@@ -1,8 +1,10 @@
-# This program points the intersection of two haplotype packages
+# This program calulates switch distance
 # Sherwin Massoudian
-# 2019 Fall
-# perl /home/s_m774/software/perl/getPoints.pl 826dbmGenotype.txt 826hapseq2Genotype.txt
+# 2020 Fall
+# perl getSwitchDistance.pl whatshap.genotype.826.chr10.txt hapseq2.genotype.826.chr10.txt
  
+# [s_m774@login2 ~]$ cp data/july2020.MIHA/compare/* Haplotype-Research/testSwitchDistance/
+
 # Both input files will have the genotype data in 2 columns
 # T T
 # T C
@@ -12,9 +14,8 @@
 # C A
 # A A
 
-# Output is a point system: perfect match or swap is 1 point
-# Strict compare match count: 65/120
-# Non-Strict compare match count: 82.5/120
+# Output is the number of switches
+# Switch error = 1
 
 use strict; use warnings;
 
@@ -22,55 +23,38 @@ use strict; use warnings;
 open(IN1, "<$ARGV[0]") or die "Error reading $ARGV[0]\n";
 open(IN2, "<$ARGV[1]") or die "Error reading $ARGV[1]\n";
 
-my ($match, $halfmatch, $snps) = (0,0,0);
+my $switches = 0;
+my %nucleotide1;
+my $agree = true;
 
 while (!eof(IN1) and !eof(IN2)) {
 	my $line1 = <IN1>;
     my $line2 = <IN2>;
-	
 	chomp $line1;
-	chomp $line2;
-	
+	chomp $line2;	
 	my @nucleotide1 = split(/ /, $line1);
 	my @nucleotide2 = split(/ /, $line2);
-	my %nucleotide1;
-	my $count = 0;
-	
-	# Count the intersection of software packages on each genotype 
-	foreach (@nucleotide1) {
-		if (exists $nucleotide1{$_}){
-			$nucleotide1{$_}++;
-		}
-		else {
-			$nucleotide1{$_} = 1;
-		}
-	}
-	
-	foreach (@nucleotide2){
-		if (exists $nucleotide1{$_}){
-			if ($nucleotide1{$_} > 0) {
-				$nucleotide1{$_}--;
-				$count++;
-			}
-		}
-	}
-	
-	# Optional: Print both genotypes and their intersection count
-	# print "$line1 $line2 $count \n";
+	my $nucleotide1 = $nucleotide1[0];
+	my $nucleotide2 = $nucleotide2[0];
 
-	if ($count == 2) {
-		$match += 1.0;
-	}
-	
-	if ($count == 1) {
-		$halfmatch += 0.5;
-	}
-	
-	$snps++;
+	# skip homozygous positions
+	# if($nucleotide1[0]!=$nucleotide1[1] && $nucleotide2[0]!=$nucleotide2[1])
+	if(exists($nucleotide1{$nucleotide1})) 
+	{ 
+		# print "Exists\n"; 
+		if ($nucleotide1{$nucleotide1} ne $nucleotide2) {
+			# print "Switch\n";
+			$nucleotide1{$nucleotide1} = $nucleotide2;
+			$nucleotide1{$nucleotide2} = $nucleotide1;
+			$switches++;
+		}
+	} 
+	else
+	{ 
+		# print "Not Exists\n";
+		$nucleotide1{$nucleotide1} = $nucleotide2;
+	} 
+
 }
-
-$halfmatch += $match;
-
-print "Strict genotype agreement: $match/$snps \n";
-print "Non-Strict genotype agreement: $halfmatch/$snps \n";
+print "Switch error =  $switches \n";
 
