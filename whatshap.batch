@@ -1,0 +1,22 @@
+#!/bin/bash -l
+
+
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH -t 120:00:00
+#SBATCH -J MAtCHap
+#SBATCH --mem=60G
+
+
+conda activate happy
+
+echo "Begin running whatshap the time is ----------------------------"
+
+date;
+
+time whatshap phase -r chr10.fa -o results/Whatshap.phased.5sample.vcf 5sample.chr10.vcf NA10837.chr10.bam NA10855.chr10.bam NA12329.chr10.bam NA12752.chr10.bam NA12878.chr10.bam
+
+
+echo "After running whatshap, the time is ----------------------------"
+
+date;

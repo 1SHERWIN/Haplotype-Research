@@ -1,0 +1,21 @@
+#!/bin/bash -l
+
+
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH -t 120:00:00
+#SBATCH -J MAtCHap
+#SBATCH --mem=60G
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin running bcftools, the time is ----------------------------"
+
+date;
+
+time ./bcftools mpileup -a AD -b bamList.txt -f chr10.fa | ./bcftools view -i 'DP>=20' | ./bcftools call -cv --skip-variants indels --ploidy GRCh38 -o results/5sample.chr10.vcf
+
+
+echo "After running bcftools, the time is ----------------------------"
+
+date;

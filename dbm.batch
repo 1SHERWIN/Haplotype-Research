@@ -1,0 +1,19 @@
+#!/bin/bash -l
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH --mem=60G
+#SBATCH --mail-type=END,FAIL         # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail	
+#SBATCH --output=slurm-dbm.out
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin running dbm, the time is ----------------------------"
+
+date;
+
+time /home/s_m774/software/DBM/dbm chr10.5sample
+
+echo "After running dbm, the time is ----------------------------"
+
+date;

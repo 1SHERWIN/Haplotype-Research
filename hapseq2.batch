@@ -1,0 +1,18 @@
+#!/bin/bash -l
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH --mem=60G
+#SBATCH --mail-type=END,FAIL         # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail	
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin running hapseq2, the time is ----------------------------"
+
+date;
+
+time /home/s_m774/software/HapSeq2/hapseq2  --readCounts counts.chr10.txt --polymorphicSites sites.chr10.txt -o phased.chr10.hapseq.txt --phase
+
+echo "After running bam_parser, the time is ----------------------------"
+
+date;
