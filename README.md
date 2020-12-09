@@ -1,6 +1,6 @@
-# Sun Lab
+# Scripts created for Sun Lab
 
-Tech: Perl, Python
+Tech: R, Python, Perl, SLURM scripts
 
 
 Perl applications used to compare Haplotype Assembly algorithms
