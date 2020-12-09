@@ -1,4 +1,4 @@
-# Scripts created for Sun Lab
+# Applications created for Sun Lab
 
 Tech: R, Python, Perl, SLURM scripts
 
