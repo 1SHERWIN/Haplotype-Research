@@ -2,18 +2,41 @@
 #SBATCH -p shared
 #SBATCH -n 1
 #SBATCH --mem=60G
+#SBATCH -t 120:00:00
 #SBATCH --mail-type=END,FAIL         # Mail events (NONE, BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail	
+#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail
 #SBATCH --output=slurm-dbm.out
 
-echo "-----------------------------------------------------------------"
-
-echo "Begin running dbm, the time is ----------------------------"
+echo "Begin running DBM the time is ----------------------------"
 
 date;
 
-time /home/s_m774/software/DBM/dbm chr10.5sample
+# DBM needs 2 inputs: chr10.snps and chr10.counts
 
-echo "After running dbm, the time is ----------------------------"
+# I only keep the primary alternate allele as multiple alleles is unsupported by Hapseq2
+grep -v "#" 5sample.chr10.vcf | awk '{print NR"\t"$1"\t"$2"\t"$6"\t"$4"\t"$5}' > chr10.5sample.snps
+
+# Extract allele count in each sample
+grep -v "#" 5sample.chr10.vcf | cut -f 10 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.10837.count
+grep -v "#" 5sample.chr10.vcf | cut -f 11 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.10855.count
+grep -v "#" 5sample.chr10.vcf | cut -f 12 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.12329.count
+grep -v "#" 5sample.chr10.vcf | cut -f 13 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.12752.count
+grep -v "#" 5sample.chr10.vcf | cut -f 14 | sed 's/:/\t/g' | cut -f 3 | sed 's/,/\t/g' > chr10.12878.count
+
+# paste each sample side by side
+awk '{print "M\t"NR}' chr10.10837.count | paste - chr10.10837.count chr10.10855.count chr10.12329.count chr10.12752.count chr10.12878.count > chr10.5sample.counts
+
+# DBM haplotypes output to 5sample.g
+time /home/s_m774/software/DBM/dbm chr10.5sample > dbmConsoleLog.txt
+
+# Split each sample
+sed '1d' chr10.5sample.g > noHeader.chr10.5sample.g
+cut -f 4,5 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.10837.chr10.txt
+cut -f 6,7 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.10855.chr10.txt
+cut -f 8,9 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.12329.chr10.txt
+cut -f 10,11 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.12752.chr10.txt
+cut -f 12,13 -d ' ' noHeader.chr10.5sample.g > individuals/dbm.genotype.12878.chr10.txt
+
+echo "After running DBM, the time is ----------------------------"
 
 date;
