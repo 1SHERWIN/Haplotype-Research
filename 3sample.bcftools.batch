@@ -1,0 +1,19 @@
+#!/bin/bash -l
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH --mem=60G
+#SBATCH -t 120:00:00
+#SBATCH --mail-type=END,FAIL         # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail
+#SBATCH --output=slurm-bcftools.out
+
+echo "-----------------------------------------------------------------"
+
+echo "Begin running bcftools, the time is ----------------------------"
+date;
+
+ls *.bam | tr " " "\n" > bamList.txt
+time ./bcftools mpileup -a AD -b bamList.txt -f chr10.fa | ./bcftools view -i 'DP>=20' | ./bcftools call -cv --skip-variants indels --ploidy GRCh38 -o snv/3sample.chr10.vcf
+
+echo "After running bcftools, the time is ----------------------------"
+date;
