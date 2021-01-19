@@ -1,0 +1,94 @@
+#!/bin/bash -l
+#SBATCH -p shared
+#SBATCH -n 1
+#SBATCH --mem=60G
+#SBATCH -t 120:00:00
+#SBATCH --mail-type=END,FAIL         # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=sherwin@txstate.edu    # Where to send mail
+#SBATCH --output=slurm-hapseq2.out
+
+echo "Begin running Hapseq2 the time is ----------------------------"
+date;
+
+cp snv/sharedPositions.bcftools.chr10.hg38.3sample.vcf hapseq2/
+cp *.ba* hapseq2/
+cd hapseq2
+
+# Hapseq2 needs 2 input files sites.txt and counts.txt
+grep -v "#" sharedPositions.bcftools.chr10.hg38.3sample.vcf | awk '{print $1"\t"$2"\t.\t" $4"\t"$5 "\t100\tPASS\t."}' > chr10.hapseq.vcf
+
+# I only keep the primary alternate allele as multiple alleles is unsupported by Hapseq2
+awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$6"\t"$7"\t"$8"\t"$5}' chr10.hapseq.vcf | sed s/,/\\t/g | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$8"\t"$5"\t"$6"\t"$7}' > singleAllele.chr10.hapseq.vcf
+
+# Prepared sites file
+cut -f 2,4,5 singleAllele.chr10.hapseq.vcf > sites.chr10.txt
+
+# each bam needs to be indexed with filename __.bam.bai
+# mv NA10837.chr10.bai NA10837.chr10.bam.bai
+# mv NA10855.chr10.bai NA10855.chr10.bam.bai
+# mv NA12329.chr10.bai NA12329.chr10.bam.bai
+# mv NA12752.chr10.bai NA12752.chr10.bam.bai
+# mv NA12878.chr10.bai NA12878.chr10.bam.bai
+
+# Ran Bam parsers
+mv *.bam* bams
+time ./bam_parser bams/chr10.hg38.NA12873.bam singleAllele.chr10.hapseq.vcf parsed/chr10.hg38.NA12873 1;
+time ./bam_parser bams/chr10.hg38.NA12874.bam singleAllele.chr10.hapseq.vcf parsed/chr10.hg38.NA12874 2;
+time ./bam_parser bams/chr10.hg38.NA12878.bam singleAllele.chr10.hapseq.vcf parsed/chr10.hg38.NA12878 3;
+# time ./bam_parser bams/NA10837.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.NA10837 1;
+# time ./bam_parser bams/NA10855.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.NA10855 2;
+# time ./bam_parser bams/NA12329.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.NA12329 3;
+# time ./bam_parser bams/NA12752.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.NA12752 4;
+# time ./bam_parser bams/NA12878.chr10.bam singleAllele.chr10.hapseq.vcf parsed/chr10.NA12878 5;
+
+# Prepared counts file
+cat parsed/*.count.txt > counts.chr10.txt
+
+# Hapseq2 phasing
+# --readCounts is the counts file
+# --polymorphicSites is a list of SNP sites
+# -o output file
+# --phase
+time /home/s_m774/software/HapSeq2/hapseq2  --readCounts counts.chr10.txt --polymorphicSites sites.chr10.txt -o phased.chr10.hapseq.txt --phase > ../output-hapseq2.txt
+
+######################################################
+
+# Coverted alleles to uppercase using awk
+# -d delimiter
+# -f field 
+cut -d " " -f 3 phased.chr10.hapseq.txt | awk '{ print toupper($1) }' | sed 's/./& /g' > results/transposeHapSeq2.txt
+cd results
+# awk -F' ' '{print NF; exit}' transposeHapSeq2.txt
+
+# Transpose using awk: https://stackoverflow.com/a/1729980
+awk '
+{
+    for (i=1; i<=NF; i++)  {
+        a[NR,i] = $i
+    }
+}
+NF>p { p = NF }
+END {
+    for(j=1; j<=p; j++) {
+        str=a[1,j]
+        for(i=2; i<=NR; i++){
+            str=str" "a[i,j];
+        }
+        print str
+    }
+}' transposeHapSeq2.txt > table.hapseq2.chr10.5sample.txt    
+
+wc -l table.hapseq2.chr10.5sample.txt
+
+# split each sample
+cut -f 1,2 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.sample1.chr10.txt
+cut -f 3,4 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.sample2.chr10.txt
+cut -f 5,6 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.sample3.chr10.txt
+# cut -f 1,2 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.10837.chr10.txt
+# cut -f 3,4 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.10855.chr10.txt
+# cut -f 5,6 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.12329.chr10.txt
+# cut -f 7,8 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.12752.chr10.txt
+# cut -f 9,10 -d ' ' table.hapseq2.chr10.5sample.txt > individuals/hapseq2.genotype.12878.chr10.txt
+
+echo "After running Hapseq2, the time is ----------------------------"
+date;

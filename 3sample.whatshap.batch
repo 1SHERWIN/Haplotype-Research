@@ -8,44 +8,35 @@
 #SBATCH --output=slurm-whatshap.out
 
 echo "Begin running whatshap the time is ----------------------------"
-
 date;
 
 conda activate happy
 
-# index bams for whatshap and hapseq2 -xargs multiple commands -n commands per proccess -p processor count
-ls *.bam | xargs -n1 -P5 samtools index
-
-cp snv/5sample.chr10.vcf whatshap/
+cp snv/sharedPositions.bcftools.chr10.hg38.3sample.vcf whatshap/
+cp chr10.fa whatshap/
 cp *.ba* whatshap/
+cd whatshap
 
-time whatshap phase -r chr10.fa -o results/Whatshap.phased.5sample.vcf 5sample.chr10.vcf NA10837.chr10.bam NA10855.chr10.bam NA12329.chr10.bam NA12752.chr10.bam NA12878.chr10.bam
+time whatshap phase -r chr10.fa -o results/whatshap.phased.3sample.vcf sharedPositions.bcftools.chr10.hg38.3sample.vcf chr10.hg38.NA12873.bam chr10.hg38.NA12874.bam chr10.hg38.NA12878.bam
 
 cd results
-grep -v '#' Whatshap.phased.5sample.vcf | wc -l
+# grep -v '#' whatshap.phased.3sample.vcf | wc -l
 
 # Split each sample to columns POS REF ALT HAP
-grep -ve '#' Whatshap.phased.5sample.vcf | cut -f 2,4,5,10| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.10837.chr10.whatshap.txt
-grep -ve '#' Whatshap.phased.5sample.vcf | cut -f 2,4,5,11| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.10855.chr10.whatshap.txt
-grep -ve '#' Whatshap.phased.5sample.vcf | cut -f 2,4,5,12| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.12329.chr10.whatshap.txt
-grep -ve '#' Whatshap.phased.5sample.vcf | cut -f 2,4,5,13| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.12752.chr10.whatshap.txt
-grep -ve '#' Whatshap.phased.5sample.vcf | cut -f 2,4,5,14| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.12878.chr10.whatshap.txt
+grep -ve '#' whatshap.phased.3sample.vcf | cut -f 2,4,5,10| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.sample1.chr10.whatshap.txt
+grep -ve '#' whatshap.phased.3sample.vcf | cut -f 2,4,5,11| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.sample2.chr10.whatshap.txt
+grep -ve '#' whatshap.phased.3sample.vcf | cut -f 2,4,5,12| sed s/:/\\t/g | awk '{print $1"\t"$4"\t"$2"\t"$3}' | sed s/,/\\t/g | awk '{print $1"\t"$3"\t"$4"\t"$2}'  > binary.sample3.chr10.whatshap.txt
 
 # Several positions had 2 alternate alleles 
 # I handled this using the last 2 pipes to select the first alt
 
-perl getHaplotype.pl binary.10837.chr10.whatshap.txt haplotypes/whatshap.haplotype.10837.chr10.txt
-perl getHaplotype.pl binary.10855.chr10.whatshap.txt haplotypes/whatshap.haplotype.10855.chr10.txt
-perl getHaplotype.pl binary.12329.chr10.whatshap.txt haplotypes/whatshap.haplotype.12329.chr10.txt
-perl getHaplotype.pl binary.12752.chr10.whatshap.txt haplotypes/whatshap.haplotype.12752.chr10.txt
-perl getHaplotype.pl binary.12878.chr10.whatshap.txt haplotypes/whatshap.haplotype.12878.chr10.txt
+perl getHaplotype.pl binary.sample1.chr10.whatshap.txt haplotypes/whatshap.haplotype.sample1.chr10.txt
+perl getHaplotype.pl binary.sample2.chr10.whatshap.txt haplotypes/whatshap.haplotype.sample2.chr10.txt
+perl getHaplotype.pl binary.sample3.chr10.whatshap.txt haplotypes/whatshap.haplotype.sample3.chr10.txt
 
-perl getAlleles.pl binary.10837.chr10.whatshap.txt individuals/whatshap.genotype.10837.chr10.txt
-perl getAlleles.pl binary.10855.chr10.whatshap.txt individuals/whatshap.genotype.10855.chr10.txt
-perl getAlleles.pl binary.12329.chr10.whatshap.txt individuals/whatshap.genotype.12329.chr10.txt
-perl getAlleles.pl binary.12752.chr10.whatshap.txt individuals/whatshap.genotype.12752.chr10.txt
-perl getAlleles.pl binary.12878.chr10.whatshap.txt individuals/whatshap.genotype.12878.chr10.txt
+perl getAlleles.pl binary.sample1.chr10.whatshap.txt individuals/whatshap.genotype.sample1.chr10.txt
+perl getAlleles.pl binary.sample2.chr10.whatshap.txt individuals/whatshap.genotype.sample2.chr10.txt
+perl getAlleles.pl binary.sample3.chr10.whatshap.txt individuals/whatshap.genotype.sample3.chr10.txt
 
 echo "After running whatshap, the time is ----------------------------"
-
 date;

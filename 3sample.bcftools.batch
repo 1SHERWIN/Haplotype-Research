@@ -15,5 +15,8 @@ date;
 ls *.bam | tr " " "\n" > bamList.txt
 time ./bcftools mpileup -a AD -b bamList.txt -f chr10.fa | ./bcftools view -i 'DP>=20' | ./bcftools call -cv --skip-variants indels --ploidy GRCh38 -o snv/3sample.chr10.vcf
 
+# index bams for whatshap and hapseq2 -xargs multiple commands -n commands per proccess -p processor count
+ls *.bam | xargs -n1 -P5 samtools index
+
 echo "After running bcftools, the time is ----------------------------"
 date;
